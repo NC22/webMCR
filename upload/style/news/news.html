@@ -1,0 +1,32 @@
+<div class="news-box">
+
+	<?php echo $admin_buttons; ?>
+	
+	<div class="news-header"> <b><?php echo $title; ?></b> </div>
+
+	<div class="news-text"><?php echo $text; ?></div>
+
+	<div class="news-footer">
+
+		<?php echo $date; ?> <span class="divider">|</span> <?php echo $time; ?> 
+		<span class="divider">|</span> <a class="news-link" href="<?php echo $category_link ?>"><?php echo $category; ?></a>
+
+		<div style="float: right; display: inline-block; padding-right: 10px;">
+
+			<div style="display: inline-block; margin-right: 6px;">
+
+				<a class="news-link" href="<?php echo $link; ?>">
+				
+					<img style="vertical-align: middle; margin-bottom: 2px;" src="<?php echo STYLE_URL ?>img/comment.png" alt="Комментарии" width="12" height="12"/>
+					<?php echo $comments; ?> 
+					
+				</a>
+			</div>
+
+			<a class="news-link" href="<?php echo $link; ?>">Подробнее...</a>
+
+		</div>
+
+    </div>
+	
+</div>

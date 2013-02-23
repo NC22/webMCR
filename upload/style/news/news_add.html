@@ -1,0 +1,43 @@
+<?php echo $error; ?>
+
+<div class="form-block">
+<div class="block-header"><?php echo $editorTitle; ?></div>
+
+<div class="block-line"></div>
+
+<form action="index.php?mode=news_add" name="adminform" method="post">
+
+   <input type="hidden" name="editMode" value="<?php echo $editMode; ?>">
+   
+   <div class="input-prepend">
+      <span class="add-on">Заголовок:</span>
+      <input type="text" name="title" class="span6" value="<?php echo $editTitle; ?>" />
+   </div> 
+   
+    <div class="input-prepend">
+      <span class="add-on">Категория:</span>
+      <select name="cid" class="span6" ><?php echo $cat_list; ?></select>
+   </div>   
+   
+   <label>HTML-код - Вводная часть:</label>
+
+	  
+      <div class="block-line"></div>
+	  
+	  <textarea class="span11" style="height:100px" name="message"><?php echo $editMessage; ?></textarea>
+	  
+	 <label>HTML-код новости - Полное описание ( Необязательно )</label>
+	 <span class="help-block">Полное описание - выводится при просмотре отдельной новости, если оставить поле пустым, то будет выводится Краткое описание
+	  </span>
+      <div class="block-line"></div>
+	  
+	  <textarea class="span11" style="height:200px" name="message_full"><?php echo $editMessage_Full; ?></textarea>
+
+   <div class="block-line"></div>
+   <div style="float: right;">
+      <input class="btn" type="submit" value="<?php echo $editorButton; ?>" />
+   </div>
+
+</form>	
+	
+</div>

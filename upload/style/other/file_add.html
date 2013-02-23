@@ -1,0 +1,25 @@
+<div class="form-block" style="padding-top: 12px;" >
+	
+	<div class="block-header">Добавить файл</div>
+	
+	<img id="file-loader" src="<?php echo STYLE_URL ?>img/load.gif" alt="Загрузка" style="display: none; margin-bottom: 10px;"/>	
+	
+	<div id="last-files"></div>
+
+	<form class="form-inline" id="file-upload" action="action.php" method="post" enctype="multipart/form-data">
+		<fieldset>
+			<input type="hidden" name="method" value="upload" />
+			<input type="file" name="new_file" onchange="UploadFile()" title="Выбрать файл..." />
+
+			<input type="text" name="nf_id_word" class="input-medium" placeholder="Идентификатор" />
+
+			<label class="checkbox">
+			
+				<input type="checkbox" name="nf_delete" value="1"> Перезапись
+				
+			</label>			
+		</fieldset>
+	</form>
+
+	<div class="alert alert-error" style="display: none;" id="file-upload-error"></div>
+</div>

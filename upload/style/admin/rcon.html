@@ -1,0 +1,285 @@
+<style>
+
+.console_holder{
+	margin: 0 auto;
+	margin-top: 20px;
+    padding: none;
+    height: auto;
+	width: 95%;
+}
+
+.help_block {
+
+    display: block;
+    clear: both;
+	float:right;	
+	margin-left: 8px;
+    text-align: left;
+	color:#e9e9e9;
+	background: #929292;
+
+    border: 2px dashed #747474;
+}
+
+.main_left_block{
+
+  font-size: 16px;
+  font-family: Cambria, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+  background: #929292;
+  color: #e5e5e5;
+  text-align: center;
+  margin-bottom: 10px;
+  
+}
+
+.main_left_block #console_log {
+  
+  text-align: left;
+  height: 300px;
+  font-size: 14px;
+  overflow:auto;
+  background:#676767;
+}
+
+</style>
+
+<!--[if IE]>
+<style>
+.console_holder{
+	position:absolute;
+	left:10%;
+}
+
+.main_left_block{
+margin-right:260px;
+}
+
+</style>
+<![endif]-->
+
+
+<script type='text/javascript'>
+var sendBeasy = false;
+
+function _getTime() {
+	var currentTime = new Date();
+	var hours = currentTime.getHours();
+	var minutes = currentTime.getMinutes();
+	
+	if (minutes < 10){
+		minutes = "0" + minutes;
+	}
+	return hours + ":" + minutes;
+}
+
+function showResult(result) {
+	GetById('console_log').innerHTML += '<p>[' + _getTime() + '] ' + result + '</p>'
+}
+
+function addNickButton(name,id) {
+
+var tmp = GetById('nickButton'+id) 
+  if (tmp != null) tmp.onclick = function(){
+  
+	document.command_form.command.value += ' '+name
+		
+	return false
+  }
+
+}
+
+function cType(com) {
+
+document.command_form.command.value += com + ' '
+
+return false
+
+}
+
+function cShow(m) {
+
+if (m==1) {
+GetById('help_buttons').innerHTML = '<b>Игроки</b> | <a href="#" onclick="cShow(2)">Команды</a>'
+GetById('commands-list').style.display = 'none'
+GetById('users-list').style.display = 'block'
+} else if (m==2) {
+GetById('help_buttons').innerHTML = '<a href="#" onclick="cShow(1)">Игроки</a> | <b>Команды</b>'
+GetById('commands-list').style.display = 'block'
+GetById('users-list').style.display = 'none'
+}
+
+return false
+}
+
+function command_send() {
+
+    if (sendBeasy) return false
+
+	if (document.command_form.command.value.length == 0) return false
+	
+	var log = GetById("console_log")
+		log.innerHTML += '<p>[' + _getTime() + '] ' + document.command_form.command.value + '</p>'
+		log.scrollTop = log.scrollHeight
+		
+	iframe = document.createElement('iframe')
+    iframe.name = 'ajax-frame-' + Math.random(1000000)
+    iframe.style.display = 'none'
+	
+    GetBody().appendChild(iframe)
+	
+    var form = GetById('rcon-form')
+		form.target = iframe.name
+		
+    var event = function () {
+   
+		var iframeDoc = getIframeDocument(iframe)
+		
+		if (iframeDoc.location.href == 'about:blank') return; 
+			
+		sendBeasy = false
+		var log = GetById("console_log")
+		log.scrollTop = log.scrollHeight	
+	
+	    GetBody().removeChild(iframe)		
+	}	
+	
+	IframeOnLoadEvent(iframe,event)
+	
+	GetById("command_ip").value = GetById("back_ip").value
+	GetById("command_pass").value = GetById("back_pass").value 
+	GetById("command_port").value = GetById("back_port").value 
+    if (GetById("back_save").checked) 
+	GetById("command_save").value = 1
+	
+    form.submit()
+	
+	sendBeasy = true
+
+	return false
+}
+
+function command_onkey(event) {  
+	if ( this.value.length == 0 || sendBeasy) return false
+	
+	if ( event.keyCode == 13 ) GetById('command_send').onclick()
+}
+
+function refresh_users(){
+  
+	GetById('users_online_refresh').disabled = !GetById('users_online_refresh').disabled
+		
+	document.userlist_form.submit();
+			
+	GetById('systemFrame01').onload = function(){
+
+	GetById('users_online_refresh').disabled = !GetById('users_online_refresh').disabled
+		
+	}	
+}
+</script>
+
+<div style="margin-top: 10px;">
+  <label>Данные для подключения:</label>  
+  <input type="text" id="back_ip" name="IP" placeholder="IP" value="<?php echo $ip ?>">
+  <input type="password" id="back_pass" name="pass" placeholder="Password"> 
+  <input type="text" id="back_port" class="input-mini" name="port" placeholder="Port" value="<?php echo $port ?>">
+    <div class="control-group">
+    <div class="controls">
+      <label class="checkbox">
+        <input type="checkbox" id="back_save" value="1" <?php echo ($save)?'checked="checked"':'' ?>> Сохранять настройки подключения
+      </label>
+    </div>
+  </div>
+</div>
+
+<div class="btn-group" style="margin-top: 10px; margin-bottom: 10px; clear: both; display: inline-block;">
+  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    Игрок
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+
+		<li><a href="#" onclick="return cType('ban')">ban [playername]</a></li>					
+		<li><a href="#" onclick="return cType('deop')">deop [playername]</a></li>
+		<li><a href="#" onclick="return cType('gamemode')">gamemode [playername] 0/1</a></li>
+		<li><a href="#" onclick="return cType('give')">give [player] [item] [amount]</a></li>			
+		<li><a href="#" onclick="return cType('kick')">kick [playername]</a></li>			
+		<li><a href="#" onclick="return cType('op')">op [playername]</a></li>
+		<li><a href="#" onclick="return cType('pardon')">pardon [playername]</a></li>
+		<li><a href="#" onclick="return cType('tp')">tp [playername] [targetplayer]</a></li>
+		<li><a href="#" onclick="return cType('xp')">xp [playername] [amount]</a></li>		
+	
+  </ul>
+</div>
+<div class="btn-group" style="margin-top: 10px; margin-bottom: 10px; clear: both; display: inline-block;">
+  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    Чат и информация
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+
+	<li><a href="#" onclick="return cType('say')">say [message]</a></li>
+	<li><a href="#" onclick="return cType('tell')">tell [playername] [message]</a></li>
+	<li><a href="#" onclick="return cType('me')">me [actiontext]</a></li>
+    <li><a href="#" onclick="return cType('list')">list</a></li>
+    <li><a href="#" onclick="return cType('help')">help</a></li>
+    <li><a href="#" onclick="return cType('banlist')">banlist</a></li>
+	<li><a href="#" onclick="return cType('whitelist')">whitelist</a></li>	
+  </ul>
+</div>
+
+<div class="btn-group" style="margin-top: 10px; margin-bottom: 10px; clear: both; display: inline-block;">
+  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+    Настройка сервера
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu">
+
+    <li><a href="#" onclick="return cType('pardon-ip')">pardon-ip [ip-address]</a></li>
+	<li><a href="#" onclick="return cType('save-all')">save-all</a></li>
+	<li><a href="#" onclick="return cType('save-off')">save-off</a></li>
+	<li><a href="#" onclick="return cType('save-on')">save-on</a></li>		
+	<li><a href="#" onclick="return cType('stop')">stop</a></li>
+	<li><a href="#" onclick="return cType('time')">time [set|add] [number]</a></li>
+	<li><a href="#" onclick="return cType('toggledownfall')">toggledownfall</a></li>
+    <li><a href="#" onclick="return cType('ban-ip')">ban-ip [ip-address]</a></li>		
+	<li><a href="#" onclick="return cType('whitelist reload')">whitelist reload</a></li>
+	<li><a href="#" onclick="return cType('defaultgamemode')">defaultgamemode [2/1/0]</a></li>
+  </ul>
+</div>
+
+<!--<button type="submit" class="btn">Список игроков</button>-->
+
+<div class="console_holder">
+	
+    <div style="overflow: hidden;">
+
+		<div class="main_left_block">
+			
+			<div style="background:#747474; text-align:center;"> Лог консоли</div>
+		
+			<div id="console_log">
+			
+			</div>
+
+			<div style="background:#747474; text-align:center;">Ввод команды</div>
+			
+			<div style="background:#818181; text-align:center; padding: 5px;">
+				<form class="form-inline" action="instruments/mcraft.rcon.php" method="POST" name="command_form" id="rcon-form">
+				    <input type="hidden" id="command_ip" name="IP"/>
+					<input type="hidden" id="command_pass" name="pass"/>
+					<input type="hidden" id="command_port" name="port" />
+					<input type="hidden" id="command_save" name="save" />
+				    <p><input name="command" type="text" style="width: 80%;">&nbsp;<a href="#" id="command_send" class="btn" onclick="return command_send()" >SEND</a></p>
+				</form>
+			</div>		
+		</div>   
+    </div>
+</div>
+
+<form action="../mcraft.rcon.php" method="POST" name="userlist_form" target="systemFrame" style="display: none;">
+	<input type="hidden" name="userlist" value="1" />						
+</form>

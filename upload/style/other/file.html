@@ -1,0 +1,31 @@
+<div class="filelist-item" id="file-<?php echo $file_id ?>">
+	
+	<div id="file-name-<?php echo $file_id ?>" class="filelist-item-name">
+		
+		<i class="icon-file"></i> <a href="<?php echo $file_link ?>" target="_blank"><?php echo $file_name ?></a>
+	
+	</div>
+	
+	<div id="file-size-<?php echo $file_id ?>" class="filelist-item-size">
+	
+		<i class="icon-upload"></i> <?php echo $file_size ?> Мб
+	
+	</div>
+	
+	<div id="file-download-<?php echo $file_id ?>" class="filelist-item-download">
+		
+		<i class="icon-download-alt"></i> <?php echo $file_downloads ?> раз.
+		
+	</div>
+	
+	<a href="#" class="news-link" onclick="BlockVisible('file-link-<?php echo $file_id ?>'); return false">HTML</a> 
+	
+	<div>
+	
+		<input type="text" id="file-link-<?php echo $file_id ?>" style="display: none;" value="<a href='<?php echo $file_link ?>'><?php echo $file_name ?></a>" />
+	
+	</div>
+	
+	<a href="#" onclick="DeleteFile(<?php echo $file_id ?>); return false"><i class="icon-remove"></i></a>
+				
+</div>

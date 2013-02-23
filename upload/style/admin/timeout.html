@@ -1,0 +1,69 @@
+<div class="accordion-group" style="margin-top: 12px;">
+  <div class="accordion-heading">
+    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
+        Правила регистрации
+    </a>
+  </div>
+  <div id="collapseOne" class="accordion-body collapse">
+      <div class="accordion-inner">
+		<form action="index.php?mode=control&do=ipbans" method="post">
+		  <fieldset>
+			<label>Таймаут: ( часы ) </label>
+			<span class="help-block">Время после которого посетитель сайта сможет повторно зарегистрироваться на сайте. 0 - без ограничений</span>
+			<input type="text" name="timeout" value="<?php echo $timeout ?>">	
+			<label class="checkbox">
+			  <input type="checkbox" name="emailver" value="1" <?php echo ($verification)?'checked="checked"':'' ?>> Подтверждение почтового ящика
+			</label>			
+			<p><button type="submit" class="btn">Изменить</button></p>
+		  </fieldset>
+		</form>
+      </div>
+  </div>
+</div>
+
+<div class="accordion-group">
+  <div class="accordion-heading">
+    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
+        Образ персонажа поумолчанию
+    </a>
+  </div>
+  <div id="collapseTwo" class="accordion-body collapse">
+      <div class="accordion-inner">
+			<form action="index.php?mode=control&do=ipbans" method="post" enctype="multipart/form-data">
+			  <fieldset>
+				<div class="skin-block" >
+				  <div id="profile-skin-front" style="background:url(skin.php?female=0); display:inline-block; height: 224px; width: 112px;"></div>
+				</div>   
+
+				<div class="skin-block" >
+				  <div id="profile-skin-back" style="background:url(skin.php?female=0); background-position: 112px 0px; display:inline-block; height: 224px; width: 112px;"></div>
+				</div>
+
+				<div class="skin-block" >
+				  <div id="profile-skin-front" style="background:url(skin.php?female=1); display:inline-block; height: 224px; width: 112px;"></div>
+				</div>   
+
+				<div class="skin-block" >
+				  <div id="profile-skin-back" style="background:url(skin.php?female=1); background-position: 112px 0px; display:inline-block; height: 224px; width: 112px;"></div>
+				</div>
+				
+				<div class="control-group" style="padding-top: 12px;">
+				  <label class="control-label" for="profile-cloak-file">[Мальчик] Скин поумолчанию</label>
+				  <div class="controls">
+					 <input id="profile-cloak-file" type="file" name="def_skin_male" size="20" />
+				  </div>
+				</div> 
+
+				<div class="control-group">
+				  <label class="control-label" for="profile-cloak-file">[Девочка] Скин поумолчанию</label>
+				  <div class="controls">
+					 <input id="profile-cloak-file" type="file" name="def_skin_female" size="20" />
+				  </div>
+				</div> 	
+
+                <button type="submit" class="btn">Изменить</button>				
+			  </fieldset>			  
+			</form>
+      </div>
+  </div>
+</div>

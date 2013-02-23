@@ -1,0 +1,122 @@
+<div class="inform-block" style="display: none;" id="loginform-error"><div class="alert alert-error" id="loginform-error-text"></div></div>
+
+<div id="login-box" class="form-block-rl">
+<div class="block-header">Авторизация</div>
+<div class="block-line"></div>
+<form action="login.php" method="post" id="loginform">
+<div style="text-align: center;">
+
+    <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span><input id="auth-login" type="text" name="login" placeholder="Логин или e-mail:" /></div>
+    <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span><input id="auth-pass" type="password" name="pass" placeholder="Пароль:" /></div>
+    <label style="margin:0 0 0 48px; text-align: left; padding-bottom:2px;" class="checkbox"><input type="checkbox" id="auth-save" name="save" value="1" /> Запомнить</label>
+
+	<div class="input-append input-prepend">
+	<input type="submit" class="btn" id="login" onclick="Login(); return false;" value="Войти">
+	<input type="button" class="btn" onclick="BlockVisible('reg-box',true); BlockVisible('login-box',false); return false " value="Создать аккаунт">
+	</div>
+	
+</div>
+</form>
+</div>
+
+<script type="text/javascript">
+function BlockHidden(itemID,state) {
+
+	var item = GetById(itemID)
+	if (item == null) return false
+
+	if (state == null) {
+	
+		if (item.style.visibility == 'visible') item.style.visibility = 'hidden'
+		else item.style.visibility = 'visible '
+		
+		return true
+	}
+	
+	var styleText = 'visible'
+
+	if (state == false)  styleText = 'hidden'
+	
+	item.style.visibility = styleText
+	
+	return true	
+}
+
+function RegisterF(){
+// var img  = GetById('register-femaleimg')
+var text = GetById('create-gender') 
+var post = GetById('register-female') 
+
+	if (text.innerHTML == 'Девочка') {
+		text.innerHTML = 'Мальчик'
+		post.value = 0
+		// BlockHidden('register-femaleimg',false)
+	} else {
+		text.innerHTML = 'Девочка'
+		post.value = 1
+		// BlockHidden('register-femaleimg',true)
+	}
+	
+return false
+}
+</script>
+
+<div id="reg-box" style= "display: none;" class="form-block-rl">
+
+<div class="block-header">Регистрация</div>
+
+<div class="block-line"></div>
+
+<form autocomplete="off" action="reg.php" method="post" id="regform">
+		
+	<div style="text-align: center;">
+
+		 <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span><input class="span8" type="text" id="register-login" name="login" placeholder="Логин:" /></div>
+		 <div class="input-prepend"><span class="add-on"><i class="icon-envelope"></i></span><input class="span8" type="text" id="register-email" name="email" placeholder="Email:" /></div>
+		 <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span><input class="span8" type="password" id="register-pass" name="passwd" placeholder="Пароль:" /></div>
+		 <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span><input class="span8" type="password" id="register-repass" name="repasswd" placeholder="Повтор пароля:" /></div>
+         
+		 <input type="hidden" id="register-female" name="female" value="0" />		 
+         <div class="female-input">Пол: <span id="create-gender">Мальчик</span><img src="<?php echo STYLE_URL ?>img/ribbon.png" style="display: none; visibility: hidden;" alt="Девочка" id="register-femaleimg"/><a href="#" onclick="return RegisterF()">></a></div>
+		 
+		<div class="input-append input-prepend">
+			<input type="button" class="btn" id="create" onclick="Register(); return false;" value="Создать">
+			<input type="button" class="btn" onclick="BlockVisible('reg-box',false); BlockVisible('login-box',true); return false " value="Авторизация">
+        </div>
+
+	</div>
+
+</form>
+	
+</div>
+
+<div id="restore-box" style= "display: none;" class="form-block-rl">
+
+<div class="block-header">Восстановление пароля</div>
+
+<div class="block-line"></div>
+
+<form autocomplete="off" action="action.php" method="post" id="restoreform">
+	
+	<div style="text-align: center;">
+
+		 <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span><input type="text" id="restore-login" name="login" placeholder="Логин:" /></div>
+		 <div class="input-prepend"><span class="add-on"><i class="icon-envelope"></i></span><input type="text" id="restore-email" name="email" placeholder="Email:" /></div>
+		 
+		 <div style="margin-bottom: 10px;">
+		 
+		  <div style="display: inline-block;" id="restore-img-holder"></div>
+		 <input id="antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" style="width: 40px; margin-top: 8px;"/>
+
+		 </div>
+		 
+		 <div class="input-append input-prepend">
+			<input type="button" class="btn" id="restore" onclick="Restore(); return false;" value="Восстановить пароль">
+			<input type="button" class="btn" onclick="BlockVisible('restore-box',false); BlockVisible('login-box',true); return false;" value="Отмена">
+		 </div>
+
+	</div>
+
+</form>
+	
+</div>

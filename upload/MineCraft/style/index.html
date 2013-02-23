@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+
+<meta name="Description" content="Minecraft server site" />
+<meta name="robots" content="all,follow" />
+<meta name="author" content="NC22" />
+<meta name="copyright" content="NC22 Team" />
+
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title><?php echo $page_title; ?></title>
+        
+<style type="text/css">
+body {
+    font-family: sans-serif;
+    background-color: #222222;
+    background-image: url('<?php echo STYLE_URL; ?>bg_main.png');
+    color: #e0d0d0;
+}
+
+table{
+text-align: right;
+margin: 0 auto;
+border:1px;
+border-collapse:separate; 
+width:98%;
+}
+
+table td{
+padding:3px; 
+}
+
+table .serverState{
+	background-color: #474747;
+	text-align: center;
+}
+
+#player-info {
+border-collapse:collapse;
+}
+
+#player-info td{
+border:1px solid #707070; 
+padding:2;
+}
+
+.infoPlayers {
+	width:100px; 
+	text-align: right;
+}
+
+a {
+    color: #aaaaff;
+}
+
+hr {
+   border: 0;
+   color: #111111;
+   background-color: #111111;
+   height: 2px;
+}
+
+h3 {
+    color: #ffffff;
+    font-size: 16px;
+}
+img {
+    border:0;
+    margin:0;
+}
+
+.newsItem {
+  width: 97%;
+  margin:0 auto;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  text-align: left;
+  padding-bottom: 10px; 
+  padding-left: 10px; 
+
+}
+
+.title {
+  color: #aaaaff;
+  font-size: 18px;
+}
+
+.text {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word; 
+}
+
+.datetime {
+  color: #aaaaff;
+  text-align: right;
+}
+
+#adminForm {
+  background: #929292;
+  width: 450px;
+  color: #e5e5e5;
+  margin:0 auto;
+  text-align: center;
+  border: 2px dashed #747474;
+  padding: 4px;
+  padding-bottom: 10px; 
+}
+
+.list-pages {
+
+ text-align: center;
+
+}
+
+.list-pages  a {
+
+color: #f1f1f1;
+
+}
+</style>
+
+</head>
+
+<body>
+
+<table>
+
+<tr>
+	<td align="left"><h1><?php echo $page_title; ?></h1></td>
+	<td rowspan="2" align="center" valign="top" style="width:200px;">
+		<div id="serverInfo"><?php echo $server_state_html; ?></div>
+		<div style="margin-top: 10px; text-align: left; padding: 4;">
+		<p style="font-size: 12px;">Полезные ссылки</p>
+		<p><a href="http://www.rubukkit.org/">RuBukkit</a></p>
+		<p><a href="http://www.drop.catface.ru/">Хранилище №22</a></p>
+		
+		
+		</div>
+	</td>
+</tr>
+
+<tr><td valign="top"><?php echo $news; ?></td></tr>
+
+</table>
+
+</body>
+
+</html>

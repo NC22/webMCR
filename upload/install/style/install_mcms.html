@@ -1,0 +1,25 @@
+<div class="form-block" style="margin-bottom: 12px;" >
+
+<form method="post">
+  <fieldset>
+  
+	<input type="hidden" name="step" value="2" />
+	<input type="hidden" name="mysql_rewrite" value="<?php echo ConfigPostInt('mysql_rewrite') ?>" />
+	<input type="hidden" name="mode" value="<?php echo $mode ?>" />
+	
+    <legend>2 / 3 Настройка совместимости с <?php echo $main_cms ?></legend>
+	
+	<label>Таблица пользователей:</label>	
+    <input type="text" name="bd_accounts_mcms" value="<?php echo $bd_names['users'] ?>">
+	<span class="help-block">Указано название таблицы используемое <?php echo $main_cms ?> по умолчанию, изменять только в случае если вы знаете, что делаете.</span>
+		
+	<label>Логин администратора:</label>	
+    <input type="text" name="site_user" value="<?php echo ConfigPostStr('site_user') ?>">
+	<span class="help-block">Введите существующий аккаунт, созданный в <?php echo $main_cms ?>, что бы присвоить ему права администратора в <?php echo PROGNAME; ?></span>
+	
+    <button type="submit" class="btn">Продолжить</button>
+	
+  </fieldset>
+</form>
+
+</div>

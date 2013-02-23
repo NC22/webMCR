@@ -1,0 +1,41 @@
+<div class="form-block" style="margin-bottom: 12px;" >
+
+<form method="post">
+  <fieldset>
+  
+	<input type="hidden" name="step" value="1" />
+	<input type="hidden" name="mode" value="<?php echo $mode ?>" />
+	
+    <legend>1 / 3 Настройка соединения с MySQL</legend>
+	
+	<label>Адрес:</label>
+	<span class="help-block">Адрес MySQL сервера (доменное имя или ip-адрес) </span>
+    <input type="text" name="mysql_adress" value="<?php echo $config['db_host'] ?>">
+	
+	<label>Порт:</label>
+	<span class="help-block">Порт для подключения к MySQL серверу (3306 - порт по умолчанию)</span>
+    <input type="text" name="mysql_port" value="<?php echo $config['db_port'] ?>">	
+	
+	<label>Название базы:</label>
+	<span class="help-block">База данных, которую будет использовать <?php echo PROGNAME; ?></span>
+    <input type="text" name="mysql_bd" value="<?php echo $config['db_name'] ?>">	
+	
+	<label>Пользователь</label>
+	<span class="help-block">Пользователь сервера MySQL</span>
+    <input type="text" name="mysql_user" value="<?php echo $config['db_login'] ?>">
+	
+	<label>Пароль</label>
+	<span class="help-block">Пароль для авторизации пользователя</span>
+    <input type="text" name="mysql_password" value="<?php echo $config['db_passw'] ?>">
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="mysql_rewrite" value="1"> Отчистить базу данных
+	</label>
+	<span class="help-block">В случае если у вас уже был установлен <?php echo PROGNAME; ?> - удалит все созданное содержимое </span>
+	
+    <button type="submit" class="btn">Продолжить</button>
+	
+  </fieldset>
+</form>
+
+</div>

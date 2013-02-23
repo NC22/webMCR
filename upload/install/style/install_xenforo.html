@@ -1,0 +1,38 @@
+<div class="form-block" style="margin-bottom: 12px;" >
+
+<form method="post">
+  <fieldset>
+  
+	<input type="hidden" name="step" value="2" />
+	<input type="hidden" name="mysql_rewrite" value="<?php echo ConfigPostInt('mysql_rewrite') ?>" />	
+	<input type="hidden" name="mode" value="<?php echo $mode ?>" />
+	
+    <legend>2 / 3 Настройка совместимости с <?php echo $main_cms ?></legend>
+	
+	<label>Путь до папки с <?php echo $main_cms ?>:</label>
+	<input type="text" name="main_cms" value="<?php echo MCR_ROOT ?>">
+	<span class="help-block">Полный или относительный путь до папки <?php echo $main_cms ?> ( например для <?php echo PROGNAME; ?> полный путь <?php echo MCR_ROOT; ?>). Обращайте внимание на слеш (/) в конце. </span>
+	
+	<label>Таблица пользователей:</label>	
+    <input type="text" name="bd_accounts_mcms" value="<?php echo $bd_names['users'] ?>">
+	<span class="help-block">Указано название таблицы используемое <?php echo $main_cms ?> по умолчанию, изменять только в случае если вы знаете, что делаете.</span>
+	
+	<label>Дополнительная таблица с данными авторизации:</label>	
+    <input type="text" name="bd_auth_xenforo" value="<?php echo $bd_names['user_auth'] ?>">
+	<span class="help-block">Указано название таблицы используемое <?php echo $main_cms ?> по умолчанию, изменять только в случае если вы знаете, что делаете.</span>
+				
+	<label>Логин администратора:</label>	
+    <input type="text" name="site_user" value="<?php echo ConfigPostStr('site_user') ?>">
+	<span class="help-block">Введите существующий аккаунт, созданный в <?php echo $main_cms ?>, что бы присвоить ему права администратора в <?php echo PROGNAME; ?></span>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="session_sync" value="1" <?php echo (!empty($config['p_sync']))?'checked="checked"':'' ?>> Общая сессия
+	</label>
+	<span class="help-block">При авторизации в <?php echo $main_cms ?>, авторизация в <?php echo PROGNAME ?> не требуется и наборот. При выходе аналогично. Для правильного взаимодействия требуется использовать один домен (адресс сайта) иначе возможна потеря временных файлов и соответственно сессии браузером.</span>
+	
+    <button type="submit" class="btn">Продолжить</button>
+	
+  </fieldset>
+</form>
+
+</div>

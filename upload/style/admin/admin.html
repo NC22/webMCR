@@ -1,0 +1,15 @@
+<script type="text/javascript">
+function GetParentForm(elem){ 
+var parent = elem.parentNode; 
+if(parent && parent.tagName != 'FORM'){
+parent = GetParentForm(parent);
+}
+return parent;
+}
+</script>
+
+<div class="form-block" style="margin-bottom: 12px;" >
+
+<?php echo $html; ?>
+
+</div>

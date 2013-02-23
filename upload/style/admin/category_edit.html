@@ -1,0 +1,32 @@
+<form action="index.php?mode=control&amp;do=category&amp;sid=<?php echo $id ?>" method="post">
+
+<input type="hidden" name="edit" value="1" />
+
+  <fieldset>
+    <legend>Настройки категории [<?php echo $cat_name ?>]</legend>
+	<label>Название:</label>
+    <input type="text" name="name" value="<?php echo $cat_name ?>">
+	
+	<label>Приоритет:</label>
+	<span class="help-block">Чем выше приоритет, тем выше категория в списке категорий.</span>
+    <input type="text" name="lvl" value="<?php echo $cat_priority ?>">
+	
+    <span class="help-block">Описание:</span>
+	
+	<div class="block-line"></div>
+	 
+	 <div style="text-align: center;">
+	 
+		 <textarea id="description-text" maxlength="255" class="span11" style="height:100px" name="desc" onclick="return DrawLenInfo(event)" onchange="return DrawLenInfo(event)" onkeyup="return DrawLenInfo(event)" onkeypress="return DrawLenInfo(event)" ><?php echo $cat_desc ?></textarea></td>
+	 
+	 </div>
+	 
+	<div class="block-line"></div>
+	
+	<div style="float: left; margin-left: 24px;">Осталось <div id="description-length" style="display: inline-block; color: #17aa4e;">255</div> символов</div>
+    <div style="float: right;">
+	<button type="submit" class="btn">Изменить</button>
+	</div>
+  </fieldset>
+</form>
+
