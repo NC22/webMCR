@@ -1,5 +1,5 @@
 <?php
-error_reporting(E_ALL);
+// error_reporting(E_ALL);
 
 define('MCR', 1);  
 define('MCR_ROOT', dirname(__FILE__).'/');
@@ -112,9 +112,10 @@ if (empty($user) or $user->lvl() <= 0) return 1;
 	$tmp_dir = MCRAFT.'tmp/';
 
 	$tmp_file_info = POSTSafeMove($post_name, $tmp_dir);
-	
+
+if (!$tmp_file_info) return 1610;	
+
 	$tmp_file = $tmp_dir.$tmp_file_info['tmp_name'];
-if (!$tmp_file) return 1610;
 
 $fsize = round($_FILES[$post_name]['size'] / 1024);
 	
