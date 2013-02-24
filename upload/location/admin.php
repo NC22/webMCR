@@ -533,6 +533,8 @@ if ($do) {
         if ($cloak_exist or !$skin_def) { $rnd = rand(1000,9999); include MCR_STYLE.'admin/profile_skin.html'; }
         if (!$skin_def )                 include MCR_STYLE.'admin/profile_del_skin.html'; 
         if ($cloak_exist )               include MCR_STYLE.'admin/profile_del_cloak.html'; 
+		if ($bd_names['iconomy'] )       include MCR_STYLE.'admin/profile_money.html'; 
+		
         include MCR_STYLE.'admin/profile_footer.html'; 
     }
     break;

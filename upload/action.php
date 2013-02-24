@@ -232,16 +232,20 @@ switch ($method) {
 		
 			if (isset($_POST['new_group'])) {
 			
-				$mod_user->changeGroup((int) $_POST['new_group']);
-				$rcodes[] = 1;
-			}			   
-			if (!empty($_POST['new_email'])) $rcodes[] = $mod_user->changeEmail($_POST['new_email']);
+				if ($mod_user->changeGroup((int) $_POST['new_group'])) $rcodes[] = 1;
+			}			
+			if (!empty($_POST['new_money'])) {
+				
+				if ($mod_user->addMoney($_POST['new_money'])) $rcodes[] = 1;
+			}			
 			if (isset($_POST['new_gender'])) {
 			
 		        $newgender = (!(int)$_POST['new_gender'])? 0 : 1;
-                $mod_user->changeGender($newgender);
-				$rcodes[] = 1;
-		    }		 
+                if ($mod_user->changeGender($newgender)) $rcodes[] = 1;
+		    }			   
+			if (!empty($_POST['new_email'])) 
+			
+				$rcodes[] = $mod_user->changeEmail($_POST['new_email']);
 		}
 		
  	    if (!empty($_POST['new_login'])) $rcodes[] = $mod_user->changeName($_POST['new_login']);

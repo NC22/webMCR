@@ -203,15 +203,37 @@ private $female;
 	
 		if ($bd_names['iconomy']) {
 		
-			$res  = BD("SELECT {$bd_money['money']} FROM {$bd_names['iconomy']} WHERE {$bd_money['login']}='".TextBase::SQLSafe($this->name())."'");
-			$line = mysql_fetch_array($res, MYSQL_NUM);
+			$result  = BD("SELECT `{$bd_money['money']}` FROM `{$bd_names['iconomy']}` WHERE `{$bd_money['login']}`='".TextBase::SQLSafe($this->name())."'");
+			if (!mysql_num_rows( $result )) {
 			
-		return $line[0];			
+			$result = BD("INSERT INTO `{$bd_names['iconomy']}` (`{$bd_money['login']}`,`{$bd_money['money']}`) values ('".TextBase::SQLSafe($this->name())."','0')");	
+			return 0;			
+			}
+			
+			$line = mysql_fetch_array($result, MYSQL_NUM);
+			
+		return (int)$line[0];			
 		} 
        
     return 0;
-    }	
-
+    }
+	
+    public function addMoney($num) {
+    global $bd_names, $bd_money;
+	
+    if (!$this->id) return false;
+	if (!$bd_names['iconomy']) return false;
+	
+	$num = (int) $num;
+	if (!$num) return $this->getMoney();
+	
+	$new_pl_money = $this->getMoney() + $num;		
+	if ($new_pl_money < 0 ) $new_pl_money = 0;
+		
+	BD("UPDATE `{$bd_names['iconomy']}` SET `{$bd_money['money']}`='".TextBase::SQLSafe($new_pl_money)."' WHERE `{$bd_money['login']}`='".TextBase::SQLSafe($this->name())."'");       
+    return $new_pl_money;
+    }
+	
 	public function getSkinFName() {
 	global $site_ways;
 		return MCRAFT.$site_ways['skins'].$this->name.'.png';
@@ -415,6 +437,7 @@ private $female;
 	
 		    $newgroup = (int) $newgroup;		
 		if ($newgroup < 0) return false;
+		if ($newgroup == $this->group) return false;
 		
 		$result = BD("SELECT `id` FROM {$bd_names['groups']} WHERE `id`='".TextBase::SQLSafe($newgroup)."'");
 		
