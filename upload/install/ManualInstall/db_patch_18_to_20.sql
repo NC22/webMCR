@@ -76,3 +76,17 @@ CREATE TABLE IF NOT EXISTS `servers` (
   `refresh_time` smallint(3) NOT NULL DEFAULT '5',
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+CREATE TABLE IF NOT EXISTS `files` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_word` char(255) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `way` char(255) DEFAULT NULL,
+  `name` char(255) DEFAULT NULL,
+  `dislikes` int(10) DEFAULT 0,
+  `likes` int(10) DEFAULT 0,
+  `downloads` int(10) DEFAULT 0,
+  `size` char(32) DEFAULT 0,
+  `hash` char(32) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
