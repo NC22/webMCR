@@ -131,7 +131,7 @@ switch ($method) {
 		
 		if ( !mail($email, $subject, $message, implode("\r\n", $headers)) ) aExit(4, 'Ошибка службы отправки сообщений.');
 		
-		if ( $restore_user->changePassword($new_pass) != 15 ) aExit(5, '');
+		if ( $restore_user->changePassword($new_pass) != 1 ) aExit(5, '');
 		
 		aExit(0, 'Новый пароль отправлен вам на Email.');	
 
