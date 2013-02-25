@@ -196,7 +196,7 @@ global $bd_names;
 	}
 	
     $result = BD("UPDATE `{$bd_names['data']}` SET `value`='".TextBase::SQLSafe($value)."' WHERE `property`='".TextBase::SQLSafe($type)."'"); 
-	if (is_bool($result) and $result == false) {
+	if ($result and !mysql_affected_rows()) {
 	
 		$result = BD("INSERT INTO `{$bd_names['data']}` (value,property) VALUES ('".TextBase::SQLSafe($value)."','".TextBase::SQLSafe($type)."')");
 		if (mysql_affected_rows()) return true;
