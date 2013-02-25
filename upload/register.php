@@ -158,8 +158,6 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 		
 		// TODO check link
 		
-        $message = TextBase::WordWrap($message, 70);
-		
 		if ( !mail($email, $subject, $message, implode("\r\n", $headers)) ) aExit(14, 'Ошибка отправки подтверждения на почтовый ящик.');
 	
 	    aExit(0,'Аккаунт успешно создан. Перейдите по ссылке, отправленой на ваш почтовый ящик для завершения регистрации.');
