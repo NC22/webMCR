@@ -462,7 +462,7 @@ private $female;
 		else
 			$isFemale = ($female == 1)? 1 : 0;	
 	
-		if ((int)$this->isFemale() == $female) return false;
+		if ((int)$this->gender() == $female) return false;
 	
 		BD("UPDATE {$bd_names['users']} SET `{$bd_users['female']}`='$isFemale' WHERE `{$bd_users['id']}`='".$this->id."'"); 
 		

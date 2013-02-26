@@ -195,13 +195,8 @@ global $bd_names;
 	default : return false;
 	}
 	
-    $result = BD("UPDATE `{$bd_names['data']}` SET `value`='".TextBase::SQLSafe($value)."' WHERE `property`='".TextBase::SQLSafe($type)."'"); 
-	if ($result and !mysql_affected_rows()) {
-	
-		$result = BD("INSERT INTO `{$bd_names['data']}` (value,property) VALUES ('".TextBase::SQLSafe($value)."','".TextBase::SQLSafe($type)."')");
-		if (mysql_affected_rows()) return true;
-		
-	} else return true;
+	$result = BD("INSERT INTO `{$bd_names['data']}` (value,property) VALUES ('".TextBase::SQLSafe($value)."','".TextBase::SQLSafe($type)."') ON DUPLICATE KEY UPDATE `value`='".TextBase::SQLSafe($value)."'");
+	return true;
 }
 
 function GetRealIp(){
