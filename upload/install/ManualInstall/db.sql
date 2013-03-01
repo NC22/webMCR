@@ -120,6 +120,20 @@ CREATE TABLE IF NOT EXISTS `ip_banning` (
   PRIMARY KEY (`IP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `files` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_word` char(255) DEFAULT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `way` char(255) DEFAULT NULL,
+  `name` char(255) DEFAULT NULL,
+  `dislikes` int(10) DEFAULT 0,
+  `likes` int(10) DEFAULT 0,
+  `downloads` int(10) DEFAULT 0,
+  `size` char(32) DEFAULT 0,
+  `hash` char(32) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 CREATE TABLE IF NOT EXISTS `data` (
   `property` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
