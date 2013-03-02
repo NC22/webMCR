@@ -18,6 +18,7 @@ switch ($method) {
 	require(MCR_ROOT.'instruments/user.class.php');
 	
 		if ($method == 'upload' or $method == 'delete_file') require(MCR_ROOT.'instruments/upload.class.php');
+	elseif ($method == 'profile') require(MCR_ROOT.'instruments/skin.class.php');
 	elseif ($method == 'restore' and $config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') 
 		aExit(1,'Восстановление пароля невозможно. Используются скрипты авторизации сторонней CMS.');
 	
@@ -224,7 +225,7 @@ switch ($method) {
         $mod_user = $user;
 		
         if ($user->lvl() >= 15 and !empty($_POST['user_id'])) 
-        $mod_user = new User((int) $_POST['user_id'],$bd_users['id']);
+        $mod_user = new User((int) $_POST['user_id'], $bd_users['id']);
 
         if (!$mod_user->id()) aExit(2, 'Пользователь не найден.'); 
 		
@@ -266,49 +267,9 @@ switch ($method) {
 			$mod_user->deleteCloak();
 			$rcodes[] = 1;
 		}
-	    if (!empty($_FILES['new_skin']['tmp_name']) ) 
+	    if (!empty($_FILES['new_skin']['tmp_name']) ) $rcodes[] = (int) $mod_user->changeVisual('new_skin', 'skin');
 
-            if ( POSTGood('new_skin') ) {
-
-            $rcode_key = sizeof($rcodes);
-
-                if (!$user->getPermission('change_skin')) $rcodes[$rcode_key] = 1605;
-
-		        else {
-                
-                $rcodes[$rcode_key] = POSTUpload('new_skin', $mod_user->getSkinFName(), 64, 2);  
-
-                    if (  $rcodes[$rcode_key] == 1 ) {
-
-						if ( !strcmp($mod_user->defaultSkinMD5(),md5_file($mod_user->getSkinFName())) ) 
-						  $mod_user->defaultSkinTrigger(true);
-						else
-						  $mod_user->defaultSkinTrigger(false); 
-	 
-						$mod_user->deleteBuffer();
-						
-						BD("UPDATE `{$bd_names['users']}` SET undress_times=undress_times+1 WHERE `{$bd_users['id']}`='".$mod_user->id()."'"); 
-	                }
-                }
-
-            } else $rcodes[] = 1604;
-
-	    if (!empty($_FILES['new_cloak']['tmp_name']) ) 
-
-            if ( POSTGood('new_cloak') ) {
-
-            $rcode_key = sizeof($rcodes);
-
-               if (!$user->getPermission('change_cloak')) $rcodes[$rcode_key] = 1606;
-
-               else {
-
-                       $rcodes[$rcode_key] = (int) POSTUpload('new_cloak', $mod_user->getCloakFName(), 22, 1.29).'1';
-                  if ( $rcodes[$rcode_key] == 11 ) $mod_user->deleteBuffer(); 
-               }
-
-            } else $rcodes[] = 1603;
-
+	    if (!empty($_FILES['new_cloak']['tmp_name']) ) $rcodes[] = (int) $mod_user->changeVisual('new_cloak', 'cloak').'1'; 
         
         $message = ''; 
         $rnum    = sizeof($rcodes);
@@ -328,14 +289,14 @@ switch ($method) {
                 case 1504 : $message .= 'Пароли не совпадают.'; break;
                 case 1601 : 
                 $message .= "Файл больше ".$user->getPermission('max_fsize')." кб ( загрузка скина )"; 				  
+				break;                
+				case 16011 : 
+				$message .= "Файл больше ".$user->getPermission('max_fsize')." кб ( загрузка плаща )"; 
 				break;
                 case 1602 : 
 				$tmpm = $user->getPermission('max_ratio');
 				$message .= "Размеры изображения заданы неверно. ( Рекомендуемое соотношение сторон для скина ".(62*$tmpm)."x".(32*$tmpm)." )"; 
 				unset($tmpm);
-				break;
-                case 16011 : 
-				$message .= "Файл больше ".$user->getPermission('max_fsize')." кб ( загрузка плаща )"; 
 				break;
                 case 16021 : 
 				$tmpm = $user->getPermission('max_ratio');
@@ -343,11 +304,13 @@ switch ($method) {
                 unset($tmpm);
 				break;
                 case 1604 : $message .= 'Ошибка при загрузке скина. ( Рекомендуемый формат файла .png )'; break;
-                case 1603 : $message .= 'Ошибка при загрузке плаща. ( Рекомендуемый формат файла .png )'; break;
-                case 1606 : $message .= 'Доступ к загрузке плащей ограничен.'; break;
-                case 1605 : $message .= 'Доступ к загрузке скинов ограничен.'; break;
+                case 16041 : $message .= 'Ошибка при загрузке плаща. ( Рекомендуемый формат файла .png )'; break;
+                case 1605 : $message .= 'Доступ к загрузке скинов ограничен.'; break;                
+				case 16051 : $message .= 'Доступ к загрузке плащей ограничен.'; break;
                 case 1610 : $message .= 'Системная папка заблокирована для работы с файлами. Включите лог, чтобы диагностировать проблему.'; 
-                case 1611 : break;				
+				case 16101 :
+                case 1611 : 
+				case 16111 : break;				
 				case 1901 : $message .= 'Emai\'l введен некорректно.'; break;
 				case 1902 : $message .= 'Почтовый ящик уже используется другим пользователем.'; break;
                 default : $modifed = false; break; 
@@ -363,7 +326,7 @@ switch ($method) {
         if (file_exists($mod_user->getCloakFName())) $ajax_message['cloak'] = 1; 
         if ($mod_user->defaultSkinTrigger())         $ajax_message['skin']  = 1; 
 
-        	if ($message) aExit(2, $message ); // some bad news 
+        	if ($message) aExit(2, $message  ); // some bad news 
 		elseif (!$rnum)  aExit(100, $message ); //nothing changed
         else aExit(0, 'Профиль успешно обновлен.');  
 

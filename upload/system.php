@@ -57,20 +57,6 @@ function tmp_name($folder, $pre = '', $ext = 'tmp'){
 return (file_exists($folder.$name))? tmp_name($folder,$pre,$ext) : $name;
 }
 
-function ratio($file, $baze = 64, $prop = 2) {
-
-	$input_size = @getimagesize($file);
-
-	if (empty($input_size)) return false;
-
-	if (round($input_size[0] / $input_size[1], 2) != round($prop,2)) return false;
-	else if ($input_size[0] < $baze) return false;
-
-	$mp = $input_size[0] / $baze;
-
-return $mp;
-}
-
 function POSTGood($post_name, $format = array('png')) {
 
 if ( empty($_FILES[$post_name]['tmp_name']) or 
@@ -102,46 +88,6 @@ function POSTSafeMove($post_name, $tmp_dir = false) {
 	}
 
 return array('tmp_name' => $tmp_file, 'name' => $_FILES[$post_name]['name'], 'size_mb' => round($_FILES[$post_name]['size'] / 1024 / 1024, 2));
-}
-
-function POSTUpload($post_name, $final_way, $baze = 64, $prop = 2) {
-global $user;
-
-if (empty($user) or $user->lvl() <= 0) return 1;
-
-	$tmp_dir = MCRAFT.'tmp/';
-
-	$tmp_file_info = POSTSafeMove($post_name, $tmp_dir);
-
-if (!$tmp_file_info) return 1610;	
-
-	$tmp_file = $tmp_dir.$tmp_file_info['tmp_name'];
-
-$fsize = round($_FILES[$post_name]['size'] / 1024);
-	
-if ( (int) $user->getPermission('max_fsize') < $fsize ) 
-	
-	{ unlink($tmp_file); return 1601; }
-  
-$input_ratio = ratio($tmp_file, $baze, $prop);
-		
-if (!$input_ratio or $input_ratio > (int) $user->getPermission('max_ratio')) 	
-
-    { unlink($tmp_file); return 1602; }
-	
-if (file_exists($final_way)) unlink($final_way);
-
-if (rename( $tmp_file, $final_way )) chmod($final_way,0777);
-else { 
-
-unlink($final_way);
-
-vtxtlog('[Ошибка модуля загрузки] Убедитесь, что папка "'.$tmp_dir.'" доступна для ЧТЕНИЯ.');  
-return 1611; 
-}
-
-return 1;
-
 }
 
 function randString( $pass_len = 50 ) {
@@ -225,8 +171,6 @@ global $bd_names;
 
 function vtxtlog($string) {
 global $config;
-
-/* Если ajax - то выводить в message */
 
 if (!$config['log']) return;
 

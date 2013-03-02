@@ -19,7 +19,13 @@
     <input type="text" name="lvl" value="<?php echo $group['lvl'] ?>">
     <span class="help-block">Дополнительные права для группы:</span>
 	<label class="checkbox">
-	  <input type="checkbox" name="change_skin" value="1" <?php echo ($group['change_skin'])?'checked="checked"':'' ?>> Смена образа
+	  <input type="checkbox" name="sp_upload" value="1" <?php echo ($group['skinposer'])?'checked="checked"':'' ?>> Добавление изображений в галерею
+	</label>
+	<label class="checkbox">
+	  <input type="checkbox" name="skinposer" value="1" <?php echo ($group['skinposer'])?'checked="checked"':'' ?>> Смена образа через галерею
+	</label>
+	<label class="checkbox">
+	  <input type="checkbox" name="change_skin" value="1" <?php echo ($group['change_skin'])?'checked="checked"':'' ?>> Смена образа через меню настроек
 	</label>
 	<label class="checkbox">
 	  <input type="checkbox" name="change_pass" value="1" <?php echo ($group['change_pass'])?'checked="checked"':'' ?>> Смена пароля

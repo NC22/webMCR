@@ -58,7 +58,7 @@ $ban_user = new User($user_id,$bd_users['id']);
 if ($ban_user->id()) { 
 
 	$user_name = $ban_user->name();
-	$user_gen  = $ban_user->gender();
+	$user_gen  = $ban_user->isFemale();
 	$user_mail = $ban_user->email();
 	$user_id   = $ban_user->id();
 	$user_ip   = $ban_user->ip();
@@ -154,45 +154,29 @@ if ($do) {
 	  
 	 $info .= 'Правила обновлены';
 	 
-    } elseif (POSTGood('def_skin_male') or POSTGood('def_skin_female')) {  
-	
-	    $code = -1;
+    } elseif (  POSTGood('def_skin_male')  or POSTGood('def_skin_female')) {		
+
+		$female = (POSTGood('def_skin_female'))? true : false;
 		$tmp_dir = MCRAFT.'tmp/';
-		if (  POSTGood('def_skin_male') ) {		
 		
-		$default_skin_md5 = $tmp_dir.'default_skins/md5.md5';
-		$default_skin     = $tmp_dir.'default_skins/Char.png';
-        $way_buffer_mini  = $tmp_dir.'skin_buffer/default/Char_Mini.png';
-        $way_buffer       = $tmp_dir.'skin_buffer/default/Char.png';  	
-	  
-		if ( POSTUpload('def_skin_male', $default_skin, 64, 2) == 1) {
-		$info .= 'Скин [Мальчик] изменен.<br/>';  
-				
-		if (file_exists($default_skin_md5) ) unlink($default_skin_md5);	
-		if (file_exists($way_buffer_mini) )  unlink($way_buffer_mini);
-		if (file_exists($way_buffer) )       unlink($way_buffer);
+		$default_skin     = $tmp_dir.'default_skins/Char'.(($female)? '_female' : '').'.png';
+		$default_skin_md5 = $tmp_dir.'default_skins/md5'.(($female)? '_female' : '').'.md5';		
+        $way_buffer_mini  = $tmp_dir.'skin_buffer/default/Char_Mini'.(($female)? '_female' : '').'.png';
+        $way_buffer       = $tmp_dir.'skin_buffer/default/Char'.(($female)? '_female' : '').'.png';  	
 		
-        } else $info .= 'Ошибка загрузки. Скин [Мальчик]<br/>';  
+		$new_file_info = POSTSafeMove(($female)? 'def_skin_female' : 'def_skin_male', $tmp_dir);
 		
-		}
+		require_once(MCR_ROOT.'instruments/skin.class.php');
+		if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir.$new_file_info['tmp_name']) and rename( $tmp_dir.$new_file_info['tmp_name'], $default_skin)) {
 		
-	    if ( POSTGood('def_skin_female') ) {
-		
-		$default_skin     = $tmp_dir.'default_skins/Char_female.png';
-		$default_skin_md5 = $tmp_dir.'default_skins/md5_female.md5';		
-        $way_buffer_mini  = $tmp_dir.'skin_buffer/default/Char_Mini_female.png';
-        $way_buffer       = $tmp_dir.'skin_buffer/default/Char_female.png';  	
-		
-        if ( POSTUpload('def_skin_female', $default_skin, 64, 2) == 1) {
-		$info .= 'Скин [Девочка] изменен.<br/>';   	
-		
-		if (file_exists($default_skin_md5) ) unlink($default_skin_md5);	
-		if (file_exists($way_buffer_mini) )  unlink($way_buffer_mini);
-		if (file_exists($way_buffer) )       unlink($way_buffer);
-		
-        } else $info .= 'Ошибка загрузки. Скин [Девочка]<br/>'; 
-		
-		} 
+			chmod($default_skin, 0777);
+			$info .= 'Скин ['.(($female)? 'Мальчик' : 'Девочка').'] изменен.<br/>';  
+					
+			if (file_exists($default_skin_md5) ) unlink($default_skin_md5);	
+			if (file_exists($way_buffer_mini) )  unlink($way_buffer_mini);
+			if (file_exists($way_buffer) )       unlink($way_buffer);
+			
+		} else $info .= 'Ошибка загрузки. Скин ['.(($female)? 'Мальчик' : 'Девочка').']<br/>';  
 	}	
   
 	$timeout = (int)sqlConfigGet('next-reg-time');

@@ -76,7 +76,6 @@ private $female;
 		$_SESSION['user_id']   = $this->id();
 		$_SESSION['user_name'] = $this->name();
 		$_SESSION['ip']        = $this->ip();
-		// $_SESSION['ip_check']  = (!strncmp($this->tmp,'ipcheck_',8))? true : false;
 		
 		if ($save) setcookie( "PRTCookie1", $tmp, time() + 60 * 60 * 24 * 30 * 12, '/');
   		
@@ -193,8 +192,6 @@ private $female;
 				
 		else 	return false;		
 	}
-	
-	/* Ввести валюту на сайте. Обмен данными с сервером по RCON */	
 	
     public function getMoney() {
     global $bd_names, $bd_money;
@@ -488,6 +485,60 @@ private $female;
 		return 1;
 	}
 	
+	public function changeVisual($post_name, $type = 'skin') { 
+	global $bd_users,$bd_names;
+	
+		if (!$this->id or !$this->getPermission(($type == 'skin')? 'change_skin' : 'change_cloak')) return 1605;
+	
+		if (!POSTGood($post_name)) return 1604;
+		
+		$tmp_dir = MCRAFT.'tmp/';
+		
+		$new_file_info = POSTSafeMove($post_name, $tmp_dir);
+		if (!$new_file_info) return 1610;		
+
+		$way  = $tmp_dir.$new_file_info['tmp_name'];	
+		
+		if ( (int) $this->getPermission('max_fsize') < $new_file_info['size_mb'] * 1024 )	{ 
+		
+			unlink($way); 
+			return 1601; 
+		}		
+		
+		if (!class_exists('skinGenerator2D')) require_once(MCR_ROOT.'instruments/skin.class.php');
+		
+		$new_file_ratio = ($type == 'skin') ? skinGenerator2D::isValidSkin($way) : skinGenerator2D::isValidCloak($way); 
+		if (!$new_file_ratio or $new_file_ratio > (int) $this->getPermission('max_ratio')) {
+
+			unlink($way);
+			return 1602; 
+		}
+		
+		($type == 'skin') ? $this->deleteSkin() : $this->deleteCloak();
+		$new_way = ($type == 'skin') ? $this->getSkinFName() : $this->getCloakFName(); 
+		
+		if (rename( $way, $new_way )) chmod($new_way , 0777);
+		else { 
+
+		unlink($way);
+		vtxtlog('[Ошибка модуля загрузки] Убедитесь, что папка "'.$tmp_dir.'" доступна для ЧТЕНИЯ \ ЗАПИСИ.');  
+		return 1611; 
+		}
+		
+		if ($type == 'skin') {
+		
+			if ( !strcmp($this->defaultSkinMD5(), md5_file($this->getSkinFName())) ) 
+				$this->defaultSkinTrigger(true);
+			else
+				$this->defaultSkinTrigger(false); 			 
+		}
+		
+		$this->deleteBuffer();
+		
+		BD("UPDATE `{$bd_names['users']}` SET undress_times=undress_times+1 WHERE `{$bd_users['id']}`='".$this->id()."'"); 
+		return 1;
+	}
+	
 	public function Delete() {
 	global $bd_users,$bd_names;	
 	
@@ -591,7 +642,9 @@ private $pavailable;
     public function Group($id = false) {
 		
 		$this->id = (int)$id;
-		$this->pavailable = array("change_skin", 
+		$this->pavailable = array("sp_upload",
+								  "skinposer",
+								  "change_skin", 
 		                          "change_pass",
 								  "lvl",
 								  "change_cloak",
