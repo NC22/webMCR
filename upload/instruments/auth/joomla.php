@@ -49,7 +49,7 @@ public static function checkPass($data) {
 	$salt = $parts[1];
 	$cryptPass = md5($data['pass'] . $salt) . ":" . $salt;
 	
-	if ($data['pass_db'] = $cryptPass) return true;
+	if ($data['pass_db'] == $cryptPass) return true;
 	else return false;
 }
 
