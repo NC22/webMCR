@@ -57,6 +57,14 @@ $menu->AddItem($page,BASE_URL.'install/install.php',true);
 
 $content_menu = $menu->Show();
 
+function createWays(){
+global $site_ways;
+
+    foreach ($site_ways as $key=>$value) 
+		if ($key != 'mcraft' and $key != 'style' and !is_dir(MCR_ROOT.$site_ways['mcraft'].$value)) 
+				mkdir(MCR_ROOT.$site_ways['mcraft'].$value, 0777, true);
+}
+
 function findCMS($way){
 global $main_cms, $mode, $info;
 
@@ -278,6 +286,8 @@ switch ($step) {
 	$config['timezone']		= $timezone		;
 
 	$config['install']    = false; 
+	
+	createWays();
 	
 	if (SaveOptions()) $step = 4; 		
 	}

@@ -6,7 +6,7 @@ function mcraftQuery_SE( $host, $port = 25565, $timeout = 2 ) {
 
 	stream_set_timeout($fp, $timeout);
 	
-	fwrite($fp, "\xFE");
+	fwrite($fp, "\xFE\x01");
 	$data = fread($fp, 1024);
 	fclose($fp);
 
@@ -14,6 +14,21 @@ function mcraftQuery_SE( $host, $port = 25565, $timeout = 2 ) {
 		
 	$data = substr( $data, 3 );
 	$data = iconv( 'UTF-16BE', 'UTF-8', $data );
+
+	// ver 1.4 >
+	if( $data[1] === "\xA7" && $data[2] === "\x31" ) {
+			
+		$data = explode( "\x00", $data );
+
+		return Array(
+			'hostname'   => $data[3 ],
+			'numpl'    => (int)$data[4],
+			'maxplayers' => (int)$data[5],
+			'protocol'   => (int)$data[1],
+			'version'    => $data[2]
+		);
+	}
+	
 	$data = explode("\xA7", $data );
 		
 	return Array(

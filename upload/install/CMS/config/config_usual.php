@@ -28,7 +28,7 @@ $config = array (
 
 	'timezone'	=> 'Asia/Vladivostok',
 	'sbuffer'	=> true,  
-	'skinposer'	=> true, 
+	'skinposer'	=> false, 
 	'rewrite'	=> true,
 	'log'		=> false,  
   
