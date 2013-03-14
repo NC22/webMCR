@@ -410,7 +410,7 @@ if ($do) {
 			if ($serv_name)     $server->SetText($serv_name, 'name');
 			if ($serv_info)     $server->SetText($serv_info, 'info');
 			
-			if ($serv_method)   $server->SetConnectMethod($serv_method, $serv_rcon);
+			if (!is_bool($serv_method))   $server->SetConnectMethod($serv_method, $serv_rcon);
 			
 			if ($serv_address and $serv_port) $server->SetConnectWay($serv_address, $serv_port);
 			
