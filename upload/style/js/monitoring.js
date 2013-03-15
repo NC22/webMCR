@@ -9,20 +9,9 @@ function LoadServersProc(){
 	var item_id   = servers_stack.pop()
     var server_id = parseInt((/\d+/).exec(item_id)[0])
 		
-		var req = getXmlHttp();	req.onreadystatechange = function() {
+		var event = function(response) {
 		
-			if (req.readyState != 4 || 
-			   (req.status != 200 && req.status != 0) || 
-			   (req.status == 0 && req.responseText.length == 0)) return false
-			   
-			var response = getJSvalue(req.responseText); delete req	
-			
-			
-			
-			if (response['code'] == 1) { 
-                GetById('load-sbyid-' + item_id).innerHTML  = 'Сервер не найден' 
-				return false
-			}
+			if (response['code'] == 1) return false
 				
 			var ServState = response['online']
 			BlockVisible('load-sbyid-' + item_id,false)
@@ -56,10 +45,8 @@ function LoadServersProc(){
 				}
 			}		
 		}
-
-		req.open('POST', base_url + 'instruments/state.php', true)  
-		req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
-		req.send('id=' + encodeURIComponent(server_id))		
+		
+	SendByXmlHttp('instruments/state.php', 'id=' + encodeURIComponent(server_id), event)
 }
 
 function LoadServers() {
@@ -148,17 +135,14 @@ return {
 				PBarMinWidth = parseIntZero(newWidth)
 			},	
 			AddById: function(id, static_text, from, to) {
-			
-				//debug('[AddById] ID ' + id + ' From ' + from + ' To '+ to + '<br/>')
-				
+
 				var newBar = GetById(id)
 				if (newBar == null) return 
 				var newBarKey = PBars.length
 				
 				PBars[newBarKey] = { bar : newBar, main : GetParent(newBar, 'DIV'), static_text: static_text, dead : false }
 				
-				AnimateBar(newBarKey, from, to)
-				// MoveImage(newBarKey)				
+				AnimateBar(newBarKey, from, to)			
 			},	
 			StopById: function(id) {
 				for (i=0; i<=PBars.length-1; ++i) {
