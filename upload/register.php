@@ -149,7 +149,7 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 		$link = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$tmp_user->id().'&verificate='.$tmp_user->getVerificationStr(); 
 		$message = '<html><body><p>Для завершения регистрации необходимо пройти по ссылке. <a href="'.$link.'">Открыть</a></p></body></html>';
 		
-		if ( !mail($email, $subject, $message) ) aExit(14, 'Ошибка отправки подтверждения на почтовый ящик.');
+		if ( !EMail::Send($email, $subject, $message) ) aExit(14, 'Ошибка отправки подтверждения на почтовый ящик.');
 	
 	    aExit(0,'Аккаунт успешно создан. Перейдите по ссылке, отправленой на ваш почтовый ящик для завершения регистрации.');
 	}
