@@ -101,15 +101,14 @@ switch ($method) {
 	break;
     case 'restore':   
     
-        if (empty($_POST['login']) or empty($_POST['email'])) aExit(1,'Не все поля заполнены.'); 
+        if (empty($_POST['email'])) aExit(1,'Не все поля заполнены.'); 
     
         CaptchaTest(2); 
 
-        $login = $_POST['login'];
         $email = $_POST['email'];  
 	    
-		$result = BD("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['login']}`='".TextBase::SQLSafe($login)."' AND `{$bd_users['email']}`='".TextBase::SQLSafe($email)."'"); 
-		if ( !mysql_num_rows($result) ) aExit(3, 'Пользователь с таким именем и почтовым адрессом не найден.');
+		$result = BD("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($email)."'"); 
+		if ( !mysql_num_rows($result) ) aExit(3, 'Пользователь с таким почтовым адрессом не найден.');
 		
 		$line = mysql_fetch_array( $result, MYSQL_NUM );
         
@@ -118,19 +117,9 @@ switch ($method) {
 		$new_pass = randString(8);
 	   
 	    $subject = 'Восстановление пароля';
-	   
-		$headers   = array();
-		$headers[] = "MIME-Version: 1.0";
-		$headers[] = "Content-type: text/plain; charset=utf-8";
-		$headers[] = "From: Auto replay <noreplay@noreplay.ru>";
-		$headers[] = "Subject: {$subject}";
-		$headers[] = "X-Mailer: PHP/".phpversion();
+		$message = '<html><body><p>Система восстановления пароля. Ваш логин: '.$restore_user->name().'. Ваш новый пароль : '.$new_pass.'</p></body></html>';
 		
-		$message = 'Система восстановления пароля. Ваш новый пароль : '.$new_pass;
-		
-        $message = TextBase::WordWrap($message, 70);
-		
-		if ( !mail($email, $subject, $message, implode("\r\n", $headers)) ) aExit(4, 'Ошибка службы отправки сообщений.');
+		if ( !EMail::Send($email, $subject, $message) ) aExit(4, 'Ошибка службы отправки сообщений.');
 		
 		if ( $restore_user->changePassword($new_pass) != 1 ) aExit(5, '');
 		

@@ -146,19 +146,10 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 	else {	
 		
 		$subject = 'Подтверждение регистрации '.$_SERVER['SERVER_NAME'];
-	   
-		$headers   = array();
-		$headers[] = "MIME-Version: 1.0";
-		$headers[] = "Content-type: text/plain; charset=utf-8";
-		$headers[] = "From: Registration confirmation <noreplay@noreplay.ru>";
-		$headers[] = "Subject: {$subject}";
-		$headers[] = "X-Mailer: PHP/".phpversion();
+		$link = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$tmp_user->id().'&verificate='.$tmp_user->getVerificationStr(); 
+		$message = '<html><body><p>Для завершения регистрации необходимо пройти по ссылке. <a href="'.$link.'">Открыть</a></p></body></html>';
 		
-		$message = 'Для завершения регистрации необходимо пройти по ссылке. http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$tmp_user->id().'&verificate='.$tmp_user->getVerificationStr();
-		
-		// TODO check link
-		
-		if ( !mail($email, $subject, $message, implode("\r\n", $headers)) ) aExit(14, 'Ошибка отправки подтверждения на почтовый ящик.');
+		if ( !mail($email, $subject, $message) ) aExit(14, 'Ошибка отправки подтверждения на почтовый ящик.');
 	
 	    aExit(0,'Аккаунт успешно создан. Перейдите по ссылке, отправленой на ваш почтовый ящик для завершения регистрации.');
 	}

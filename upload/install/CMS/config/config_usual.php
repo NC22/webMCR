@@ -34,6 +34,18 @@ $config = array (
   
 	'install' => true,
 	'p_logic' => 'usual',
+
+/* mail */
+
+	'fbackName' => 'Info',
+	'fbackMail' => 'noreplay@noreplay.ru',
+	
+	'smtp'		=> false,
+	'smtpUser'	=> '',
+	'smtpPass'	=> '',
+	'smtpHost'	=> 'localhost',
+	'smtpPort'	=> 25,
+	'smtpHello' => 'HELO', // some servers prefer EHLO command instead
 );
   
 $site_ways = array (

@@ -121,13 +121,12 @@ if (img_obj == null ) {
 
 function Restore() {
 	
-	var login = getValById('restore-login')
 	var email = getValById('restore-email')
 	var code  = getValById('antibot')
 
-	if ( login == null || email == null || code == null ) return false
+	if ( email == null || code == null ) return false
 
-	if (login.length < 1 || email.length < 1 || code.length != 4) return false
+	if ( email.length < 1 || code.length != 4) return false
 	
 	toggleButton('restore')
 
@@ -144,7 +143,7 @@ function Restore() {
 		toggleButton('restore')		  
 	}
 	
-	SendByXmlHttp('action.php', 'method=restore&login=' + encodeURIComponent(login) + '&email=' + encodeURIComponent(email) + '&antibot=' + encodeURIComponent(code), event)
+	SendByXmlHttp('action.php', 'method=restore&email=' + encodeURIComponent(email) + '&antibot=' + encodeURIComponent(code), event)
 	return false
 }
 

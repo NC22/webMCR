@@ -53,6 +53,86 @@ Class TextBase {
 	}	
 }
 
+Class EMail {
+const ENCODE = 'utf-8';
+	
+	public function Send($mail_to, $subject, $message) {
+	global $config;	
+	
+		$headers = array();
+		$headers[] = "Reply-To: ".$config['fbackMail'];
+		$headers[] = "MIME-Version: 1.0";
+		$headers[] = "Content-Type: text/html; charset=\"".self::ENCODE."\"";
+		$headers[] = "Content-Transfer-Encoding: 8bit";
+		$headers[] = "From: \"".$config['fbackName']."\" <".$config['fbackMail'].">";
+		$headers[] = "To: ".$mail_to." <".$mail_to.">";
+		$headers[] = "X-Priority: 3";	
+		$headers[] = "X-Mailer: PHP/".phpversion();
+		
+		$headers = implode("\r\n", $headers);
+
+		$subject = '=?'.self::ENCODE.'?B?'.base64_encode($subject).'?=';
+		
+		return ($config['smtp'])? self::smtpmail($mail_to, $subject, $message, $headers) : mail($mail_to, $subject, $message, $headers);
+	}
+	
+	private function smtpmail($mail_to, $subject, $message, $headers) {
+	global $config;	
+		
+		$send = "Date: ".date("D, d M Y H:i:s")." UT\r\n";
+		$send .= "Subject: {$subject}\r\n";			
+		$send .= $headers."\r\n\r\n".$message."\r\n";
+
+		if( !$socket = fsockopen($config['smtpHost'], $config['smtpPort'], $errno, $errstr, 10) ) {
+			vtxtlog('[SMPT] '.$errno." | ".$errstr);
+			return false;
+		}
+		
+		stream_set_timeout($socket, 10);
+		
+		if (!self::server_action($socket, false, "220") or
+			!self::server_action($socket, $config['smtpHello']." " . $config['smtpHost'] . "\r\n", "250", 'Приветствие сервера недоступно')) 
+				return false;
+			
+		if (!empty($config['smtpUser']))
+			if (!self::server_action($socket, "AUTH LOGIN\r\n", "334", 'Нет ответа авторизации') or
+				!self::server_action($socket, base64_encode($config['smtpUser']) . "\r\n", "334", 'Неверный логин авторизации') or
+				!self::server_action($socket, base64_encode($config['smtpPass']) . "\r\n", "235", 'Неверный пароль авторизации')) 
+					return false;
+				
+		if (!self::server_action($socket, "MAIL FROM: <".$config['smtpUser'].">\r\n", "250", 'Ошибка MAIL FROM') or
+			!self::server_action($socket, "RCPT TO: <" . $mail_to . ">\r\n", "250", 'Ошибка RCPT TO') or
+			!self::server_action($socket, "DATA\r\n", "354", 'Ошибка DATA') or
+			!self::server_action($socket, $send."\r\n.\r\n", "250", 'Ошибка сообщения')) 
+				return false;
+		
+		self::server_action($socket, "QUIT\r\n"); 
+		return true;
+	}
+
+	private function server_action($socket, $command = false, $correct_response = false, $error_mess = false, $line = __LINE__)	{
+		
+		if ($command) fputs($socket, $command);		
+		if ($correct_response) { 
+		
+			$server_response = '';
+			while (substr($server_response, 3, 1) != ' ') {
+				if ($server_response = fgets($socket, 256)) continue;
+
+				if ($error_mess) vtxtlog('[SMPT] '.$error_mess.' Line: '.$line);			
+				return false;
+			}
+			$code = substr($server_response, 0, 3);
+			if ($code == $correct_response) return true;
+		}
+		
+		if ($error_mess) vtxtlog('[SMPT] '.$error_mess.' | Code: '.$code.' Line: '.$line);	
+		fclose($socket);
+		
+		if ($correct_response) return false; return true;
+	}
+}
+
 Class Message {
 
 	/*	 
