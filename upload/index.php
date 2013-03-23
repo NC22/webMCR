@@ -1,6 +1,5 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
-//$start_time = microtime(true); $mem_use = memory_get_usage();
 
 require_once('./system.php');
 BDConnect();
@@ -18,8 +17,6 @@ if (!empty($user)) {
   if ($user->getPermission('add_news')) $menu_items['add_news'] = $menu->AddItem('Добавить новость', ($config['rewrite'])? 'go/news_add' : '?mode=news_add');
   if ($user->lvl() >= 15)               $menu_items['admin']    = $menu->AddItem('Управление', ($config['rewrite'])? 'go/control' : '?mode=control');
   if ($user->lvl() > 0)                 $menu_items['options']  = $menu->AddItem('Настройки', ($config['rewrite'])? 'go/options' : '?mode=options');
-  
-  $menu_items['exit'] = $menu->AddItem('Выход','login.php?out=1');
 }
 
 if (!empty($user)) {
@@ -34,33 +31,34 @@ $player_money = $user->getMoney();
 
 $content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $mode = null;
 
-if ( isset($_GET["mode"]) ) $mode = $_GET["mode"]; 
-if ( isset($_GET["id"]) )   $mode = "news_full";
-
-if ( empty($user) and in_array($mode, array("options", "news_add", "control"))) $mode = $config['s_dpage']; 	
-
-/* Загрузка контента */
+if ( isset($_GET['id']) ) $mode = 'news_full';
+else $mode = (empty($_GET['mode']) or (empty($user) and in_array($_GET['mode'], array('options', 'news_add', 'control'))))? $config['s_dpage'] : $_GET["mode"]; 
 
 switch ($mode) {
     case 'start': $page = 'Начать игру'; $content_main = Menager::ShowStaticPage(STYLE_URL.'start-game.html');  break;
 	case '404':   $page = 'Страница не найдена'; $content_main = Menager::ShowStaticPage(STYLE_URL.'404.html'); break;
-	case 'register':  include('./location/news.php');			  break;
-	case 'news_full': include('./location/news_full.php');        break;
-    case 'options':   include('./location/options.php');          break;
-	case 'news_add':  include('./location/news_add.php');         break;
-    case 'control':   include('./location/admin.php');            break; 
-    default: $mode = $config['s_dpage']; include('./location/'.$config['s_dpage'].'.php');  break;
+	case 'register': 
+	case 'news':	  include('./location/news.php');		break;
+	case 'news_full': include('./location/news_full.php');	break;
+    case 'options':   include('./location/options.php');	break;
+	case 'news_add':  include('./location/news_add.php');	break;
+    case 'control':   include('./location/admin.php');		break; 
+    default: 
+		if (!preg_match("/^[a-zA-Z0-9_-]+$/", $mode) or !file_exists(MCR_ROOT.'/location/'.$mode.'.php')) $mode = $config['s_dpage']; 
+
+		include(MCR_ROOT.'/location/'.$mode.'.php');  	
+	break;
 } 
 
 include('./location/side.php'); 
 
-$servManager = new ServerMenager();
-
+$menu_items['exit'] = $menu->AddItem('Выход','login.php?out=1');
 $content_menu 		= $menu->Show();
+
+$servManager = new ServerMenager();
 $content_servers 	= $servManager->Show('side');
 
 unset($servManager);
 
 include MCR_STYLE.'index.html';
-//$exec_time = microtime(true) - $start_time; echo (microtime(true) - $start_time).'<br />'.(memory_get_usage() - $mem_use);
 ?>
