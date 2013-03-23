@@ -17,6 +17,8 @@ if (!empty($user)) {
   if ($user->getPermission('add_news')) $menu_items['add_news'] = $menu->AddItem('Добавить новость', ($config['rewrite'])? 'go/news_add' : '?mode=news_add');
   if ($user->lvl() >= 15)               $menu_items['admin']    = $menu->AddItem('Управление', ($config['rewrite'])? 'go/control' : '?mode=control');
   if ($user->lvl() > 0)                 $menu_items['options']  = $menu->AddItem('Настройки', ($config['rewrite'])? 'go/options' : '?mode=options');
+
+  $menu_items['exit'] = $menu->AddItem('Выход','login.php?out=1');
 }
 
 if (!empty($user)) {
@@ -52,7 +54,6 @@ switch ($mode) {
 
 include('./location/side.php'); 
 
-$menu_items['exit'] = $menu->AddItem('Выход','login.php?out=1');
 $content_menu 		= $menu->Show();
 
 $servManager = new ServerMenager();
