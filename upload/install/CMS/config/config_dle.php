@@ -34,6 +34,7 @@ $bd_names = array (
 	'data' 				=> 'mcr_data',
 	'comments' 			=> 'mcr_comments', 
 	'servers' 			=> 'mcr_servers',
+	'action_log'		=> 'mcr_action_log',
 	'iconomy' 			=> false,
 );
 

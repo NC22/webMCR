@@ -33,7 +33,7 @@ global $link;
 	return $result;
 }
 
-function BDConnect() {
+function BDConnect($log_script = 'default') {
 global $link, $config;
 
 $link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_login'], $config['db_passw']) or die("ОШИБКА MySQL Базы данных. Сервер не отвечает или не удается пройти авторизацию");
@@ -43,6 +43,9 @@ $link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_log
 	BD("SET character_set_client='utf8'"); 
 	BD("SET character_set_results='utf8'"); 
 	BD("SET collation_connection='utf8_general_ci'"); 
+	
+	if ($log_script and $config['action_log']) ActionLog($log_script);	
+	CanAccess(2);	
 }
 
 /* Системные функции */
@@ -165,7 +168,9 @@ return $ip;
 function RefreshBans() {
 global $bd_names;
 
+	/* Default ban until time */
 	BD("DELETE FROM {$bd_names['ip_banning']} WHERE (ban_until='0000-00-00 00:00:00') AND (time_start<NOW()-INTERVAL ".((int) sqlConfigGet('next-reg-time'))." HOUR)");
+	
 	BD("DELETE FROM {$bd_names['ip_banning']} WHERE (ban_until<>'0000-00-00 00:00:00') AND (ban_until<NOW())");					
 }
 
@@ -180,7 +185,55 @@ $log_file = MCR_ROOT.'log.txt';
 	
 	if ( !$fp = fopen($log_file,'a') ) exit('[system.php] Ошибка открытия файла '.$log_file.' убедитесь, что файл доступен для ЗАПИСИ');
 	
-	fwrite($fp,date("H:i:s d-m-Y").' < '.$string.PHP_EOL); 
+	fwrite($fp, date("H:i:s d-m-Y").' < '.$string.PHP_EOL); 
 	fclose($fp);	
+}
+
+function ActionLog($last_info = 'default_action') {
+global $config, $bd_names;
+
+	$ip = GetRealIp();
+	BD("DELETE FROM `{$bd_names['action_log']}` WHERE `first_time` < NOW() - INTERVAL {$config['action_time']} SECOND");	
+
+	$sql  = "INSERT INTO `{$bd_names['action_log']}` (IP, first_time, last_time, query_count, info) ";
+	$sql .= "VALUES ('".TextBase::SQLSafe($ip)."', NOW(), NOW(), 1, '".TextBase::SQLSafe($last_info)."') ";
+	$sql .= "ON DUPLICATE KEY UPDATE `last_time` = NOW(), `query_count` = `query_count` + 1, `info` = '".TextBase::SQLSafe($last_info)."' ";
+	
+	BD($sql);	
+	
+	$result = BD("SELECT `query_count` FROM `{$bd_names['action_log']}` WHERE `IP`='".TextBase::SQLSafe($ip)."'"); 
+	$line = mysql_fetch_array($result, MYSQL_NUM);
+	
+	$query_count = (int) $line[0];
+	if ($query_count > $config['action_max']) {
+	
+	BD("DELETE FROM `{$bd_names['action_log']}` WHERE `IP` = '".TextBase::SQLSafe($ip)."'");
+	
+	RefreshBans();
+	BD("INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type, reason) VALUES ('".TextBase::SQLSafe($ip)."', NOW(), NOW()+INTERVAL ".TextBase::SQLSafe($config['action_ban'])." SECOND, '2', 'Many BD connections (".$query_count.") per time')");
+	}
+	
+	return $query_count;
+}
+
+function CanAccess($ban_type = 1) {
+global $link, $bd_names;
+
+	$ip = GetRealIp(); 
+	$ban_type = (int) $ban_type;
+	
+	$result = BD("SELECT COUNT(*) FROM `{$bd_names['ip_banning']}` WHERE `IP`='".TextBase::SQLSafe($ip)."' AND `ban_type`='".$ban_type."' AND `ban_until` <> '0000-00-00 00:00:00' AND `ban_until` > NOW()"); 
+	$line = mysql_fetch_array($result, MYSQL_NUM);
+	$num = (int)$line[0];
+
+	if ($num) {
+	
+		mysql_close( $link );
+		
+		if ( $ban_type == 2 ) exit('(-_-)zzZ <br> IP in blacklist or query limit is reached ');
+		return false;
+	}
+	
+	return true;					
 }
 ?>

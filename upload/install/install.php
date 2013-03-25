@@ -90,6 +90,10 @@ function BD( $query ) {
     return mysql_query( $query );
 }
 
+function BD_ColumnExist($table, $column) {
+	return (@mysql_query("SELECT `$column` FROM `$table` LIMIT 0, 1"))? true : false;
+}
+
 function Root_url(){
 	$root_url = str_replace('\\', '/', $_SERVER['PHP_SELF']); 
 	$root_url = explode("install/install.php", $root_url, -1);

@@ -12,7 +12,7 @@ if (isset($_POST['now']) and !empty($user) and $user->lvl() >= 15)
 
 $now = true;
 
-BDConnect();
+BDConnect('monitoring');
 
 $server = new Server($id);
 $server->UpdateState($now);

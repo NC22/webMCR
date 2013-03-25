@@ -5,7 +5,7 @@ if (empty($_POST['command']) and empty($_POST['userlist']))
 require_once('../system.php');
 require_once(MCR_ROOT.'instruments/rcon.class.php');
 
-BDConnect();
+BDConnect('mcraft.rcon');
 
 require(MCR_ROOT.'instruments/user.class.php');
 MCRAuth::userLoad();	  

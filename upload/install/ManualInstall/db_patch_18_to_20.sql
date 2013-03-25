@@ -13,12 +13,24 @@ ALTER TABLE `accounts` ADD `default_skin` tinyint(1) NOT NULL DEFAULT '2';
 
 ALTER TABLE `accounts` DROP `lvl`;
 
+ALTER TABLE `ip_banning` ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1;
+ALTER TABLE `ip_banning` ADD `reason` varchar(255) DEFAULT NULL;
+
 INSERT INTO `data` (`property`, `value`) VALUES
 ('next-reg-time', '2'),
 ('email-verification', '0'),
 ('rcon-port', '0'),
 ('rcon-pass', '0'),
 ('rcon-serv', '0');
+
+CREATE TABLE IF NOT EXISTS `action_log` (
+  `IP` varchar(16) NOT NULL,
+  `first_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `query_count` int(10) NOT NULL DEFAULT 1,
+  `info` varchar(255) NOT NULL,
+  PRIMARY KEY (`IP`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `news_categorys` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,

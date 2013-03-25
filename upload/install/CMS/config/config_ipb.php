@@ -35,6 +35,7 @@ $bd_users = array (
 	'group' 	=> 'mcr_group',
 	'tmp' 		=> 'mcr_tmp',
 	'session'	=> 'mcr_session',
+	'action_log'		=> 'mcr_action_log',
 	'server' 	=> 'mcr_server',
 );
 

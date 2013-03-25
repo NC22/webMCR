@@ -46,6 +46,13 @@ $config = array (
 	'smtpHost'	=> 'localhost',
 	'smtpPort'	=> 25,
 	'smtpHello' => 'HELO', // some servers prefer EHLO command instead
+	
+/* action limiter */
+
+	'action_log'	=> false,	// log connect with BD times and detect some fast users, possible bots
+	'action_max'	=> 10,		// maximum exec php script's times ( server monitorings, page refresh, profile edit and etc.)
+	'action_time'	=> 1,		// per seconds. 
+	'action_ban'	=> 60,		// ban time in seconds
 );
   
 $site_ways = array (
@@ -66,6 +73,7 @@ $bd_names = array (
 	'files'				=> 'files',
 	'comments'			=> 'comments', 
 	'servers'			=> 'servers',
+	'action_log'		=> 'action_log',
 	'iconomy'			=> false,
 );
 

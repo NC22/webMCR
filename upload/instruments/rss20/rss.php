@@ -1,6 +1,6 @@
 <?php
 require_once('../../system.php');
-BDConnect();
+BDConnect('rss.module');
 
 $title = 'Сайт '.$_SERVER['SERVER_NAME'];
 $desc = 'Новости сайта '.$_SERVER['SERVER_NAME'];

@@ -103,6 +103,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['ip_banning']}` (
   `IP` varchar(16) NOT NULL,
   `time_start` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ban_until` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ban_type` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`IP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
@@ -124,4 +125,20 @@ BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('rcon-port', '0'),
 ('rcon-pass', '0'),
 ('rcon-serv', '0');");
-?>
+
+/* 2.05 UPDATE */
+
+if (!BD_ColumnExist($bd_names['ip_banning'], 'ban_type'))
+
+BD("ALTER TABLE `{$bd_names['ip_banning']}` 
+	ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1,
+	ADD `reason` varchar(255) DEFAULT NULL;");
+
+BD("CREATE TABLE IF NOT EXISTS `{$bd_names['action_log']}` (
+  `IP` varchar(16) NOT NULL,
+  `first_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `query_count` int(10) NOT NULL DEFAULT 1,
+  `info` varchar(255) NOT NULL,
+  PRIMARY KEY (`IP`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;");

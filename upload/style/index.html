@@ -46,7 +46,8 @@ addSubmitEvent('uploadcloak', 'uploadcloakform')
 addSubmitEvent('changenick' , 'changenickform')
 addSubmitEvent('changepass' , 'changepassform')
 
-LoadServers()
+setTimeout(function() { LoadServers() }, 1000)
+
 
 pbm = ProgressBarManager('progressbar_meter pbar',true)
 pbm.Live(100,100)

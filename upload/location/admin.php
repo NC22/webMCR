@@ -220,15 +220,16 @@ if ($do) {
 	case 'banip':  
 	if (isset($_POST['confirm']) and $ban_user and !empty($_POST['banip_days'])) { 	
   
-    $ban_time     = (int)$_POST['banip_days'];
-	$and_ban_user = (isset($_POST['banip_anduser']) and (int)$_POST['banip_anduser'])? true : false;
+	$ban_time	= (int)$_POST['banip_days'];
+	$ban_type	= (isset($_POST['banip_all']))? 2 : 1;
+	$ban_user_t	= (isset($_POST['banip_anduser']) and (int)$_POST['banip_anduser'])? true : false;
 		
 		BD("DELETE FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ban_user->ip())."'");	
-		BD("INSERT INTO {$bd_names['ip_banning']} (IP,time_start,ban_until) VALUES ('".TextBase::SQLSafe($ban_user->ip())."',NOW(),NOW()+INTERVAL ".TextBase::SQLSafe($ban_time)." DAY)");
+		BD("INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type) VALUES ('".TextBase::SQLSafe($ban_user->ip())."', NOW(), NOW()+INTERVAL ".TextBase::SQLSafe($ban_time)." DAY, '".$ban_type."')");
 		
-		$info .= 'Регистрация на сайте заблокирована<br/>';
+		$info .= 'Доступ к функционалу сайта с IP '.$ban_user->ip().' ограничен<br/>';
 		
-		if ($and_ban_user) {
+		if ($ban_user_t) {
 			
 			$ban_user->changeGroup(2);			
 			$info .= 'Аккаунт пользователя заблокирован';

@@ -14,7 +14,7 @@ if (empty($_POST['user']) or empty($_POST['password']) or empty($_POST['version'
   exit("Bad login");
 }	
 	require(MCR_ROOT.'instruments/user.class.php'); 
-	BDConnect();
+	BDConnect('auth');
 
 	$login 		= $_POST['user']; 
 	$password 	= $_POST['password']; 

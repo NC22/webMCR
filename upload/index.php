@@ -2,7 +2,7 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 require_once('./system.php');
-BDConnect();
+BDConnect('index');
 
 require(MCR_ROOT.'instruments/user.class.php');
 MCRAuth::userLoad();

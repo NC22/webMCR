@@ -5,7 +5,16 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `accounts`,`ip_banning`,`news`,`news_categorys`,`groups`,`data`,`comments`,`servers`;
-						 
+	
+CREATE TABLE IF NOT EXISTS `action_log` (
+  `IP` varchar(16) NOT NULL,
+  `first_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `last_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `query_count` int(10) NOT NULL DEFAULT 1,
+  `info` varchar(255) NOT NULL,
+  PRIMARY KEY (`IP`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+	
 CREATE TABLE IF NOT EXISTS `news` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `category_id` int(10) NOT NULL DEFAULT 1,
@@ -119,6 +128,8 @@ CREATE TABLE IF NOT EXISTS `ip_banning` (
   `IP` varchar(16) NOT NULL,
   `time_start` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ban_until` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `ban_type` tinyint(1) NOT NULL DEFAULT 1,
+  `reason` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`IP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

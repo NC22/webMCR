@@ -27,25 +27,9 @@ if ($config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') aExit(1,'Р
 
 require(MCR_ROOT.'instruments/user.class.php');
 
-BDConnect();
+BDConnect('register');
 
 $rcodes  = array();  
-
-function CanRegister() {
-global $link,$bd_names;
-
-	$ip = $_SERVER['REMOTE_ADDR']; //если нужен реальный адрес пользователя используйте GetRealIp
-	$result = BD("SELECT ban_until FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ip)."'"); 
-	$line = mysql_fetch_array($result);
-	
-	if ( ($line != NULL) and ($line['ban_until']!='0000-00-00 00:00:00') ) {
-	
-		mysql_close( $link );
-		return false;
-	}
-	
-	return true;					
-}
 
 function tryExit() {
 global $rcodes;
@@ -96,7 +80,7 @@ $repass = $_POST['repass'];
 $female = (!(int)$_POST['female'])? 0 : 1;
 $email  = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL); 
 	
-if (!CanRegister()) aExit(11,'Регистрация временно запрещена.');
+if (!CanAccess()) aExit(11,'Регистрация временно запрещена.');
 	
 if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) aExit(1,'Не все поля заполнены.');
     

@@ -7,7 +7,7 @@ require(MCR_ROOT.'instruments/user.class.php');
 require(MCR_ROOT.'instruments/monitoring.class.php');
 require(MCR_ROOT.'instruments/catalog.class.php');
 
-BDConnect();
+BDConnect('news');
 
 $news = '';
 $page_title = 'Новостная лента';

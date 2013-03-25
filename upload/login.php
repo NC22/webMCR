@@ -5,15 +5,15 @@ require('./system.php');
 require(MCR_ROOT.'instruments/ajax.php');
 require(MCR_ROOT.'instruments/user.class.php');
 
-BDConnect();
+BDConnect('login');
 
 if (isset($_GET['out'])) {
 
 	header("Location: ".BASE_URL);	
 	MCRAuth::userLoad();  	
 	if (!empty($user)) $user->logout();	
-	
 	exit;	
+	
 } elseif (isset($_POST['login'])) {
 
 	 $name = $_POST['login']; $pass = $_POST['pass'];   

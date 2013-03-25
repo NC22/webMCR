@@ -22,7 +22,7 @@ switch ($method) {
 	elseif ($method == 'restore' and $config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') 
 		aExit(1,'Восстановление пароля невозможно. Используются скрипты авторизации сторонней CMS.');
 	
-	BDConnect();
+	BDConnect('action_'.$method);
 	MCRAuth::userLoad();
 	
     break;
@@ -31,7 +31,7 @@ switch ($method) {
 	require('./system.php');
 	require(MCR_ROOT.'instruments/upload.class.php');
 	
-	BDConnect();
+	BDConnect('action_download');
 	
 	break;
 	default: exit; break;

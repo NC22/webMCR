@@ -8,7 +8,7 @@ exit('Bad login');
 }	
 
 require(MCR_ROOT.'instruments/user.class.php');  
-BDConnect();
+BDConnect('joinserver');
 
 $login 		= $_GET['user']; 
 $serverid	= $_GET['serverId'];
