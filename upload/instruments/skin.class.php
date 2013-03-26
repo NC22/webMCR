@@ -172,7 +172,7 @@ const CLOAK_PROP = 1.29; // 22 / 17
 	
 	if (!file_exists($way_cloak)) return false; 
 	
-	$ratio = self::ratio($way_skin, self::CLOAK_BASE, self::CLOAK_PROP);
+	$ratio = self::ratio($way_cloak, self::CLOAK_BASE, self::CLOAK_PROP);
 	if (!$ratio) return false;
 
 	return $ratio; 	
