@@ -189,13 +189,6 @@ function LoadProfile(form,pid) {
 				GetById(form + '-create_time').innerHTML = date.getLocaleFormat('%H:%M:%S %d.%m.%y')
 			} else GetById(form + '-create_time').innerHTML = 'Неизвестно'
 						 
-			/* 
-				 if (response['active_last'] != 0) {
-				    date = new Date(response['active_last']*1000)
-				    GetById(form + '-active_last').innerHTML = timeFrom(date)
-				 }
-			*/
-						 
             GetById(form + '-comments_num').innerHTML  = response['comments_num']
             GetById(form + '-play_times').innerHTML    = response['play_times']
             GetById(form + '-undress_times').innerHTML = response['undress_times']			

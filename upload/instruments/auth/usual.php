@@ -4,13 +4,15 @@
 Class MCRAuth {
 
 public static function userLoad() {
-global $config;
+global $config, $user;
 
 	if ($config['p_logic'] != 'usual') 
 	
 	MCMSAuth::userInit();
 	
-	else self::LoadSession();	
+	else self::LoadSession();
+
+	if (!empty($user)) $user->activity();
 }
 
 public static function LoadSession() { 

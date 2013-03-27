@@ -56,6 +56,12 @@ private $female;
 	return true;			
 	}
 	
+	public function activity() {
+	global $bd_users, $bd_names;
+	
+		BD("UPDATE `{$bd_names['users']}` SET `active_last`= NOW() WHERE `{$bd_users['id']}`='".$this->id."'");	
+	}
+	
 	public function login($tmp, $ip, $save = false) {
 	global $bd_users, $bd_names, $config;
 
