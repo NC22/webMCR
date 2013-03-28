@@ -37,8 +37,8 @@ if ( isset($_GET['id']) ) $mode = 'news_full';
 else $mode = (empty($_GET['mode']) or (empty($user) and in_array($_GET['mode'], array('options', 'news_add', 'control'))))? $config['s_dpage'] : $_GET["mode"]; 
 
 switch ($mode) {
-    case 'start': $page = 'Начать игру'; $content_main = Menager::ShowStaticPage(STYLE_URL.'start-game.html');  break;
-	case '404':   $page = 'Страница не найдена'; $content_main = Menager::ShowStaticPage(STYLE_URL.'404.html'); break;
+    case 'start': $page = 'Начать игру'; $content_main = Menager::ShowStaticPage(MCR_STYLE.'start-game.html');  break;
+	case '404':   $page = 'Страница не найдена'; $content_main = Menager::ShowStaticPage(MCR_STYLE.'404.html'); break;
 	case 'register': 
 	case 'news':	  include('./location/news.php');		break;
 	case 'news_full': include('./location/news_full.php');	break;
