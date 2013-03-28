@@ -1,5 +1,5 @@
 <?php
- error_reporting(E_ALL);
+// error_reporting(E_ALL);
 
 define('MCR', 1);  
 define('MCR_ROOT', dirname(__FILE__).'/');

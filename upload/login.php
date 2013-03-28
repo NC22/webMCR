@@ -29,7 +29,6 @@ if (isset($_GET['out'])) {
 	if ($tmp_user->lvl() <= 0) aExit(4, 'Ваш аккаунт заблокирован.');	
 	
 	$tmp_user->login(randString( 15 ), GetRealIp(), (!empty($_POST['save']))? true : false);
-	$user = $tmp_user;
 	aExit(0, 'success');	  
 }
 ?>

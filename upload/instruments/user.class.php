@@ -62,12 +62,14 @@ private $female;
 	public function activity() {
 	global $bd_users;
 	
-		BD("UPDATE `{$this->db}` SET `active_last`= NOW() WHERE `{$bd_users['id']}`='".$this->id."'");	
+		if ($this->id) BD("UPDATE `{$this->db}` SET `active_last`= NOW() WHERE `{$bd_users['id']}`='".$this->id."'");	
 	}
 	
 	public function authenticate($pass) {
 	global $bd_users;
 	
+		if (!$this->id) return false;
+
 		$result = BD("SELECT `{$bd_users['password']}` FROM `{$this->db}` WHERE `{$bd_users['id']}`='".$this->id."'"); 
 		$line = mysql_fetch_array( $result, MYSQL_NUM);
 		
