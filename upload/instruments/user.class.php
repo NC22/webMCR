@@ -665,8 +665,8 @@ private $pavailable;
 		
 		$this->db = $bd_names['groups'];
 		$this->id = (int)$id;
-		$this->pavailable = array("sp_upload",
-								  "skinposer",
+		$this->pavailable = array(/*"sp_upload",*/
+								  /*"skinposer",*/
 								  "change_skin", 
 		                          "change_pass",
 								  "lvl",
@@ -805,7 +805,7 @@ private $pavailable;
 		
 		if (!$sql) $sql = '';
 		
-		    $result = BD("UPDATE `{$bd_names['groups']}` SET `name`='".TextBase::SQLSafe($name)."'$sql WHERE `id`='".$this->id."'"); 
+		    $result = BD("UPDATE `{$this->db}` SET `name`='".TextBase::SQLSafe($name)."'$sql WHERE `id`='".$this->id."'"); 
 		if ($result and mysql_affected_rows()) return true;
 		
 		return true; 
