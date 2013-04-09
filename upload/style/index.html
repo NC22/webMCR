@@ -41,13 +41,7 @@ window.onload = function () {
 for (i=0; i<=tmpLinks.length-1; ++i)
    tmpLinks[i].innerHTML = StringWithSmiles(tmpLinks[i].innerHTML)
 
-addSubmitEvent('uploadskin' , 'uploadskinform')
-addSubmitEvent('uploadcloak', 'uploadcloakform')
-addSubmitEvent('changenick' , 'changenickform')
-addSubmitEvent('changepass' , 'changepassform')
-
 setTimeout(function() { LoadServers() }, 1000)
-
 
 pbm = ProgressBarManager('progressbar_meter pbar',true)
 pbm.Live(100,100)
