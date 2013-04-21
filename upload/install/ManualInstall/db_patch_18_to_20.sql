@@ -1,7 +1,10 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 ALTER TABLE `news` ADD `category_id` int(10) NOT NULL DEFAULT 1;
-
+ALTER TABLE `news` ADD `user_id` bigint(20) NOT NULL;
+ALTER TABLE `news` ADD `dislikes` int(10) DEFAULT 0;
+ALTER TABLE `news` ADD `likes` int(10) DEFAULT 0;
+  
 ALTER TABLE `accounts` ADD `female` tinyint(1) NOT NULL DEFAULT '2';
 ALTER TABLE `accounts` ADD `group` int(10) NOT NULL DEFAULT 1;
 ALTER TABLE `accounts` ADD `comments_num` int(10) NOT NULL;
@@ -16,12 +19,30 @@ ALTER TABLE `accounts` DROP `lvl`;
 ALTER TABLE `ip_banning` ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1;
 ALTER TABLE `ip_banning` ADD `reason` varchar(255) DEFAULT NULL;
 
+ALTER TABLE `news`	ADD KEY `category_id` (`category_id`),
+					ADD KEY `user_id` (`user_id`);
+					
+ALTER TABLE `comments`	ADD	KEY `user_id` (`user_id`),
+						ADD	KEY `item_id` (`item_id`);
+
+ALTER TABLE `accounts`	ADD	KEY `group_id` (`group`);
+
 INSERT INTO `data` (`property`, `value`) VALUES
 ('next-reg-time', '2'),
 ('email-verification', '0'),
 ('rcon-port', '0'),
 ('rcon-pass', '0'),
 ('rcon-serv', '0');
+
+CREATE TABLE IF NOT EXISTS `likes` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `item_type` smallint(3) NOT NULL DEFAULT 1,
+  `var` tinyint(1) NOT NULL DEFAULT -1,
+  PRIMARY KEY (`id`),
+  KEY `uniq_item` (`user_id`,`item_id`,`item_type`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
 
 CREATE TABLE IF NOT EXISTS `action_log` (
   `IP` varchar(16) NOT NULL,

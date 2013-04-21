@@ -15,14 +15,29 @@ CREATE TABLE IF NOT EXISTS `action_log` (
   PRIMARY KEY (`IP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 	
+CREATE TABLE IF NOT EXISTS `likes` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `item_type` smallint(3) NOT NULL DEFAULT 1,
+  `var` tinyint(1) NOT NULL DEFAULT -1,
+  PRIMARY KEY (`id`),
+  KEY `uniq_item` (`user_id`,`item_id`,`item_type`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
+	
 CREATE TABLE IF NOT EXISTS `news` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `category_id` int(10) NOT NULL DEFAULT 1,
+  `user_id` bigint(20) NOT NULL,
+  `dislikes` int(10) DEFAULT 0,
+  `likes` int(10) DEFAULT 0,
   `title` char(255) NOT NULL,
   `message` TEXT NOT NULL,
   `message_full` MEDIUMTEXT NOT NULL,
-  `time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `time` datetime DEFAULT NULL,  
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `news_categorys` (
@@ -90,7 +105,9 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `item_id` bigint(20) NOT NULL,
   `message` varchar(255) NOT NULL,
   `time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;
 
 CREATE TABLE IF NOT EXISTS `accounts` (
@@ -119,7 +136,8 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `server` varchar(255) default NULL,  
 
   PRIMARY KEY (`id`),
-  UNIQUE KEY `Login` (`login`)
+  UNIQUE KEY `Login` (`login`),
+  KEY `group_id` (`group`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0 ;
 
 -- Баны по IP для защиты от повторной регистрации
