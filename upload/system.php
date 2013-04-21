@@ -210,7 +210,12 @@ global $config, $bd_names;
 	BD("DELETE FROM `{$bd_names['action_log']}` WHERE `IP` = '".TextBase::SQLSafe($ip)."'");
 	
 	RefreshBans();
-	BD("INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type, reason) VALUES ('".TextBase::SQLSafe($ip)."', NOW(), NOW()+INTERVAL ".TextBase::SQLSafe($config['action_ban'])." SECOND, '2', 'Many BD connections (".$query_count.") per time')");
+	
+	$sql  = "INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type, reason) ";
+	$sql .= "VALUES ('".TextBase::SQLSafe($ip)."', NOW(), NOW()+INTERVAL ".TextBase::SQLSafe($config['action_ban'])." SECOND, '2', 'Many BD connections (".$query_count.") per time') ";
+	$sql .= "ON DUPLICATE KEY UPDATE `ban_type` = '2', `reason` = 'Many BD connections (".$query_count.") per time' ";
+	
+	BD($sql);	
 	}
 	
 	return $query_count;
