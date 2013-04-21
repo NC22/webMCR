@@ -230,7 +230,7 @@ private $female;
 			
 			$line = mysql_fetch_array($result, MYSQL_NUM);
 			
-		return (int)$line[0];			
+		return floatval($line[0]);			
 		} 
        
     return 0;

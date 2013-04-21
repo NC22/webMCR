@@ -6,6 +6,7 @@ $bd_names = array (
 
   'users' 		=> 'members',
   
+  'likes'			=> 'mcr_likes',
   'files'			=> 'mcr_files',
   'ip_banning' 		=> 'mcr_ip_banning',
   'news'			=> 'mcr_news',

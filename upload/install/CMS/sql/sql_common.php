@@ -1,5 +1,5 @@
 <?php 
-/* SQL COMMON TABLES CREATE + ADD DEFAULT INFO */
+/* SQL COMMON TABLES CREATE + ADD DEFAULT INFO + UPDATES */
 
 BD("SET FOREIGN_KEY_CHECKS=0;");
 
@@ -8,6 +8,7 @@ if ($mysql_rewrite) {
 BD("DROP TABLE IF EXISTS `{$bd_names['ip_banning']}`,
 						 `{$bd_names['news']}`,
 						 `{$bd_names['news_categorys']}`,
+						 `{$bd_names['likes']}`,
                          `{$bd_names['groups']}`,
 						 `{$bd_names['data']}`,
 						 `{$bd_names['comments']}`,
@@ -16,6 +17,15 @@ BD("DROP TABLE IF EXISTS `{$bd_names['ip_banning']}`,
 }
 
 /* CREATE TABLES */
+	
+BD("CREATE TABLE IF NOT EXISTS `{$bd_names['likes']}` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) NOT NULL,
+  `item_id` bigint(20) NOT NULL,
+  `item_type` smallint(3) NOT NULL DEFAULT 1,
+  `var` tinyint(1) NOT NULL DEFAULT -1,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;");
 
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['files']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -34,11 +44,16 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['files']}` (
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `category_id` int(10) NOT NULL DEFAULT 1,
+  `user_id` bigint(20) NOT NULL,
+  `dislikes` int(10) DEFAULT 0,
+  `likes` int(10) DEFAULT 0,
   `title` char(255) NOT NULL,
   `message` TEXT NOT NULL,
   `message_full` MEDIUMTEXT NOT NULL,
   `time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `category_id` (`category_id`),
+  KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news_categorys']}` (
@@ -96,7 +111,9 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['comments']}` (
   `item_id` bigint(20) NOT NULL,
   `message` varchar(255) NOT NULL,
   `time` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['ip_banning']}` (
@@ -133,6 +150,24 @@ if (!BD_ColumnExist($bd_names['ip_banning'], 'ban_type'))
 BD("ALTER TABLE `{$bd_names['ip_banning']}` 
 	ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1,
 	ADD `reason` varchar(255) DEFAULT NULL;");
+	
+/* 2.1 UPDATE */
+
+if (!BD_ColumnExist($bd_names['news'], 'user_id')) {
+
+BD("ALTER TABLE `{$bd_names['news']}` 
+	ADD `user_id` bigint(20) NOT NULL,
+	ADD `dislikes` int(10) DEFAULT 0,
+	ADD `likes` int(10) DEFAULT 0;");
+	
+BD("ALTER TABLE `{$bd_names['news']}`	ADD KEY `category_id` (`category_id`),
+										ADD KEY `user_id` (`user_id`);");
+					
+BD("ALTER TABLE `{$bd_names['comments']}`	ADD KEY `user_id` (`user_id`),
+											ADD	KEY `item_id` (`item_id`);");
+
+BD("ALTER TABLE `{$bd_names['users']}`	ADD	KEY `group_id` (`{$bd_users['group']}`);");	
+}	
 
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['action_log']}` (
   `IP` varchar(16) NOT NULL,

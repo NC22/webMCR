@@ -11,7 +11,8 @@ $bd_users = array (
 	'ctime' 	=> 'register_date',
   
 /* Required MCR fields */
-  
+
+  'likes'		=> 'mcr_likes',
   'password' 	=> 'mcr_default', 
   'ip' 			=> 'mcr_ip',  
   'group' 		=> 'mcr_group',

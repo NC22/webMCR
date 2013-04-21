@@ -26,6 +26,7 @@ $bd_names = array (
 
 	'users' 			=> 'dle_users',
 	
+	'likes'				=> 'mcr_likes',
 	'files'				=> 'mcr_files',
 	'ip_banning' 		=> 'mcr_ip_banning',
 	'news'				=> 'mcr_news',

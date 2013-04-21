@@ -22,6 +22,44 @@ function DeleteComment(id) {
 	return false
 }
 
+function Like(dislike, id, type) {
+
+	var event = function(response) {
+	
+		var dlike = GetById('dislike' + id + 'type' + type)
+		var  like = GetById('like' + id + 'type' + type)
+		
+		dlike.onclick = function(){ return false }
+		like.onclick = function() { return false }
+				
+		if ( response['code'] == 0 ) return false
+        if ( response['code'] == 3 ) { 
+		
+		BlockVisible('loginform-error',true)
+		return false
+		}
+		
+		if ( response['code'] == 2 ) 
+		
+			if (dislike) {
+			
+				dlike.innerHTML = parseInt(dlike.innerHTML) + 1
+				like.innerHTML  = parseInt(like.innerHTML) - 1				
+			} else {		
+			
+				dlike.innerHTML = parseInt(dlike.innerHTML) - 1
+				like.innerHTML  = parseInt(like.innerHTML) + 1					
+			}
+		
+		else
+			if (dislike) dlike.innerHTML = parseInt(dlike.innerHTML) + 1			
+			else like.innerHTML  = parseInt(like.innerHTML) + 1							
+	}
+	
+	SendByXmlHttp('action.php', 'method=like&dislike=' + encodeURIComponent(dislike) + '&type=' + encodeURIComponent(type) + '&id=' + encodeURIComponent(id), event)
+	return false
+}
+
 function PostComment() {
 
     var addition_post = ''    

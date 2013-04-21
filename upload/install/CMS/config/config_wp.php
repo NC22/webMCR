@@ -11,7 +11,8 @@ $bd_users = array (
 	'password' 	=> 'user_pass',   
   
 /* Required MCR fields */
-  
+
+	'likes'		=> 'mcr_likes',  
 	'female'	=> 'mcr_gender',
 	'ip' 		=> 'mcr_ip',  
 	'group' 	=> 'mcr_group',

@@ -13,6 +13,7 @@ $bd_users = array (
 	
 /* Required MCR fields */
   
+	'likes'		=> 'mcr_likes',
 	'female'	=> 'mcr_gender',
 	'ip' 		=> 'mcr_ip',  
 	'group' 	=> 'mcr_group',

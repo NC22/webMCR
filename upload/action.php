@@ -10,7 +10,8 @@ switch ($method) {
 	case 'profile': 
 	case 'restore': 
 	case 'load_info': 
-	case 'upload':	
+	case 'upload':
+	case 'like':	
 	case 'delete_file':	
 	
 	require('./system.php');
@@ -83,6 +84,28 @@ switch ($method) {
 		$ajax_message['file_html'] = $file->Show();
 		
 		aExit($result, $error);
+	break;
+	case 'like':
+	
+		if (empty($_POST['type']) or empty($_POST['id']) or !isset($_POST['dislike'])) break;
+		if (empty($user)) { 
+		
+		aExit(3, 'Like not authed'); 
+		break;
+		}
+		
+		$id			= (int)$_POST['id'];
+		$type		= (int)$_POST['type'];
+		$dislike	= ((int)$_POST['dislike'])? true : false;		
+		
+		if ($type == ItemType::News) {
+		
+			require_once(MCR_ROOT.'instruments/catalog.class.php');
+			
+			$item = new News_Item($id);
+			
+			aExit((int)$item->Like($dislike), 'Like');
+		}		
 	break;
 	case 'download': 
 		

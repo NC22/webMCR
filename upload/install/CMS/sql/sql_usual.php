@@ -24,7 +24,8 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['users']}` (
   `{$bd_users['server']}` varchar(255) default NULL,  
 
   PRIMARY KEY (`{$bd_users['id']}`),
-  UNIQUE KEY `Login` (`{$bd_users['login']}`)
+  UNIQUE KEY `Login` (`{$bd_users['login']}`),
+  KEY `group_id` (`{$bd_users['group']}`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
 BD("INSERT INTO `{$bd_names['groups']}` 

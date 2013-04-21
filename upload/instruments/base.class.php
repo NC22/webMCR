@@ -1,9 +1,15 @@
 <?php
-
-define('PROGNAME', 'WebMCR 2.0');
+define('PROGNAME', 'WebMCR 2.1');
 define('FEEDBACK', '<a href="http://drop.catface.ru/index.php?nid=17">'.PROGNAME.'</a> &copy; 2013 NC22');  
 
 /* TODO обобщенная модель для удаления \ проверки существования объекта */
+
+class ItemType { 
+
+	const News = 1;
+	const Comment = 2;
+	const Skin = 3;	
+}
 
 Class TextBase {
 
@@ -275,6 +281,66 @@ private $style;
 	}
 }
 
+class ItemLike {
+private $id;
+private $type;
+private $user_id;
+
+private $bd_item;
+	
+	public function ItemLike($item_type, $item_id, $user_id) {
+	global $bd_names;
+	
+	$this->id = false;
+	
+		switch ($item_type) {
+			case ItemType::News: $this->bd_content = $bd_names['news']; break;
+			case ItemType::Comment: $this->bd_content = $bd_names['comments']; break; 
+			default: return false; break;
+		}
+		
+	$this->db = $bd_names['likes'];	
+	
+	$this->id		= (int) $item_id;
+	$this->type		= (int) $item_type;
+	$this->user_id	= (int) $user_id;	
+	}
+	
+	public function Like($dislike = false) {
+
+		$var = (!$dislike)? 1 : -1;
+
+		$result = BD("SELECT `var` FROM `{$this->db}` WHERE `user_id` = '".$this->user_id."' AND `item_id` = '".$this->id."' AND `item_type` = '".$this->type."'"); 
+		
+		if ( !mysql_num_rows( $result ) ) { 
+		
+			BD("INSERT INTO `{$this->db}` (`user_id`, `item_id`, `item_type`, `var`) VALUES ('".$this->user_id."', '".$this->id."', '".$this->type."', '".$var."')");
+		
+			if (!$dislike) 
+				BD("UPDATE `{$this->bd_content}` SET `likes` = `likes` + 1 WHERE `id` = '".$this->id."'");					
+			else 	     
+				BD("UPDATE `{$this->bd_content}` SET `dislikes` = `dislikes` + 1 WHERE `id` = '".$this->id."'");
+		
+		return 1;
+		
+		} else {
+			
+			$line = mysql_fetch_array( $result, MYSQL_NUM );
+			
+			if ((int)$line[0] == (int)$var) return 0; 
+			
+			BD("UPDATE `{$this->db}` SET `var` = '".$var."' WHERE `user_id` = '".$this->user_id."' AND `item_id` = '".$this->id."' AND `item_type` = '".$this->type."'");		
+			
+			if (!$dislike) 
+				BD("UPDATE `{$this->bd_content}` SET `likes` = `likes` + 1, `dislikes` = `dislikes` - 1  WHERE `id` = '".$this->id."'");
+			else 
+				BD("UPDATE `{$this->bd_content}` SET `likes` = `likes` - 1, `dislikes` = `dislikes` + 1 WHERE `id` = '".$this->id."'");			
+		
+		return 2;		
+		}
+	}
+}
+
 Class Menu {
 private $menu_items;
 private $style;
@@ -326,4 +392,3 @@ private $style;
     }
 	
 }
-?>
