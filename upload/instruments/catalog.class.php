@@ -308,16 +308,26 @@ private $title;
 	    $sql = ''; $sql2 = '';		
 	    if ( $message_full ) { $sql = '`message_full`, '; $sql2 = "'".TextBase::SQLSafe($message_full)."', "; }
 		
-		$cat_id = (int)$cat_id;
+		$cat_id = (int) $cat_id;
 		if (!CategoryMenager::ExistByID($cat_id)) return false; 
 
-		BD("INSERT INTO `{$this->db}` ( `title`, `message`, ".$sql."`time`, `category_id`) VALUES ( '".TextBase::SQLSafe($title)."', '".TextBase::SQLSafe($message)."', ".$sql2."NOW(), '".TextBase::SQLSafe($cat_id)."' )");
+		BD("INSERT INTO `{$this->db}` ( `title`, `message`, ".$sql."`time`, `category_id`, `user_id`) VALUES ( '".TextBase::SQLSafe($title)."', '".TextBase::SQLSafe($message)."', ".$sql2."NOW(), '".TextBase::SQLSafe($cat_id)."', '".$user->id()."' )");
 		
 		$this->id = mysql_insert_id();
-		$this->category_id 	= (int)$cat_id;
+		$this->category_id 	= $cat_id;
 		$this->title 		= $title;
 		
 	return true; 
+	}
+
+	public function Like($dislike = false) {
+	global $user;
+	
+		if (!$this->Exist() or empty($user) or !$user->lvl()) return 0;		
+		
+        $like = new ItemLike(ItemType::News, $this->id, $user->id());
+
+		return $like->Like($dislike);
 	}
 	
 	public function GetCategoryID() {
@@ -344,9 +354,9 @@ private $title;
 		$line   = mysql_fetch_array($result, MYSQL_NUM);	  
 		$comments = $line[0];	
 		
-		$sql = ( $full_text )? '`message_full`,' : ''; //:%S
+		$sql = ( $full_text )? ' `message_full`,' : ''; //:%S
 		
-		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS date,DATE_FORMAT(time,'%H:%i') AS time,".$sql."`message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
+		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS date,DATE_FORMAT(time,'%H:%i') AS time, `likes`, `dislikes`,".$sql." `message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
 		if (!mysql_num_rows( $result )) return ''; 
 		
 		$line = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -360,6 +370,8 @@ private $title;
 		$title = $this->title;
 		$date  = $line['date'];
 		$time  = $line['time'];
+		$likes = $line['likes'];
+		$dlikes = $line['dislikes']; 
 		
 		// можно добавить work_script по аналогии
 		$link  = ($config['rewrite'])? 'news/'.$id : 'index.php?id='.$id;
