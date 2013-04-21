@@ -173,9 +173,9 @@ private $downloads;
 		header('Expires:0'); 
 		header('Cache-Control:no-cache, must-revalidate'); 
 		header('Pragma:no-cache'); 	
-	}
-	
-	BD("UPDATE `{$this->db}` SET downloads = downloads + 1 WHERE `id`='{$this->id}'");
+		
+		BD("UPDATE `{$this->db}` SET downloads = downloads + 1 WHERE `id`='{$this->id}'");
+	}	
 		
 	readfile($this->way);
 	return true;
