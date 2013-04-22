@@ -11,8 +11,7 @@ $bd_users = array (
 	'password' 	=> 'user_pass',   
   
 /* Required MCR fields */
-
-	'likes'		=> 'mcr_likes',  
+ 
 	'female'	=> 'mcr_gender',
 	'ip' 		=> 'mcr_ip',  
 	'group' 	=> 'mcr_group',
@@ -26,7 +25,8 @@ $bd_names = array (
 /* Exists WP fields */
 
   'users' 		=> 'wp_users',
-  
+
+  'likes'			=> 'mcr_likes',   
   'files'			=> 'mcr_files',
   'ip_banning' 		=> 'mcr_ip_banning',
   'news'			=> 'mcr_news',

@@ -13,7 +13,6 @@ $bd_users = array (
 	
 /* Required MCR fields */
   
-	'likes'		=> 'mcr_likes',
 	'female'	=> 'mcr_gender',
 	'ip' 		=> 'mcr_ip',  
 	'group' 	=> 'mcr_group',
@@ -27,7 +26,8 @@ $bd_names = array (
 /* Exists Joomla fields */
 
   'users' 		=> 'prefix_users',
-  
+  	
+  'likes'			=> 'mcr_likes',
   'files'			=> 'mcr_files',
   'ip_banning' 		=> 'mcr_ip_banning',
   'news'			=> 'mcr_news',
