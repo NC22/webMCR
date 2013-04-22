@@ -417,7 +417,7 @@ private $title;
 	}	
 		
 	public function Delete() {
-	global $user,$bd_names;
+	global $user, $bd_names;
 	
 		if (empty($user) or 
 		    !$user->getPermission('add_news') or 
@@ -434,7 +434,9 @@ private $title;
 		  }
 		}
 		
-		BD("DELETE FROM `{$this->db}` WHERE `id`='".$this->id."'");
+		BD("DELETE FROM `{$this->db}` WHERE `id`='".$this->id."'");		
+		BD("DELETE FROM `{$bd_names['likes']}` WHERE `item_id` = '".$this->id."' AND `item_type` = '".ItemType::News."'");
+		
 		$this->id = false;
 		return true; 
 	}	
