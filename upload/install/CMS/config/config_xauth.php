@@ -6,7 +6,6 @@ $bd_users = array (
 	'login'		=> 'playername',
 	'id'		=> 'id',  
 	'email'		=> 'email',
-
 	'ctime' 	=> 'registerdate',
 	'password' 	=> 'password',   
   
@@ -20,24 +19,9 @@ $bd_users = array (
 	'server' 	=> 'mcr_server',
 );
 
-$bd_names = array (
+/* Common xAuth fields */
 
-/* Exists xAuth fields */
-
-  'users' 		=> 'account',
-  
-  'likes'			=> 'mcr_likes',
-  'files'			=> 'mcr_files',
-  'ip_banning' 		=> 'mcr_ip_banning',
-  'news'			=> 'mcr_news',
-  'news_categorys' 	=> 'mcr_news_categorys',
-  'groups' 			=> 'mcr_groups',
-  'data' 			=> 'mcr_data',
-  'comments' 		=> 'mcr_comments', 
-  'servers' 		=> 'mcr_servers',
-  'action_log'		=> 'mcr_action_log',
-  'iconomy' 		=> false,
-);
+$bd_names['users'] 	= 'account';
 
 $config['db_name'] 	= 'xauth';
 $config['p_logic'] 	= 'xauth';

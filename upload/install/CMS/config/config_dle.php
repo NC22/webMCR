@@ -20,24 +20,7 @@ $bd_users = array (
 	'server' 	=> 'mcr_server',
 );
 
-$bd_names = array (
-
-/* Exists DLE fields */
-
-	'users' 			=> 'dle_users',
-	
-	'likes'				=> 'mcr_likes',
-	'files'				=> 'mcr_files',
-	'ip_banning' 		=> 'mcr_ip_banning',
-	'news'				=> 'mcr_news',
-	'news_categorys' 	=> 'mcr_news_categorys',
-	'groups' 			=> 'mcr_groups',
-	'data' 				=> 'mcr_data',
-	'comments' 			=> 'mcr_comments', 
-	'servers' 			=> 'mcr_servers',
-	'action_log'		=> 'mcr_action_log',
-	'iconomy' 			=> false,
-);
+$bd_names['users'] 	= 'dle_users';
 
 $config['db_name'] 	= 'dle';
 $config['p_logic'] 	= 'dle';

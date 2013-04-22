@@ -1,23 +1,4 @@
 <?php 
-  
-$bd_names = array (
-
-/* Exists IPB fields */
-
-  'users' 		=> 'members',
-  
-  'likes'			=> 'mcr_likes',
-  'files'			=> 'mcr_files',
-  'ip_banning' 		=> 'mcr_ip_banning',
-  'news'			=> 'mcr_news',
-  'news_categorys' 	=> 'mcr_news_categorys',
-  'groups' 			=> 'mcr_groups',
-  'data' 			=> 'mcr_data',
-  'comments' 		=> 'mcr_comments', 
-  'servers' 		=> 'mcr_servers',
-  'iconomy' 		=> false,
-);
-
 $bd_users = array (
 
 /* Valid IPB fields */
@@ -36,9 +17,13 @@ $bd_users = array (
 	'group' 	=> 'mcr_group',
 	'tmp' 		=> 'mcr_tmp',
 	'session'	=> 'mcr_session',
-	'action_log'		=> 'mcr_action_log',
+	'action_log' => 'mcr_action_log',
 	'server' 	=> 'mcr_server',
 );
+
+/* Exists IPB fields */
+
+$bd_users['users'] 	= 'members';
 
 $config['db_name'] 	= 'ipb';
 $config['p_logic'] 	= 'ipb';

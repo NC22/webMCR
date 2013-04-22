@@ -1,4 +1,21 @@
 <?php 
+$bd_names_PREFIX = 'mcr_'; /* Not used by default. Will add for usual table names if install with main CMS */
+  
+$bd_names = array (
+	'users' 			=> 'accounts',
+	'likes'				=> 'likes',
+	'ip_banning' 		=> 'ip_banning',
+	'news'				=> 'news',
+	'news_categorys'	=> 'news_categorys',
+	'groups'			=> 'groups',
+	'data'				=> 'data',
+	'files'				=> 'files',
+	'comments'			=> 'comments', 
+	'servers'			=> 'servers',
+	'action_log'		=> 'action_log',
+	'iconomy'			=> false,
+);
+
 $config = array (
 /* MySQL connection */
 
@@ -61,21 +78,6 @@ $site_ways = array (
 	'skins'		=> 'MinecraftSkins/',
 	'cloaks'	=> 'MinecraftCloaks/',
 	'distrib'	=> 'MinecraftDownload/',
-);
-  
-$bd_names = array (
-	'users' 			=> 'accounts',
-	'likes'				=> 'likes',
-	'ip_banning' 		=> 'ip_banning',
-	'news'				=> 'news',
-	'news_categorys'	=> 'news_categorys',
-	'groups'			=> 'groups',
-	'data'				=> 'data',
-	'files'				=> 'files',
-	'comments'			=> 'comments', 
-	'servers'			=> 'servers',
-	'action_log'		=> 'action_log',
-	'iconomy'			=> false,
 );
 
 $bd_money = array ( /* iconomy or some other plugin, just check names */

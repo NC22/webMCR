@@ -6,7 +6,6 @@ $bd_users = array (
 	'login'		=> 'user_login',
 	'id'		=> 'ID',  
 	'email'		=> 'user_email',
-
 	'ctime' 	=> 'user_registered',
 	'password' 	=> 'user_pass',   
   
@@ -20,24 +19,9 @@ $bd_users = array (
 	'server' 	=> 'mcr_server',
 );
 
-$bd_names = array (
+/* Common WP fields */
 
-/* Exists WP fields */
-
-  'users' 		=> 'wp_users',
-
-  'likes'			=> 'mcr_likes',   
-  'files'			=> 'mcr_files',
-  'ip_banning' 		=> 'mcr_ip_banning',
-  'news'			=> 'mcr_news',
-  'news_categorys' 	=> 'mcr_news_categorys',
-  'groups' 			=> 'mcr_groups',
-  'data' 			=> 'mcr_data',
-  'comments' 		=> 'mcr_comments', 
-  'action_log'		=> 'mcr_action_log',
-  'servers' 		=> 'mcr_servers',
-  'iconomy' 		=> false,
-);
+$bd_names['users'] 	= 'wp_users';
 
 $config['db_name'] 	= 'wp';
 $config['p_logic'] 	= 'wp';

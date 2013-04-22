@@ -30,7 +30,14 @@ elseif ($config['p_logic'] != $mode) /* Установка была не зав�
 
 include './CMS/config/config_usual.php';
 
-if ($mode != 'usual') include './CMS/config/config_'.$mode.'.php';
+	if ($mode != 'usual') {
+		
+		foreach ($bd_names as $key => $value)
+			
+			if ($value) $bd_names[$key] = $bd_names_PREFIX . $value ;
+		
+		include './CMS/config/config_'.$mode.'.php';
+	}
 }
 
 define('MCR_STYLE', MCR_ROOT.$site_ways['style']);
