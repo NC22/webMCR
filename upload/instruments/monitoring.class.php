@@ -182,7 +182,10 @@ private $rcon;
 		$full_state = ($this->method == 1)? mcraftQuery($this->address, $this->port ) : mcraftQuery_SE($this->address, $this->port );		 
 		 
 		if (empty($full_state) or isset($full_state['too_many'])) {
+		
 		   BD("UPDATE `".$this->db."` SET online='".((isset($full_state['too_many']))? '1' : '0')."' WHERE id='".$this->id."'"); 
+		   
+		   $this->online = (isset($full_state['too_many']))? true : false;
 		   return;
 		}
 		elseif (!empty($full_state['players'])) $users_list = $full_state['players']; 
@@ -190,6 +193,7 @@ private $rcon;
 	}
 	
 	$this->online = true;	
+	  
 	$system_users = '';
 	$numpl = (!empty($full_state['numpl']))? $full_state['numpl'] : 0;
 	
@@ -206,6 +210,9 @@ private $rcon;
 			}		
 		}			 
 	}
+	
+	$this->slots = (!empty($full_state))? $full_state['maxplayers'] : -1;
+	$this->numpl = $numpl;
 	
 	if (!empty($full_state))	// name='".$full_state['hostname']."'
 	  BD("UPDATE `".$this->db."` SET numpl='".TextBase::SQLSafe($numpl)."',slots='".TextBase::SQLSafe($full_state['maxplayers'])."',players='".TextBase::SQLSafe($system_users)."',online='1' WHERE id='".$this->id."'"); 		 
@@ -357,7 +364,7 @@ private $rcon;
 	  $ajax_message['address'] = $this->address;
 	  $ajax_message['port']    = $this->port;
 	  	  
-	  if (!$this->online) aExit(0,'server_state'); 
+	  if (!$this->online) aExit(2,'server_state'); 
 	  
 	  $players = $this->GetPlayers();
 		
