@@ -346,49 +346,90 @@ private $menu_items;
 private $style;
 
     public function Menu($style = false) {
-	global $site_ways;
+	global $config;
 	
 		$this->style = (!$style)? MCR_STYLE : $style;
+		
+		require('menu_items.php');
+		
+		$this->menu_items = $menu_items; 		
 	}
 
+	public function ShowItem(&$item) {
+	
+		$button_name  = $item['name'];
+		$button_url   = $item['url'];
+			
+		$button_class = ($item['active'])? 'active' : 'not_active';
+		
+		$button_links = (isset($item['inner_html']))? $item['inner_html'] : '';
+		
+		$type = ($button_links)? 'menu_dropdown_item' : 'menu_item'; 
+
+		ob_start(); include ($this->style.$type.'.html');
+		
+		return ob_get_clean();		
+	}
+	
 	public function Show() {
-    $menu_items = '';    
-
-        for ($i=0;$i < sizeof($this->menu_items);$i++) {
-
-			$button_name  = $this->menu_items[$i]['name'];
-			$button_url   = $this->menu_items[$i]['url'];
-			$button_class = $this->menu_items[$i]['class'];
-            
-		    ob_start(); include ($this->style.'menu_item.html');
-		    $menu_items .= ob_get_clean();
-						
+	global $user;
+	
+	if (!empty($user)) $user_lvl = $user->lvl(); else $user_lvl = 0;	
+	
+		foreach ($this->menu_items as $key => $value) {
+		  
+			$this->menu_items[$key]['access'] = true; 
+			
+			if ( $user_lvl < $value['lvl'] ) $this->menu_items[$key]['access'] = false;
+			
+			if ( $value['permission'] != -1 )
+			
+				if (!empty($user) and !$user->getPermission($value['permission'])) 
+				
+					$this->menu_items[$key]['access'] = false;			
+		  
+			if ( $value['parent_id'] == -1 or !$this->menu_items[$key]['access'] ) continue;		
+		  
+			$this->menu_items[$value['parent_id']]['inner_html'] .= $this->ShowItem($value);
+			
+			if ($value['active'] and $value['parent_id'] != -1) 
+			
+				$this->menu_items[$value['parent_id']]['active'] = true;
 		}
 
-		ob_start(); include ($this->style.'menu.html');
-		return ob_get_clean();
+	$html = '';
+	
+		foreach ($this->menu_items as $key => $value) {
+		  
+			if ( $value['parent_id'] != -1 or !$value['access'] ) continue;
 
+		    $html .= $this->ShowItem($value, 'menu_item');
+		}	
+		
+	return $html;
 	}
 
-    public function AddItem($name,$url,$active = false) {
+    public function AddItem($name, $url, $active = false) {
 
-    $new_item_key = sizeof($this->menu_items);
+    $new_key = sizeof($this->menu_items);
 
-     $this->menu_items[$new_item_key]['name']  = $name;
-     $this->menu_items[$new_item_key]['url']   = $url;
-     $this->menu_items[$new_item_key]['class'] = ($active)? 'active' : 'not_active';
-   
-    return $new_item_key;
+	$this->menu_items[$new_key] = array (
+	
+		'name'			=> $name,
+		'url' 			=> $url,
+		'parent_id'		=> -1,
+		'lvl'			=> -1,
+		'permission'	=> -1,
+		'active'		=> $active,
+		'inner_html'	=> '',
+	);
+	
+    return $new_key;
     }
 
     public function SetItemActive($item_key) {
-
-      $this->menu_items[$item_key]['class'] = 'active';
-
-        for ($i=0;$i < sizeof($this->menu_items);$i++) 
-          if ($i != $item_key and $this->menu_items[$i]['class'] == 'active')
-            $this->menu_items[$i]['class'] = 'not_active';
-
-    }
+	global $menu_items;
 	
+    $this->menu_items[$item_key]['active'] = true;
+    }	
 }

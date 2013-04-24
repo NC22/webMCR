@@ -10,16 +10,6 @@ MCRAuth::userLoad();
 function GetRandomAdvice() { return ($quotes = @file(MCR_STYLE.'sovet.txt'))? $quotes[rand(0, sizeof($quotes)-1)] : "Советов нет"; }
 
 $menu = new Menu();
-$menu_items['main'] = $menu->AddItem('Главная','',true);
-
-if (!empty($user)) {
-
-  if ($user->getPermission('add_news')) $menu_items['add_news'] = $menu->AddItem('Добавить новость', ($config['rewrite'])? 'go/news_add' : '?mode=news_add');
-  if ($user->lvl() >= 15)               $menu_items['admin']    = $menu->AddItem('Управление', ($config['rewrite'])? 'go/control' : '?mode=control');
-  if ($user->lvl() > 0)                 $menu_items['options']  = $menu->AddItem('Настройки', ($config['rewrite'])? 'go/options' : '?mode=options');
-
-  $menu_items['exit'] = $menu->AddItem('Выход','login.php?out=1');
-}
 
 if (!empty($user)) {
 
