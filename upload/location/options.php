@@ -5,7 +5,7 @@ if (!defined('FEEDBACK') or empty($user) or $user->lvl() <= 0) exit;
 $page    = 'Настройки аккаунта';
 
 $user_img_get = '?user_id='.$player_id.'&refresh='.rand(1000,9999);
-$menu->SetItemActive($menu_items['options']);
+$menu->SetItemActive('options');
 
 ob_start();	
 

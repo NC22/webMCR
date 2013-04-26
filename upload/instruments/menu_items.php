@@ -14,39 +14,6 @@ $menu_items = array (
 		'inner_html'	=> '',
 	),
 
-	'guide' => array (
-	
-		'name'			=> 'Как начать играть',
-		'url' 			=> ($config['rewrite'])? 'go/guide' : '?mode=guide',
-		'parent_id'		=> -1,
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
-
-	'rules' => array (
-	
-		'name'			=> 'Правила',
-		'url' 			=> ($config['rewrite'])? 'go/rules' : '?mode=rules',
-		'parent_id'		=> -1,
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
-	
-	'map' => array (
-	
-		'name'			=> 'Карта',
-		'url' 			=> ($config['rewrite'])? 'go/map' : '?mode=map',
-		'parent_id'		=> -1,
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
-			
 	'control' => array (
 	
 		'name'			=> 'Управление',
@@ -89,8 +56,41 @@ $menu_items = array (
 		'permission'	=> -1,
 		'active'		=> false,
 		'inner_html'	=> '',
-	),	
+	),
+	
+	'help' => array (
+	
+		'name'			=> 'Помощь',
+		'url' 			=> '',
+		'parent_id'		=> -1,
+		'lvl'			=> -1,
+		'permission'	=> -1,
+		'active'		=> false,
+		'inner_html'	=> '',
+	),
+	
+	'guide' => array (
+	
+		'name'			=> 'Как начать играть',
+		'url' 			=> ($config['rewrite'])? 'go/guide' : '?mode=guide',
+		'parent_id'		=> 'help',
+		'lvl'			=> -1,
+		'permission'	=> -1,
+		'active'		=> false,
+		'inner_html'	=> '',
+	),
 
+	'rules' => array (
+	
+		'name'			=> 'Правила',
+		'url' 			=> ($config['rewrite'])? 'go/rules' : '?mode=rules',
+		'parent_id'		=> 'help',
+		'lvl'			=> -1,
+		'permission'	=> -1,
+		'active'		=> false,
+		'inner_html'	=> '',
+	),
+	
 	'exit' => array (
 	
 		'name'			=> 'Выход',

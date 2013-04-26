@@ -62,13 +62,14 @@ $info_color = 'alert-error'; //alert-success
 $menu = new Menu(MCR_STYLE);
 $menu->AddItem($page,BASE_URL.'install/install.php',true); 
 
+$create_ways = array("skins", "cloaks", "distrib");
 $content_menu = $menu->Show();
 
 function createWays(){
-global $site_ways;
-
-    foreach ($site_ways as $key=>$value) 
-		if ($key != 'mcraft' and $key != 'style' and !is_dir(MCR_ROOT.$site_ways['mcraft'].$value)) 
+global $site_ways, $create_ways;	
+						
+    foreach ($site_ways as $key => $value)
+		if ($value and in_array($key, $create_ways) and !is_dir(MCR_ROOT.$site_ways['mcraft'].$value)) 
 				mkdir(MCR_ROOT.$site_ways['mcraft'].$value, 0777, true);
 }
 

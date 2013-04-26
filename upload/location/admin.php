@@ -41,7 +41,7 @@ $result = file_put_contents("config.php", $txt);
 return true;
 }
 
-$menu->SetItemActive($menu_items['admin']);
+$menu->SetItemActive('admin');
 
 /* Default vars */
 $page    = 'Панель управления';

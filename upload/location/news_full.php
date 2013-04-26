@@ -14,5 +14,5 @@ $news_manager = new NewsMenager(2, MCR_STYLE.'news/','index.php?id='.$item_id.'&
     $content_main  = $news_manager->ShowFullById($item_id,$curlist);
 	$content_main .= $news_manager->ShowCommentForm($item_id); 
 	   	   
-$menu->SetItemActive($menu_items['main']);
+$menu->SetItemActive('main');
 ?>

@@ -350,7 +350,7 @@ private $style;
 	
 		$this->style = (!$style)? MCR_STYLE : $style;
 		
-		require('menu_items.php');
+		require(MCR_ROOT.'instruments/menu_items.php');
 		
 		$this->menu_items = $menu_items; 		
 	}
@@ -409,23 +409,56 @@ private $style;
 	return $html;
 	}
 
-    public function AddItem($name, $url, $active = false) {
+	public function SaveItem($id, $info) {
 
-    $new_key = sizeof($this->menu_items);
+	if (!is_array($info) 			or
+		!$info['name']				or
+		!is_int($info['lvl'])		or
+		(is_int($info['parent_id']) and $info['parent_id'] != -1) or
+		(is_int($info['permission']) and $info['permission'] != -1))
 
-	$this->menu_items[$new_key] = array (
-	
-		'name'			=> $name,
-		'url' 			=> $url,
-		'parent_id'		=> -1,
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> $active,
-		'inner_html'	=> '',
-	);
-	
-    return $new_key;
-    }
+		return false;
+
+		$this->menu_items[$id] = array (
+		
+			'name'			=> $info['name'],
+			'url' 			=> $info['url'],
+			'parent_id'		=> ($info['parent_id'])? $info['parent_id'] : -1,
+			'lvl'			=> (is_int($info['parent_id']))-1,
+			'permission'	=> $info['permission'],
+			'active'		=> (isset($info['active']))? $info['active'] : false,
+			'inner_html'	=> '',
+		);
+
+	$txt  = "<?php if (!defined('MCR')) exit;".PHP_EOL;
+	$txt .= '$menu_items = '.var_export($this->menu_items, true).';'.PHP_EOL;
+
+	$result = file_put_contents(MCR_ROOT.'instruments/menu_items.php', $txt);
+
+	return (is_bool($result) and $result == false)? false : true;
+	}
+
+	public function AddItem($name, $url, $active = false) { /* Deprecated */
+
+		foreach ($this->menu_items as $key => $value) 
+			
+			if ($value['name'] == $name) return $key;
+		
+		$new_key = sizeof($this->menu_items);
+
+		$this->menu_items[$new_key] = array (
+		
+			'name'			=> $name,
+			'url' 			=> $url,
+			'parent_id'		=> -1,
+			'lvl'			=> -1,
+			'permission'	=> -1,
+			'active'		=> $active,
+			'inner_html'	=> '',
+		);
+
+	return $new_key;
+	}
 
     public function SetItemActive($item_key) {
 	global $menu_items;
