@@ -355,10 +355,10 @@ private $style;
 		require(MCR_ROOT.'instruments/menu_items.php');
 		
 		$this->menu_items = $menu_items; 				
-		} else $this->menu_items = array();
+		} else $this->menu_items = array( 0 => array(), 1 => array() );
 	}
 
-	public function ShowItem(&$item) {
+	private function ShowItem(&$item) {
 	
 		$button_name  = $item['name'];
 		$button_url   = $item['url'];
@@ -374,45 +374,61 @@ private $style;
 		return ob_get_clean();		
 	}
 	
+	/* TODO -- add config trigger cheker */
+	
 	public function Show() {
 	global $user;
 	
+	$menu_content = ''; $html_menu = '';
+	
 	if (!empty($user)) $user_lvl = $user->lvl(); else $user_lvl = 0;	
 	
-		foreach ($this->menu_items as $key => $value) {
+	for ($i = 0; $i < 2; $i ++) {
+	
+		if (!sizeof($this->menu_items[$i])) continue;
+	
+		foreach ($this->menu_items[$i] as $key => $value) {
 		  
-			$this->menu_items[$key]['access'] = true; 
+			$this->menu_items[$i][$key]['access'] = true; 
 			
-			if ( $user_lvl < $value['lvl'] ) $this->menu_items[$key]['access'] = false;
+			if ( $user_lvl < $value['lvl'] ) $this->menu_items[$i][$key]['access'] = false;
 			
 			if ( $value['permission'] != -1 )
 			
 				if (!empty($user) and !$user->getPermission($value['permission'])) 
 				
-					$this->menu_items[$key]['access'] = false;			
+					$this->menu_items[$i][$key]['access'] = false;			
 		  
-			if ( $value['parent_id'] == -1 or !$this->menu_items[$key]['access'] ) continue;		
+			if ( $value['parent_id'] == -1 or !$this->menu_items[$i][$key]['access'] ) continue;		
 		  
-			$this->menu_items[$value['parent_id']]['inner_html'] .= $this->ShowItem($value);
+			$this->menu_items[$i][$value['parent_id']]['inner_html'] .= $this->ShowItem($value);
 			
 			if ($value['active'] and $value['parent_id'] != -1) 
 			
-				$this->menu_items[$value['parent_id']]['active'] = true;
-		}
-
-	$html = '';
+				$this->menu_items[$i][$value['parent_id']]['active'] = true;
+		}	
 	
-		foreach ($this->menu_items as $key => $value) {
+		foreach ($this->menu_items[$i] as $key => $value) {
 		  
 			if ( $value['parent_id'] != -1 or !$value['access'] ) continue;
 
-		    $html .= $this->ShowItem($value, 'menu_item');
-		}	
+		    $menu_content .= $this->ShowItem($value, 'menu_item');
+		}
 		
-	return $html;
+		$menu_align = ($i == 1) ? 'pull-right' : 'pull-left';
+		
+		ob_start(); include ($this->style.'menu.html');
+		
+		$html_menu .= ob_get_clean();
+		
+		$menu_content = '';
+		unset($key, $value); 
+	}
+	
+	return $html_menu;
 	}
 
-	public function SaveItem($id, $info) {
+	public function SaveItem($id, $menu, $info) {
 
 	if (!is_array($info) 			or
 		!$info['name']				or
@@ -422,7 +438,14 @@ private $style;
 
 		return false;
 
-		$this->menu_items[$id] = array (
+	for ($i = 0; $i < 2; $i ++) 
+	
+		if ( array_key_exists($id, $this->menu_items[$i]) ) return false;
+	
+		$menu_id = 1;
+		if ($menu == 'left') $menu_id = 0;
+		
+		$this->menu_items[$menu_id][$id] = array (
 		
 			'name'			=> $info['name'],
 			'url' 			=> $info['url'],
@@ -441,15 +464,20 @@ private $style;
 	return (is_bool($result) and $result == false)? false : true;
 	}
 
-	public function AddItem($name, $url, $active = false) { 
+	public function AddItem($name, $url, $active = false, $menu = 'left') { 
 
-		foreach ($this->menu_items as $key => $value) 
-			
-			if ($value['name'] == $name) return $key;
+		for ($i = 0; $i < 2; $i ++) 
 		
-		$new_key = sizeof($this->menu_items);
+			foreach ($this->menu_items[$i] as $key => $value) 
+			
+				if ($value['name'] == $name) return $key;
+		
+		$menu_id = 1;
+		if ($menu == 'left') $menu_id = 0;
+		
+		$new_key = sizeof($this->menu_items[$menu_id]);
 
-		$this->menu_items[$new_key] = array (
+		$this->menu_items[$menu_id][$new_key] = array (
 		
 			'name'			=> $name,
 			'url' 			=> $url,
@@ -466,6 +494,9 @@ private $style;
     public function SetItemActive($item_key) {
 	global $menu_items;
 	
-    $this->menu_items[$item_key]['active'] = true;
+	$menu_id = 1;
+	if ( array_key_exists($item_key, $this->menu_items[0])) $menu_id = 0;
+	
+	$this->menu_items[$menu_id][$item_key]['active'] = true;
     }	
 }

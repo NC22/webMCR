@@ -1,104 +1,109 @@
-<?php 
-if (!defined('MCR')) exit;
+<?php if (!defined('MCR')) exit;
 
 $menu_items = array (
-	
-	'main' => array (
-	
-		'name'			=> 'Главная',
-		'url' 			=> '',
-		'parent_id'		=> -1,
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
 
-	'control' => array (
+  0 => array (
+  
+    'main' => array (
 	
-		'name'			=> 'Управление',
-		'url' 			=> '',
-		'parent_id'		=> -1,
-		'lvl'			=> 15,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),	
+      'name' => 'Главная',
+      'url' => '',
+      'parent_id' => -1,
+      'lvl' => -1,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
 	
-	'admin' => array (
+    'control' => array (
 	
-		'name'			=> 'Администрирование',
-		'url' 			=> ($config['rewrite'])? 'go/control' : '?mode=control',
-		'parent_id'		=> 'control',
-		'lvl'			=> 15,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),	
-
-	'add_news' => array (
+      'name' => 'Управление',
+      'url' => '',
+      'parent_id' => -1,
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
 	
-		'name'			=> 'Добавить новость',
-		'url' 			=> ($config['rewrite'])? 'go/news_add' : '?mode=news_add',
-		'parent_id'		=> 'control',
-		'lvl'			=> 1,
-		'permission'	=> 'add_news',
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
-
-	'options' => array (
+    'admin' => array (
 	
-		'name'			=> 'Настройки',
-		'url' 			=> ($config['rewrite'])? 'go/options' : '?mode=options',
-		'parent_id'		=> -1,
-		'lvl'			=> 1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
+      'name' => 'Администрирование',
+      'url' => 'go/control',
+      'parent_id' => 'control',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
 	
-	'help' => array (
+    'add_news' => array (
 	
-		'name'			=> 'Помощь',
-		'url' 			=> '',
-		'parent_id'		=> -1,
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
+      'name' => 'Добавить новость',
+      'url' => 'go/news_add',
+      'parent_id' => 'control',
+      'lvl' => 1,
+      'permission' => 'add_news',
+      'active' => false,
+      'inner_html' => '',
+    ),
 	
-	'guide' => array (
+    'help' => array (
 	
-		'name'			=> 'Как начать играть',
-		'url' 			=> ($config['rewrite'])? 'go/guide' : '?mode=guide',
-		'parent_id'		=> 'help',
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
-
-	'rules' => array (
+      'name' => 'Помощь',
+      'url' => '',
+      'parent_id' => -1,
+      'lvl' => -1,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
 	
-		'name'			=> 'Правила',
-		'url' 			=> ($config['rewrite'])? 'go/rules' : '?mode=rules',
-		'parent_id'		=> 'help',
-		'lvl'			=> -1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),
+    'guide' => array (
+      'name' => 'Как начать играть',
+      'url' => 'go/guide',
+      'parent_id' => 'help',
+      'lvl' => -1,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
 	
-	'exit' => array (
+    'rules' => array (
 	
-		'name'			=> 'Выход',
-		'url' 			=> 'login.php?out=1',
-		'parent_id'		=> -1,
-		'lvl'			=> 1,
-		'permission'	=> -1,
-		'active'		=> false,
-		'inner_html'	=> '',
-	),	
+      'name' => 'Правила',
+      'url' => 'go/rules',
+      'parent_id' => 'help',
+      'lvl' => -1,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+	
+    'options' => array (
+	
+      'name' => 'Настройки',
+      'url' => 'go/options',
+      'parent_id' => -1,
+      'lvl' => 1,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+  ),
+  
+  1 => array (
+  
+    'exit' => array (
+	
+      'name' => 'Выход',
+      'url' => 'login.php?out=1',
+      'parent_id' => -1,
+      'lvl' => 1,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',	  
+    ),
+	
+  ),
 );
