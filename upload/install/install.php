@@ -59,8 +59,8 @@ $addition_events = '';
 $info = '';  $cErr = '';
 $info_color = 'alert-error'; //alert-success
 
-$menu = new Menu(MCR_STYLE);
-$menu->AddItem($page,BASE_URL.'install/install.php',true); 
+$menu = new Menu(MCR_STYLE, false);
+$menu->AddItem($page, BASE_URL.'install/install.php', true); 
 
 $create_ways = array("skins", "cloaks", "distrib");
 $content_menu = $menu->Show();

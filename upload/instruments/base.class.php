@@ -345,14 +345,17 @@ Class Menu {
 private $menu_items;
 private $style;
 
-    public function Menu($style = false) {
+    public function Menu($style = false, $auto_load = true) {
 	global $config;
 	
 		$this->style = (!$style)? MCR_STYLE : $style;
 		
+		if ($auto_load) {
+
 		require(MCR_ROOT.'instruments/menu_items.php');
 		
-		$this->menu_items = $menu_items; 		
+		$this->menu_items = $menu_items; 				
+		} else $this->menu_items = array();
 	}
 
 	public function ShowItem(&$item) {
@@ -438,7 +441,7 @@ private $style;
 	return (is_bool($result) and $result == false)? false : true;
 	}
 
-	public function AddItem($name, $url, $active = false) { /* Deprecated */
+	public function AddItem($name, $url, $active = false) { 
 
 		foreach ($this->menu_items as $key => $value) 
 			
