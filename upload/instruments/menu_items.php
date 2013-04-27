@@ -14,55 +14,11 @@ $menu_items = array (
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'control' => array (
-	
-      'name' => 'Управление',
-      'url' => '',
-      'parent_id' => -1,
-      'lvl' => 15,
-      'permission' => -1,
-      'active' => false,
-      'inner_html' => '',
-    ),
-	
-    'admin' => array (
-	
-      'name' => 'Администрирование',
-      'url' => 'go/control',
-      'parent_id' => 'control',
-      'lvl' => 15,
-      'permission' => -1,
-      'active' => false,
-      'inner_html' => '',
-    ),
-	
-    'add_news' => array (
-	
-      'name' => 'Добавить новость',
-      'url' => 'go/news_add',
-      'parent_id' => 'control',
-      'lvl' => 1,
-      'permission' => 'add_news',
-      'active' => false,
-      'inner_html' => '',
-    ),
-	
-    'help' => array (
-	
-      'name' => 'Помощь',
-      'url' => '',
-      'parent_id' => -1,
-      'lvl' => -1,
-      'permission' => -1,
-      'active' => false,
-      'inner_html' => '',
-    ),
-	
+
     'guide' => array (
-      'name' => 'Как начать играть',
+      'name' => 'Начать играть',
       'url' => 'go/guide',
-      'parent_id' => 'help',
+      'parent_id' => -1,
       'lvl' => -1,
       'permission' => -1,
       'active' => false,
@@ -73,7 +29,7 @@ $menu_items = array (
 	
       'name' => 'Правила',
       'url' => 'go/rules',
-      'parent_id' => 'help',
+      'parent_id' => -1,
       'lvl' => -1,
       'permission' => -1,
       'active' => false,
@@ -93,7 +49,125 @@ $menu_items = array (
   ),
   
   1 => array (
-  
+
+    'admin' => array (
+	
+      'name' => 'Администрирование',
+      'url' => '',
+      'parent_id' => -1,
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+	
+    'add_news' => array (
+	
+      'name' => 'Добавить новость',
+      'url' => 'go/news_add',
+      'parent_id' => 'admin',
+      'lvl' => 1,
+      'permission' => 'add_news',
+      'active' => false,
+      'inner_html' => '',
+    ),
+	
+    'control' => array (
+	
+      'name' => 'Управление пользователями',
+      'url' => 'go/control',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+	
+    'category_news' => array (
+	
+      'name' => 'Категории новостей',
+      'url' => '?mode=control&do=category',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+
+    'reg_edit' => array (
+	
+      'name' => 'Регистрация',
+      'url' => '?mode=control&do=ipbans',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+	
+    'group_edit' => array (
+	
+      'name' => 'Группы',
+      'url' => '?mode=control&do=group',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+    'file_edit' => array (
+	
+      'name' => 'Файлы',
+      'url' => '?mode=control&do=filelist',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+    'site_edit' => array (
+	
+      'name' => 'Сайт',
+      'url' => '?mode=control&do=constants',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+    'rcon' => array (
+	
+      'name' => 'RCON',
+      'url' => '?mode=control&do=rcon',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+	
+    'game_edit' => array (
+	
+      'name' => 'Настройки игры',
+      'url' => '?mode=control&do=update',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+	
+    'serv_edit' => array (
+	
+      'name' => 'Мониторинг серверов',
+      'url' => '?mode=control&do=servers',
+      'parent_id' => 'admin',
+      'lvl' => 15,
+      'permission' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
+
     'exit' => array (
 	
       'name' => 'Выход',
