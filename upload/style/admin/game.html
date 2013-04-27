@@ -8,19 +8,19 @@
 	
 	<label>Cсылка на лаунчер (Windows):</label>
 	<span class="help-block">Ссылка, выводимая в шаблоне (<?php echo MCR_STYLE; ?>start-game.html) (<a href="index.php?mode=start">Страница</a>)</span>
-    <input type="text" name="link_win" value="<?php echo $config['s_llink_win']; ?>">
+    <input type="text" name="link_win" value="<?php echo sqlConfigGet('game-link-win') ?>">
 	
 	<label>Cсылка на лаунчер (Linux):</label>
 	<span class="help-block">Ссылка, выводимая в шаблоне (<?php echo MCR_STYLE; ?>start-game.html) (<a href="index.php?mode=start">Страница</a>)</span>
-    <input type="text" name="link_lin" value="<?php echo $config['s_llink_lin']; ?>">	
+    <input type="text" name="link_lin" value="<?php echo sqlConfigGet('game-link-lin') ?>">	
 	
 	<label>Build клиента:</label>
 	<span class="help-block">Настройка необходима для синхронизации обновлений в оригинальном лаунчере. </span>
-    <input type="text" name="build_set" value="<?php echo $game_build; ?>">
+    <input type="text" name="build_set" value="<?php echo sqlConfigGet('latest-game-build') ?>">
 	
 	<label>Версия лаунчера:</label>
 	<span class="help-block">При запросе авторизации, лаунчер передает свою версию. При не совпадении версии лаунчера и заданной здесь, авторизация будет отклонена.</span>
-    <input type="text" name="launcher_set" value="<?php echo $game_lver; ?>">	
+    <input type="text" name="launcher_set" value="<?php echo sqlConfigGet('launcher-version') ?>">	
 	
 	<br/>				 
 	

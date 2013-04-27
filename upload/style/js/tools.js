@@ -297,6 +297,8 @@ GetById('debug').innerHTML += string
   This is meant to convert all file input tags into a set of elements that displays consistently in all browsers.
 */
 
+if(typeof $ == 'function')
+
 $(function() {
 
 $('input[type=file]').each(function(i,elem){

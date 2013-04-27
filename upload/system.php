@@ -60,6 +60,23 @@ function tmp_name($folder, $pre = '', $ext = 'tmp'){
 return (file_exists($folder.$name))? tmp_name($folder,$pre,$ext) : $name;
 }
 
+function InputGet($key, $method = 'POST', $type = 'str') {
+	
+	$blank_result = array( 'str' => '', 'int' => 0, 'float' => 0, 'bool' => false);
+	
+	if (($method == 'POST' and !isset($_POST[$key])) or
+		($method != 'POST' and !isset($_GET[$key]))) return $blank_result[$type];
+	
+	$var = ($method == 'POST')? $_POST[$key] : $_GET[$key];
+	
+    switch($type){
+		case 'str': return TextBase::HTMLDestruct($var); break;
+		case 'int': return (int) $var; break;
+		case 'float': return (float) $var; break;
+		case 'bool': return (bool) $var; break;
+	}	
+}
+
 function POSTGood($post_name, $format = array('png')) {
 
 if ( empty($_FILES[$post_name]['tmp_name']) or 
@@ -108,17 +125,7 @@ function randString( $pass_len = 50 ) {
 function sqlConfigGet($type){
 global $bd_names;
 	
-    switch($type){
-	case 'latest-game-build':
-	case 'rcon-port':
-	case 'rcon-serv':	
-	case 'rcon-pass':
-	case 'next-reg-time':
-	case 'email-verification':
-	case 'email-verification-salt':
-	case 'launcher-version':  break;
-	default : return false;
-	}
+	if (!in_array($type, ItemType::$SQLConfigVar)) return false;
 	
     $result = BD("SELECT `value` FROM `{$bd_names['data']}` WHERE `property`='".TextBase::SQLSafe($type)."'");   
 
@@ -129,20 +136,10 @@ global $bd_names;
 	return $line[0];		
 }
 
-function sqlConfigSet($type,$value) {
+function sqlConfigSet($type, $value) {
 global $bd_names;
 
-    switch($type){
-	case 'latest-game-build':
-	case 'rcon-port':
-	case 'rcon-pass':
-	case 'rcon-serv':
-    case 'next-reg-time':	
-	case 'email-verification':
-	case 'email-verification-salt':
-	case 'launcher-version': break;
-	default : return false;
-	}
+	if (!in_array($type, ItemType::$SQLConfigVar)) return false;
 	
 	$result = BD("INSERT INTO `{$bd_names['data']}` (value,property) VALUES ('".TextBase::SQLSafe($value)."','".TextBase::SQLSafe($type)."') ON DUPLICATE KEY UPDATE `value`='".TextBase::SQLSafe($value)."'");
 	return true;

@@ -11,6 +11,8 @@ function GetRandomAdvice() { return ($quotes = @file(MCR_STYLE.'sovet.txt'))? $q
 
 $menu = new Menu();
 
+if ($config['offline'] and (empty($user) or $user->group() != 3)) exit(Menager::ShowStaticPage(MCR_STYLE.'site_closed.html'));
+
 if (!empty($user)) {
 
 $player       = $user->name();

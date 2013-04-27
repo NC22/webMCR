@@ -1,43 +1,97 @@
 <form action="index.php?mode=control&amp;do=constants" method="post">
-  <fieldset>
-  
-	<input type="hidden" name="step" value="3" />
 	
-    <legend>Настройки сайта</legend>
+	<div class="tabbable" style="margin-top: 12px; padding: 10px;">
+
+    <ul class="nav nav-tabs">
 	
-	<label>Название сайта:</label>
-	<span class="help-block">Название, отображаемое в заголовке и на страницах сайта. </span>
-    <input type="text" name="site_name" value="<?php echo $config['s_name']; ?>">
+		<li class="active"><a href="#tab1" data-toggle="tab">Основные настройки</a></li>
+		<li><a href="#tab2" data-toggle="tab">Почтовый сервер</a></li>
+		<li><a href="#tab3" data-toggle="tab">Дополнительно</a></li>		
+    </ul>
 	
-	<label>Описание сайта:</label>
-	<span class="help-block">По умолчанию используется для индексации сайта поисковыми машинами. Так же отображается под названием сайта.</span>
-    <input type="text" name="site_about" value="<?php echo $config['s_about']; ?>">	
+    <div class="tab-content">
 	
-	<label>Ключевые слова:</label>
-	<span class="help-block">Используются для индексации сайта поисковыми машинами. Вводить через пробел, общая длинна не > 200 символов </span>
-    <input type="text" name="site_keyword" value="<?php echo $config['s_keywords']; ?>">
-	
-	<label class="checkbox">
-	  <input type="checkbox" name="comm_revers" value="1" <?php echo ($config['comm_revers'])?'checked="checked"':'' ?>> Комментарии в обратном порядке
-	</label>
-	<span class="help-block">Новые в конец, страница листинга комментариев по умолчанию последняя.</span>
+		<div class="tab-pane active" id="tab1">
 			
-	<label class="checkbox">
-	  <input type="checkbox" name="sbuffer" value="1" <?php echo ($config['sbuffer'])?'checked="checked"':'' ?>> Буферизация генерируемых изображений
-	</label>
-	<span class="help-block">Рекомендуется включить, если вы намерены разрешить использование HD скинов на вашем сайте.</span>
-	
-	<label class="checkbox">
-	  <input type="checkbox" name="rewrite" value="1" <?php echo ($config['rewrite'])?'checked="checked"':'' ?>> Простые ссылки на новости
-	</label>
-	<span class="help-block">Если сервер использует модуль mod_rewrite, можно активировать эту опцию для замены ссылок вида site.ru/index.php?id=2334 на site.ru/news/2334</span>	
-	
-	<label class="checkbox">
-	  <input type="checkbox" name="log" value="1" <?php echo ($config['log'])?'checked="checked"':'' ?>> Запись лога (<a href="index.php?mode=control&do=log">Просмотр</a>)
-	</label>
-	<span class="help-block">Запись сообщений об ошибках веб приложения в файл <?php echo MCR_ROOT.'log.txt' ?> . Обнуление файла при размере > 50мб</span>	
+			<label>Название сайта:</label>
+			<span class="help-block">Название, отображаемое в заголовке и на страницах сайта. </span>
+			<input type="text" name="site_name" value="<?php echo $config['s_name']; ?>">
+			
+			<label>Описание сайта:</label>
+			<span class="help-block">По умолчанию используется для индексации сайта поисковыми машинами. Так же отображается под названием сайта.</span>
+			<input type="text" name="site_about" value="<?php echo $config['s_about']; ?>">	
+			
+			<label>Ключевые слова:</label>
+			<span class="help-block">Используются для индексации сайта поисковыми машинами. Вводить через пробел, общая длинна не > 200 символов </span>
+			<input type="text" name="site_keyword" value="<?php echo $config['s_keywords']; ?>">
+			
+			<label class="checkbox">
+			  <input type="checkbox" name="comm_revers" value="1" <?php echo ($config['comm_revers'])?'checked="checked"':'' ?>> Комментарии в обратном порядке
+			</label>
+			<span class="help-block">Новые в конец, страница листинга комментариев по умолчанию последняя.</span>
+					
+			<label class="checkbox">
+			  <input type="checkbox" name="sbuffer" value="1" <?php echo ($config['sbuffer'])?'checked="checked"':'' ?>> Буферизация генерируемых изображений
+			</label>
+			<span class="help-block">Рекомендуется включить, если вы намерены разрешить использование HD скинов на вашем сайте.</span>
+			
+			<label class="checkbox">
+			  <input type="checkbox" name="rewrite" value="1" <?php echo ($config['rewrite'])?'checked="checked"':'' ?>> Простые ссылки на новости
+			</label>
+			<span class="help-block">Если сервер использует модуль mod_rewrite, можно активировать эту опцию для замены ссылок вида site.ru/index.php?id=2334 на site.ru/news/2334</span>	
 		
-    <button type="submit" class="btn">Сохранить</button>
+		</div>
+		
+		<div class="tab-pane" id="tab2">
 	
-  </fieldset>
+			<label class="checkbox">
+			  <input type="checkbox" name="smtp" value="1" <?php echo ($config['smtp'])?'checked="checked"':'' ?>> Использовать заданые настройки smtp
+			</label>	
+			<span class="help-block">В обход настроеной функции mail из файла php.ini вашего web сервера. </span>
+			
+			<label>Пользователь smtp:</label>
+			<input type="text" name="smtp_user" value="<?php echo sqlConfigGet('smtp-user') ?>">
+			
+			<label>Пароль пользователя:</label>
+			<input type="password" name="smtp_pass" value="<?php echo (sqlConfigGet('smtp-pass'))? '**defined**' : '' ?>">
+			
+			<label class="checkbox">
+			  <input type="checkbox" name="smtp_no_pass" value="1" <?php echo (!sqlConfigGet('smtp-pass'))?'checked="checked"':'' ?>> Без пароля
+			</label>
+			
+			<label>Адрес сервера:</label>
+			<input type="text" name="smtp_host" value="<?php echo sqlConfigGet('smtp-host');  ?>">
+			
+			<label>Порт:</label>
+			<input type="text" name="smtp_port" value="<?php echo sqlConfigGet('smtp-port');  ?>">	
+			
+			<label>Приветствие:</label>
+			
+			<input type="text" name="smtp_hello" value="<?php echo sqlConfigGet('smtp-hello');  ?>">	
+			<span class="help-block">HELO | EHLO</span>	
+			
+		</div>
+		
+		<div class="tab-pane" id="tab3">
+	
+			<label class="checkbox">
+			  <input type="checkbox" name="site_offline" value="1" <?php echo ($config['offline'])?'checked="checked"':'' ?>> Закрыть сайт ( режим "Технических работ" )
+			</label>
+
+			<div class="alert alert-info">
+			В режиме "Технических работ" доступ к сайту будет доступен только пользователям из группы Администратор
+			</div>
+			
+			<label class="checkbox">
+			  <input type="checkbox" name="log" value="1" <?php echo ($config['log'])?'checked="checked"':'' ?>> Запись лога (<a href="index.php?mode=control&do=log">Просмотр</a>)
+			</label>
+			<span class="help-block">Запись сообщений об ошибках веб приложения в файл <?php echo MCR_ROOT.'log.txt' ?> . Обнуление файла при размере > 50мб</span>	
+								
+		</div>		
+    </div>
+	
+	<button type="submit" class="btn">Применить</button>
+	
+	</div>	
+	
 </form>

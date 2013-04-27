@@ -34,6 +34,15 @@ INSERT INTO `data` (`property`, `value`) VALUES
 ('rcon-pass', '0'),
 ('rcon-serv', '0');
 
+INSERT INTO `property` (`property`, `value`) VALUES
+('smtp-user', ''),
+('smtp-pass', ''),
+('smtp-host', 'localhost'),
+('smtp-port', '25'),
+('smtp-hello', 'HELO'),
+('game-link-win', ''),
+('game-link-lin', '');
+
 CREATE TABLE IF NOT EXISTS `likes` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL,

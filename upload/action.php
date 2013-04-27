@@ -2,7 +2,7 @@
 /* WEB-APP : WebMCR (С) 2013 NC22 */
 
 if (empty($_POST['method']) and empty($_GET['method'])) exit;
-$method = ($_POST['method'])? $_POST['method'] : $_GET['method'];
+$method = (isset($_POST['method']))? $_POST['method'] : $_GET['method'];
 
 switch ($method) {
 	case 'comment': 

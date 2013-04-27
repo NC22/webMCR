@@ -32,9 +32,6 @@ $config = array (
 	's_keywords'	=> 'сервер игра онлайн NC22 Minecraft',
 	's_dpage'		=> 'news',  
 	's_root'		=> '/',
-
-	's_llink_win'	=> 'launcher_win.zip',
-	's_llink_lin'	=> 'launcher_lin.zip',
   
 	'news_by_page'	=> 5,
 	'comm_by_page'	=> 5,  
@@ -47,7 +44,8 @@ $config = array (
 	'sbuffer'	=> true,  
 	'skinposer'	=> false, 
 	'rewrite'	=> true,
-	'log'		=> false,  
+	'log'		=> false,
+	'offline'	=> false,
   
 	'install' => true,
 	'p_logic' => 'usual',
@@ -58,11 +56,6 @@ $config = array (
 	'fbackMail' => 'noreplay@noreplay.ru',
 	
 	'smtp'		=> false,
-	'smtpUser'	=> '',
-	'smtpPass'	=> '',
-	'smtpHost'	=> 'localhost',
-	'smtpPort'	=> 25,
-	'smtpHello' => 'HELO', // some servers prefer EHLO command instead
 	
 /* action limiter */
 

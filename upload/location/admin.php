@@ -30,7 +30,7 @@ $txt .= '$site_ways = '.var_export($site_ways, true).';'.PHP_EOL;
 $txt .= '/* Put all new config additions here */'.PHP_EOL;
 $txt .= '?>';
 
-$result = file_put_contents("config.php", $txt);
+$result = file_put_contents(MCR_ROOT.'config.php', $txt);
 
 	if (is_bool($result) and $result == false) {
 
@@ -262,12 +262,12 @@ if ($do) {
 		$new_build  = (!empty($_POST['build_set']))? (int)$_POST['build_set'] : false;
 		$new_version_l = (!empty($_POST['launcher_set']))? (int)$_POST['launcher_set'] : false;
 		
-		$link_win  = (!empty($_POST['link_win']))? TextBase::HTMLDestruct($_POST['link_win']) : false;
-		$link_lin  = (!empty($_POST['link_lin']))? TextBase::HTMLDestruct($_POST['link_lin']) : false;
+		$link_win  = InputGet('link_win', 'POST', 'str');
+		$link_lin  = InputGet('link_lin', 'POST', 'str');
 		$game_news = (!empty($_POST['game_news']))? (int)$_POST['game_news'] : false;
 		
-		if ($link_win)  $config['s_llink_win'] = $link_win;
-		if ($link_lin)  $config['s_llink_lin'] = $link_lin;
+		if ($link_win)  sqlConfigSet('game-link-win', $link_win); 
+		if ($link_lin)  sqlConfigSet('game-link-lin', $link_lin);
 		if (!is_bool($game_news)) {
 		
 				if ($game_news <= 0) $config['game_news'] = 0;
@@ -475,7 +475,9 @@ if ($do) {
 	
 	if (isset($_POST['site_name'])) {
 	
-	$site_name   = TextBase::HTMLDestruct($_POST['site_name']);
+	$site_name		= InputGet('site_name', 'POST', 'str');
+	$site_offline	= InputGet('site_offline', 'POST', 'bool');
+	$smtp			= InputGet('smtp', 'POST', 'bool');
 	
 	$site_about  = (isset($_POST['site_about']))? TextBase::HTMLDestruct($_POST['site_about']) : '';
 	$keywords    = (isset($_POST['site_keyword']))? TextBase::HTMLDestruct($_POST['site_keyword']) : '';	
@@ -488,21 +490,42 @@ if ($do) {
 	$info .= 'Укажите название сайта.';
 	break;
 	}
+
+	$sbuffer     = InputGet('sbuffer', 'POST', 'bool');
+	$rewrite     = InputGet('rewrite', 'POST', 'bool');
+	$log  		 = InputGet('log', 'POST', 'bool');
+	$comm_revers = InputGet('comm_revers', 'POST', 'bool');
 	
-	$sbuffer     = (!empty($_POST['sbuffer']))? true : false;	
-	$rewrite     = (!empty($_POST['rewrite']))? true : false;
-	$log  		 = (!empty($_POST['log']))? true : false;
-	$comm_revers = (!empty($_POST['comm_revers']))? true : false;
-	
-	$config['s_name']      = $site_name   ;
-	$config['s_about']     = $site_about  ; 	
-	$config['s_keywords']  = $keywords    ;	
-	$config['sbuffer']     = $sbuffer     ;	
-	$config['rewrite']     = $rewrite 	  ;
- 	$config['log']  	   = $log	 	  ;
-	$config['comm_revers'] = $comm_revers ;
+	$config['s_name']		= $site_name	;
+	$config['s_about']		= $site_about	; 	
+	$config['s_keywords']	= $keywords		;	
+	$config['sbuffer']		= $sbuffer		;	
+	$config['rewrite']		= $rewrite		;
+	$config['log']			= $log			;
+	$config['comm_revers']	= $comm_revers	;
+	$config['offline']		= $site_offline	;
+	$config['smtp']			= $smtp			;
 	
 	if (SaveOptions()) $info .= 'Файл настроек обновлен.';
+
+		if ($config['smtp']) {
+		
+		$smtp_user		= InputGet('smtp_user', 'POST', 'str');
+		$smtp_pass		= (isset($_POST['smtp_no_pass']))? '' : InputGet('smtp_pass', 'POST', 'str');
+		$smtp_host		= InputGet('smtp_host', 'POST', 'str');
+		$smtp_port		= InputGet('smtp_port', 'POST', 'int');
+		$smtp_hello		= InputGet('smtp_hello', 'POST', 'str');
+		
+			sqlConfigSet('smtp-user', $smtp_user);
+			
+			if ($smtp_pass != '**defined**')
+				
+				sqlConfigSet('smtp-pass', $smtp_pass);
+			
+			sqlConfigSet('smtp-host', $smtp_host);
+			sqlConfigSet('smtp-port', $smtp_port);
+			sqlConfigSet('smtp-hello', $smtp_hello);
+		}	
 	}
 	include MCR_STYLE.'admin/constants.html'; 
     break;	

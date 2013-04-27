@@ -9,6 +9,31 @@ class ItemType {
 	const News = 1;
 	const Comment = 2;
 	const Skin = 3;	
+	
+	/** @const */
+	public static $SQLConfigVar = array (
+		 
+		'rcon-port',
+		'rcon-serv',	
+		'rcon-pass',
+	 
+		'next-reg-time',
+	 
+		'email-verification',
+		'email-verification-salt',
+	 
+		'latest-game-build',
+		'launcher-version',
+	
+		'game-link-win',
+		'game-link-lin',
+	
+		'smtp-user',
+		'smtp-pass',
+		'smtp-host',
+		'smtp-port',
+		'smtp-hello',		
+	);
 }
 
 Class TextBase {
@@ -83,13 +108,18 @@ const ENCODE = 'utf-8';
 	}
 	
 	private function smtpmail($mail_to, $subject, $message, $headers) {
-	global $config;	
+		
+		$smtp_user	= sqlConfigGet('smtp-user');
+		$smtp_pass	= sqlConfigGet('smtp-pass');
+		$smtp_host	= sqlConfigGet('smtp-host');
+		$smtp_port	= (int) sqlConfigGet('smtp-port');
+		$smtp_hello	= sqlConfigGet('smtp-hello');
 		
 		$send = "Date: ".date("D, d M Y H:i:s")." UT\r\n";
 		$send .= "Subject: {$subject}\r\n";			
 		$send .= $headers."\r\n\r\n".$message."\r\n";
 
-		if( !$socket = fsockopen($config['smtpHost'], $config['smtpPort'], $errno, $errstr, 10) ) {
+		if( !$socket = @fsockopen($smtp_host, $smtp_port, $errno, $errstr, 10) ) {
 			vtxtlog('[SMPT] '.$errno." | ".$errstr);
 			return false;
 		}
@@ -97,16 +127,16 @@ const ENCODE = 'utf-8';
 		stream_set_timeout($socket, 10);
 		
 		if (!self::server_action($socket, false, "220") or
-			!self::server_action($socket, $config['smtpHello']." " . $config['smtpHost'] . "\r\n", "250", 'Приветствие сервера недоступно')) 
+			!self::server_action($socket, $smtp_hello." " . $smtp_host . "\r\n", "250", 'Приветствие сервера недоступно')) 
 				return false;
 			
-		if (!empty($config['smtpUser']))
+		if (!empty($smtp_user))
 			if (!self::server_action($socket, "AUTH LOGIN\r\n", "334", 'Нет ответа авторизации') or
-				!self::server_action($socket, base64_encode($config['smtpUser']) . "\r\n", "334", 'Неверный логин авторизации') or
-				!self::server_action($socket, base64_encode($config['smtpPass']) . "\r\n", "235", 'Неверный пароль авторизации')) 
+				!self::server_action($socket, base64_encode($smtp_user) . "\r\n", "334", 'Неверный логин авторизации') or
+				!self::server_action($socket, base64_encode($smtp_pass) . "\r\n", "235", 'Неверный пароль авторизации')) 
 					return false;
 				
-		if (!self::server_action($socket, "MAIL FROM: <".$config['smtpUser'].">\r\n", "250", 'Ошибка MAIL FROM') or
+		if (!self::server_action($socket, "MAIL FROM: <". $smtp_user .">\r\n", "250", 'Ошибка MAIL FROM') or
 			!self::server_action($socket, "RCPT TO: <" . $mail_to . ">\r\n", "250", 'Ошибка RCPT TO') or
 			!self::server_action($socket, "DATA\r\n", "354", 'Ошибка DATA') or
 			!self::server_action($socket, $send."\r\n.\r\n", "250", 'Ошибка сообщения')) 

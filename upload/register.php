@@ -21,13 +21,13 @@ $method = CheckPostComplect();
 if (!$method) exit;
 
 require('./system.php');
-require(MCR_ROOT.'instruments/ajax.php');
 
 if ($config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') aExit(1,'Регистрация заблокирована. Используются скрипты авторизации сторонней CMS.');
 
-require(MCR_ROOT.'instruments/user.class.php');
-
 BDConnect('register');
+
+require(MCR_ROOT.'instruments/user.class.php');
+require(MCR_ROOT.'instruments/ajax.php');
 
 $rcodes  = array();  
 
@@ -130,8 +130,8 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 	else {	
 		
 		$subject = 'Подтверждение регистрации '.$_SERVER['SERVER_NAME'];
-		$link = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$tmp_user->id().'&verificate='.$tmp_user->getVerificationStr(); 
-		$message = '<html><body><p>Для завершения регистрации необходимо пройти по ссылке. <a href="'.$link.'">Открыть</a></p></body></html>';
+		$http_link = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$tmp_user->id().'&verificate='.$tmp_user->getVerificationStr(); 
+		$message = '<html><body><p>Для завершения регистрации необходимо пройти по ссылке. <a href="'.$http_link.'">Открыть</a></p></body></html>';
 		
 		if ( !EMail::Send($email, $subject, $message) ) aExit(14, 'Ошибка отправки подтверждения на почтовый ящик.');
 	

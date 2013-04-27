@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">	
+    <title>Доступ к сайту ограничен</title>
+	
+	<base href="<?php echo BASE_URL ?>"> 
+	
+</head>
+
+<body>
+<script type="text/javascript">
+
+	var way_style = '<?php echo STYLE_URL ?>'
+	var base_url  = '<?php echo BASE_URL ?>'
+</script>
+
+<p>На сервере ведутся технические работы.</p>
+
+
+
+<div id="login-box" style="height: 300px; width: 300px; margin: 0 auto;">
+	
+	<div style="padding: 10px; text-align: center;">Вход для адиминистратора</div>
+
+	<div style="text-align: center;">
+
+		<form action="login.php" method="post" id="loginform">
+		
+			<p><input id="auth-login" type="text" name="login" placeholder="Логин или e-mail:" /></p>
+			<p><input id="auth-pass" type="password" name="pass" placeholder="Пароль:" /></p>
+			
+			<input type="hidden" id="auth-save" name="save" value="1" />
+
+			<p><input type="submit" class="btn" id="login" onclick="Login(); return false;" value="Войти"></p>
+		</form>
+		
+	</div>
+
+	<div class="inform-block" style="display: none; color: #434343; background-color: #ff8395; padding: 10px;" id="loginform-error">
+
+		<div class="alert alert-error" id="loginform-error-text"></div>
+
+	</div>
+
+</div>
+
+	<script src="<?php echo STYLE_URL ?>js/tools.js"></script>
+	<script src="<?php echo STYLE_URL ?>js/ajax.js"></script>
+	
+</body>
+
+</html>

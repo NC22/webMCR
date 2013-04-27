@@ -143,6 +143,15 @@ BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('rcon-pass', '0'),
 ('rcon-serv', '0');");
 
+BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+('smtp-user', ''),
+('smtp-pass', ''),
+('smtp-host', 'localhost'),
+('smtp-port', '25'),
+('smtp-hello', 'HELO'),
+('game-link-win', ''),
+('game-link-lin', '');");
+
 /* 2.05 UPDATE */
 
 if (!BD_ColumnExist($bd_names['ip_banning'], 'ban_type'))
