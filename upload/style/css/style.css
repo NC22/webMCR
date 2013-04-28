@@ -21,13 +21,18 @@ textarea {
 
 /* класс image-polaroid используется скриптами ajax */
 
+/* Bootstrap mod */
+
 .breadcrumb {
   font-size: 13px; 
   padding: 8px 15px;
   margin: 0 0 20px;
   list-style: none;
-  background-color: #f5f5f5;
   border: 1px dashed #e0edf1; 
+  background-color: #f5f5f5;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
 }
 
 .breadcrumb li {
