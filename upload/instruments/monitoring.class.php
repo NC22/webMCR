@@ -357,19 +357,19 @@ private $rcon;
 
       if (!$this->id) aExit(1,'server_state');	
 	  
-	  $ajax_message['id']      = $this->id;		
+	  $ajax_message['id']      = (int)$this->id;		
 	  $ajax_message['name']    = $this->name;					
 	  $ajax_message['online']  = ($this->online)? 1 : 0;
 	  $ajax_message['info']    = $this->info;
 	  $ajax_message['address'] = $this->address;
-	  $ajax_message['port']    = $this->port;
+	  $ajax_message['port']    = (int)$this->port;
 	  	  
 	  if (!$this->online) aExit(2,'server_state'); 
 	  
 	  $players = $this->GetPlayers();
 		
-	  $ajax_message['numpl']    = $players[1];
-	  $ajax_message['slots']    = $this->slots;
+	  $ajax_message['numpl']    = (int)$players[1];
+	  $ajax_message['slots']    = (int)$this->slots;
 	  $ajax_message['pl_array'] = $players[0];
 	 
 	  aExit(0,'server_state');
