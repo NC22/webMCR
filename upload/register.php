@@ -22,13 +22,13 @@ if (!$method) exit;
 
 require('./system.php');
 
+require(MCR_ROOT.'instruments/ajax.php');
+
 if ($config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') aExit(1,'Регистрация заблокирована. Используются скрипты авторизации сторонней CMS.');
 
 BDConnect('register');
 
 require(MCR_ROOT.'instruments/user.class.php');
-require(MCR_ROOT.'instruments/ajax.php');
-
 $rcodes  = array();  
 
 function tryExit() {
