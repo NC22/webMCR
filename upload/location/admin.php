@@ -1,7 +1,7 @@
 <?php
 if (!defined('MCR')) exit;
  
-if (empty($user) or $user->lvl() < 15) exit;
+if (empty($user) or $user->lvl() < 15) { header("Location: ".BASE_URL); exit; }
 
 require(MCR_ROOT.'instruments/catalog.class.php');
 require(MCR_ROOT.'instruments/alist.class.php');

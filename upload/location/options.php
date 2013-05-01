@@ -1,5 +1,6 @@
 <?php
-if (!defined('FEEDBACK') or empty($user) or $user->lvl() <= 0) exit;
+if (!defined('MCR')) exit;
+if (empty($user) or $user->lvl() <= 0) { header("Location: ".BASE_URL); exit; }
 
 /* Default vars */
 $page    = 'Настройки аккаунта';

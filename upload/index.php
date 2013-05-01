@@ -23,10 +23,13 @@ $player_group = $user->getGroupName();
 $player_money = $user->getMoney();
 }
 
-$content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $mode = null;
+$content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $mode = $config['s_dpage'];
 
-if ( isset($_GET['id']) ) $mode = 'news_full';
-else $mode = (empty($_GET['mode']) or (empty($user) and in_array($_GET['mode'], array('options', 'news_add', 'control'))))? $config['s_dpage'] : $_GET["mode"]; 
+	if (isset($_GET['id'])) $mode = 'news_full'; 
+elseif (isset($_GET['mode'])) $mode = $_GET['mode']; 
+elseif (isset($_POST['mode'])) $mode = $_POST['mode']; 
+
+if ($mode == 'side') $mode = $config['s_dpage'];
 
 switch ($mode) {
     case 'start': $page = 'Начать игру'; $content_main = Menager::ShowStaticPage(MCR_STYLE.'start-game.html');  break;
@@ -40,16 +43,15 @@ switch ($mode) {
     default: 
 		if (!preg_match("/^[a-zA-Z0-9_-]+$/", $mode) or !file_exists(MCR_ROOT.'/location/'.$mode.'.php')) $mode = $config['s_dpage']; 
 
-		include(MCR_ROOT.'/location/'.$mode.'.php');  	
-	break;
+		include(MCR_ROOT.'/location/'.$mode.'.php'); break;
 } 
 
 include('./location/side.php'); 
 
-$content_menu 		= $menu->Show();
+$content_menu = $menu->Show();
 
 $servManager = new ServerMenager();
-$content_servers 	= $servManager->Show('side');
+$content_servers = $servManager->Show('side');
 
 unset($servManager);
 
