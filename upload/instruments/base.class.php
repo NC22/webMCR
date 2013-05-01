@@ -387,7 +387,27 @@ private $style;
 		$this->menu_items = $menu_items; 				
 		} else $this->menu_items = array( 0 => array(), 1 => array() );
 	}
+	
+	private static function array_insert_before(&$array, $var, $key_name) {
 
+	$index = array_search($key_name, array_keys($array));
+	if ($index === false) return false;
+
+	$part_array = array_splice ($array, 0, $index);
+	$array = array_merge ($part_array, $var, $array);
+	return true;
+	}
+	
+	private function SaveMenu() {
+	
+		$txt  = "<?php if (!defined('MCR')) exit;".PHP_EOL;
+		$txt .= '$menu_items = '.var_export($this->menu_items, true).';'.PHP_EOL;
+
+		$result = file_put_contents(MCR_ROOT.'instruments/menu_items.php', $txt);
+
+		return (is_bool($result) and $result == false)? false : true;	
+	}
+	
 	private function ShowItem(&$item) {
 	
 		$button_name  = $item['name'];
@@ -404,10 +424,21 @@ private $style;
 		return ob_get_clean();		
 	}
 	
+	public function DeleteItem($menu, $key) {
+	
+	$menu_id = 1; if ($menu == 'left') $menu_id = 0;
+	
+	$index = array_search($key, array_keys($this->menu_items[$menu_id]));
+	if ($index === false) return false;
+
+	array_splice ($this->menu_items[$menu_id], $index, 1);
+	return $this->SaveMenu();
+	}
+	
 	/* TODO -- add config trigger cheker */
 	
 	public function Show() {
-	global $user;
+	global $user, $config;
 	
 	$menu_content = ''; $html_menu = '';
 	
@@ -421,9 +452,15 @@ private $style;
 		  
 			$this->menu_items[$i][$key]['access'] = true; 
 			
-			if ( $user_lvl < $value['lvl'] ) $this->menu_items[$i][$key]['access'] = false;
+				if ( $user_lvl < $value['lvl'] ) 
+					
+					$this->menu_items[$i][$key]['access'] = false;
+					
+			elseif ( array_key_exists('config', $value) and is_bool($config[$value['config']]) and !$config[$value['config']])
 			
-			if ( $value['permission'] != -1 )
+					$this->menu_items[$i][$key]['access'] = false;
+			
+			elseif ( $value['permission'] != -1 )
 			
 				if (!empty($user) and !$user->getPermission($value['permission'])) 
 				
@@ -458,8 +495,10 @@ private $style;
 	return $html_menu;
 	}
 
-	public function SaveItem($id, $menu, $info) {
-
+	public function SaveItem($id, $menu, $info, $insert_before = false) {
+	
+	$menu_id = 1; if ($menu == 'left') $menu_id = 0;
+	
 	if (!is_array($info) 			or
 		!$info['name']				or
 		!is_int($info['lvl'])		or
@@ -467,15 +506,12 @@ private $style;
 		(is_int($info['permission']) and $info['permission'] != -1))
 
 		return false;
-
+		
 	for ($i = 0; $i < 2; $i ++) 
 	
 		if ( array_key_exists($id, $this->menu_items[$i]) ) return false;
-	
-		$menu_id = 1;
-		if ($menu == 'left') $menu_id = 0;
 		
-		$this->menu_items[$menu_id][$id] = array (
+	$new_item =  array (
 		
 			'name'			=> $info['name'],
 			'url' 			=> $info['url'],
@@ -485,13 +521,19 @@ private $style;
 			'active'		=> (isset($info['active']))? $info['active'] : false,
 			'inner_html'	=> '',
 		);
-
-	$txt  = "<?php if (!defined('MCR')) exit;".PHP_EOL;
-	$txt .= '$menu_items = '.var_export($this->menu_items, true).';'.PHP_EOL;
-
-	$result = file_put_contents(MCR_ROOT.'instruments/menu_items.php', $txt);
-
-	return (is_bool($result) and $result == false)? false : true;
+	
+	if ($insert_before) {
+	
+		if (!Menu::array_insert_before($this->menu_items[$menu_id], array( $id => $new_item ), $insert_before))
+		
+			$this->menu_items[$menu_id][$id] = $new_item;		
+	
+	} else	{
+		
+		$this->menu_items[$menu_id][$id] = $new_item;
+	}
+	
+	return $this->SaveMenu();
 	}
 
 	public function AddItem($name, $url, $active = false, $menu = 'left') { 
