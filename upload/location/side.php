@@ -18,5 +18,5 @@ if (!empty($user)) {
 	include MCR_STYLE.'login.html';		    
 }
 
-$content_side = ob_get_clean();
+$content_side .= ob_get_clean();
 ?>
