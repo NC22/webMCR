@@ -316,17 +316,26 @@ private $id;
 private $type;
 private $user_id;
 
-private $bd_item;
+private $bd_content;
+private $db;
 	
 	public function ItemLike($item_type, $item_id, $user_id) {
 	global $bd_names;
 	
 	$this->id = false;
+	$this->bd_content = false;
 	
 		switch ($item_type) {
 			case ItemType::News: $this->bd_content = $bd_names['news']; break;
 			case ItemType::Comment: $this->bd_content = $bd_names['comments']; break; 
-			default: return false; break;
+			case ItemType::Skin: 
+			
+			if (array_key_exists('skins', $bd_names)) 
+			
+				$this->bd_content = $bd_names['skins']; 
+			
+			break; 
+			default:  return false; break;
 		}
 		
 	$this->db = $bd_names['likes'];	
@@ -337,7 +346,9 @@ private $bd_item;
 	}
 	
 	public function Like($dislike = false) {
-
+		
+		if (!$this->bd_content) return 0;
+		
 		$var = (!$dislike)? 1 : -1;
 
 		$result = BD("SELECT `var` FROM `{$this->db}` WHERE `user_id` = '".$this->user_id."' AND `item_id` = '".$this->id."' AND `item_type` = '".$this->type."'"); 

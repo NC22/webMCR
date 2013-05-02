@@ -38,19 +38,6 @@ switch ($method) {
 	default: exit; break;
 }
 
-function CaptchaTest($exit_mess = 2) { 
-
-	if ( empty($_SESSION['code']) or 
-         empty($_POST['antibot']) or 
-         $_SESSION['code'] != (int)$_POST['antibot'] ) {
-       
-            if (isset($_SESSION['code'])) unset($_SESSION['code']);
-            aExit($exit_mess, 'Защитный код введен не верно.');
-
-    }
-	unset($_SESSION['code']);
-}
-
 switch ($method) {
 	case 'upload': // TODO Список последних добавленых файлов
 		
@@ -97,6 +84,7 @@ switch ($method) {
 		$id			= (int)$_POST['id'];
 		$type		= (int)$_POST['type'];
 		$dislike	= ((int)$_POST['dislike'])? true : false;		
+		$item		= null;
 		
 		if ($type == ItemType::News) {
 		
@@ -104,8 +92,14 @@ switch ($method) {
 			
 			$item = new News_Item($id);
 			
-			aExit((int)$item->Like($dislike), 'Like');
-		}		
+		} elseif ($type == ItemType::Skin and file_exists(MCR_ROOT.'instruments/skinposer.class.php')) {
+
+			require_once(MCR_ROOT.'instruments/skinposer.class.php');
+			
+			$item = new SPItem($id);
+		}
+		
+		if ($item) aExit((int)$item->Like($dislike), 'Like');	
 	break;
 	case 'download': 
 		
@@ -126,7 +120,7 @@ switch ($method) {
     
         if (empty($_POST['email'])) aExit(1,'Не все поля заполнены.'); 
     
-        CaptchaTest(2); 
+        CaptchaCheck(2); 
 
         $email = $_POST['email'];  
 	    
@@ -155,7 +149,7 @@ switch ($method) {
 
 	    if ( !$user->canPostComment() ) aExit(1, 'Отправлять сообщения можно не чаще чем раз в минуту.'); 
 
-	    CaptchaTest(3); 
+	    CaptchaCheck(3); 
 			
 	    require_once(MCR_ROOT.'instruments/catalog.class.php');
 				

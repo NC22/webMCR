@@ -8,6 +8,19 @@ header("Content-type: text/html; charset=UTF-8");
 
 $ajax_message = array('code' => 0, 'message' => '');
 
+function CaptchaCheck($exit_mess = 2) { 
+
+	if ( empty($_SESSION['code']) or 
+         empty($_POST['antibot']) or 
+         $_SESSION['code'] != (int)$_POST['antibot'] ) {
+       
+            if (isset($_SESSION['code'])) unset($_SESSION['code']);
+            aExit($exit_mess, 'Защитный код введен не верно.');
+
+    }
+	unset($_SESSION['code']);
+}
+
 function aExit($code, $mess = 'error') {
 global $ajax_message;
 
