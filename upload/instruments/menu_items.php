@@ -17,7 +17,7 @@ $menu_items = array (
 
     'guide' => array (
       'name' => 'Начать играть',
-      'url' => 'go/guide',
+      'url' => ($config['rewrite'])? 'go/guide' : '?mode=guide',
       'parent_id' => -1,
       'lvl' => -1,
       'permission' => -1,
@@ -28,7 +28,7 @@ $menu_items = array (
     'rules' => array (
 	
       'name' => 'Правила',
-      'url' => 'go/rules',
+      'url' => ($config['rewrite'])? 'go/rules' : '?mode=rules',
       'parent_id' => -1,
       'lvl' => -1,
       'permission' => -1,
@@ -39,7 +39,7 @@ $menu_items = array (
     'options' => array (
 	
       'name' => 'Настройки',
-      'url' => 'go/options',
+      'url' => ($config['rewrite'])? 'go/options' : '?mode=options',
       'parent_id' => -1,
       'lvl' => 1,
       'permission' => -1,
@@ -64,7 +64,7 @@ $menu_items = array (
     'add_news' => array (
 	
       'name' => 'Добавить новость',
-      'url' => 'go/news_add',
+      'url' => ($config['rewrite'])? 'go/news_add' : '?mode=news_add',
       'parent_id' => 'admin',
       'lvl' => 1,
       'permission' => 'add_news',
@@ -75,7 +75,7 @@ $menu_items = array (
     'control' => array (
 	
       'name' => 'Управление пользователями',
-      'url' => 'go/control',
+      'url' => ($config['rewrite'])? 'go/control' : '?mode=control',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
