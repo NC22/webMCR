@@ -50,7 +50,7 @@ return substr($hash, 0, $saltPos) . $salt . substr($hash, $saltPos);
 public static function checkPass($data) { 
 
 
-	$saltPos = (strlen($data['pass']) >= strlen($data['pass_db']) ? strlen($data['pass_db']) : strlen($data['pass']);
+	$saltPos = (strlen($data['pass']) >= strlen($data['pass_db'])) ? strlen($data['pass_db']) : strlen($data['pass']);
     $salt = substr($data['pass_db'], $saltPos, 12);
     $hash = hash('whirlpool', $salt . $data['pass']);
  
