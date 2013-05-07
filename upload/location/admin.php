@@ -34,7 +34,7 @@ $result = file_put_contents(MCR_ROOT.'config.php', $txt);
 
 	if (is_bool($result) and $result == false) {
 
-	$info .= 'Файл '.MCR_ROOT.'config.php не существует \ защищен от записи \ папка содержащая файл не доступна для записи. Настройки не были сохранены.';	
+	$info .= _('WRITE_FAIL').' ( '.MCR_ROOT.'config.php )';	
 	return false;
 	}
 
@@ -44,7 +44,7 @@ return true;
 $menu->SetItemActive('admin');
 
 /* Default vars */
-$page    = 'Панель управления';
+$page    = _('PAGE_ADMIN');
 
 $curlist = (isset($_GET['l']))? (int) $_GET['l'] : 1;
 $do      = (isset($_GET['do']))? $_GET['do'] : 'all'; 
@@ -66,13 +66,8 @@ if ($ban_user->id()) {
 	
 } else $ban_user = false;
 
-if ( !extension_loaded('gd') )      $html .= 'Библиотека GD не подключена, пользователь не сможет увидеть загруженый скин \ плащ в профиле.<br/>';
-if ( ini_get('register_globals') )  $html .= '[<span style="color: #b02900;">Нарушение безопасности</span>] [ Файл php.ini настроек PHP ] [Опция] <b>register_globals = On</b>. Привести в значение <b>Off</b><br/>';
-if ( !function_exists('fsockopen')) $html .= 'Функция fsockopen недоступна. Подключиться и проверить состояние игрового сервера будет невозможно.<br/>';
-
-	if (!empty($_GET['sid'])) $id = (int)$_GET['sid']; 
-	else $id = false;
- 
+if (!empty($_GET['sid'])) $id = (int)$_GET['sid']; 
+else $id = false; 
 
 if ($do) {
 // Buffer OFF 
@@ -93,7 +88,7 @@ if ($do) {
 	case 'log':
 	$log_file = MCR_ROOT.'log.txt';
 	
-	if (!file_exists($log_file)) { $html .= '<b>'.$log_file.'</b><br> Файл отсутствует'; break; }
+	if (!file_exists($log_file)) break;
 	
 	$file = @file($log_file);
 	$count = count($file);
@@ -152,7 +147,7 @@ if ($do) {
 	  
 	  sqlConfigSet('email-verification',(isset($_POST['emailver']))? 1 : 0);
 	  
-	 $info .= 'Правила обновлены';
+	 $info .= _('OPTIONS_COMPLETE');
 	 
     } elseif (  POSTGood('def_skin_male')  or POSTGood('def_skin_female')) {		
 
@@ -170,13 +165,13 @@ if ($do) {
 		if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir.$new_file_info['tmp_name']) and rename( $tmp_dir.$new_file_info['tmp_name'], $default_skin)) {
 		
 			chmod($default_skin, 0777);
-			$info .= 'Скин ['.(($female)? 'Мальчик' : 'Девочка').'] изменен.<br/>';  
+			$info .= _('SKIN_CHANGED').' ('.(($female)? _('MALE') : _('FEMALE')).') <br/>';  
 					
 			if (file_exists($default_skin_md5) ) unlink($default_skin_md5);	
 			if (file_exists($way_buffer_mini) )  unlink($way_buffer_mini);
 			if (file_exists($way_buffer) )       unlink($way_buffer);
 			
-		} else $info .= 'Ошибка загрузки. Скин ['.(($female)? 'Мальчик' : 'Девочка').']<br/>';  
+		} else $info .= _('UPLOAD_FAIL').'. ('.(($female)? _('MALE') : _('FEMALE')).') <br/>';  
 	}	
   
 	$timeout = (int)sqlConfigGet('next-reg-time');
@@ -211,7 +206,7 @@ if ($do) {
 	
 	if (isset($_POST['confirm']) and $ban_user) {     
 		$ban_user->changeGroup(2);			
-		$info .= 'Аккаунт пользователя заблокирован';
+		$info .= _('USER_BANNED');
 	}
 	
 	if ($ban_user) include MCR_STYLE.'admin/user_ban.html'; 
@@ -227,12 +222,12 @@ if ($do) {
 		BD("DELETE FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ban_user->ip())."'");	
 		BD("INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type) VALUES ('".TextBase::SQLSafe($ban_user->ip())."', NOW(), NOW()+INTERVAL ".TextBase::SQLSafe($ban_time)." DAY, '".$ban_type."')");
 		
-		$info .= 'Доступ к функционалу сайта с IP '.$ban_user->ip().' ограничен<br/>';
+		$info .= _('ADMIN_BAN_IP').' (IP '.$ban_user->ip().') <br/>';
 		
 		if ($ban_user_t) {
 			
 			$ban_user->changeGroup(2);			
-			$info .= 'Аккаунт пользователя заблокирован';
+			$info .= _('USER_BANNED');
 		} 
 	}		
 	if ($ban_user) include MCR_STYLE.'admin/user_ban_ip.html';    
@@ -241,7 +236,7 @@ if ($do) {
 	if (isset($_POST['confirm']) and $ban_user) {     
 	
 		$ban_user->Delete();
-		$html .= 'Аккаунт пользователя удален';
+		$html .= _('ADMIN_USER_DEL');
 		unset($ban_user);
 		
 	} elseif ($ban_user) include MCR_STYLE.'admin/user_del.html';  
@@ -274,20 +269,17 @@ if ($do) {
 			elseif (CategoryMenager::ExistByID($game_news)) $config['game_news'] = $game_news;
 		}
 		
-		if ($link_win or $link_lin or $game_news) 
-			if (SaveOptions()) $info .= 'Файл настроек обновлен.';
-		
-		if ($new_build) {			
-				sqlConfigSet('latest-game-build',$new_build); $info .= 'Build изменен '.$new_build.'<br/>';
-			}
+		if ($new_build) sqlConfigSet('latest-game-build', $new_build);
 			
-		if ($new_version_l) {			
-				sqlConfigSet('launcher-version',$new_version_l); $info .= 'Версия лаунчера изменена '.$new_version_l.'<br/>';
-			}
+		if ($new_version_l) sqlConfigSet('launcher-version', $new_version_l);
+			
+		if ($link_win or $link_lin or $game_news or $new_build or $new_version_l) 
+			
+			if (SaveOptions()) $info .= _('OPTIONS_COMPLETE');
 					
         $game_lver  = sqlConfigGet('launcher-version');
         $game_build = sqlConfigGet('latest-game-build');
-		$cat_list = '<option value="-1">Последние новости</option>';	
+		$cat_list = '<option value="-1">'._('NEWS_LAST').'</option>';	
 		$cat_list .= CategoryMenager::GetList($config['game_news']);	
 		
 		include MCR_STYLE.'admin/game.html';   		 
@@ -296,21 +288,21 @@ if ($do) {
 	
 	if (!$id and isset($_POST['name']) and isset($_POST['lvl']) and isset($_POST['desc'])) {  
 		$new_category = new Category();
-		if ($new_category->Create($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= 'Категория создана.';
-		else  $info .= 'Категория с таким названием уже существует.';
+		if ($new_category->Create($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= _('CAT_COMPLITE');
+		else  $info .= _('CAT_EXIST');
 		
 	} elseif ($id and isset($_POST['edit']) and isset($_POST['name']) and isset($_POST['lvl']) and isset($_POST['desc'])) { 
 	
 		$category = new Category($id);
-		if ($category->Edit($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= 'Категория изменена.';
-		else  $info .= 'Категория с таким названием уже существует.';
+		if ($category->Edit($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= _('CAT_UPDATED');
+		else  $info .= _('CAT_EXIST');
 		
 	} elseif ($id and isset($_POST['delete'])) {  
 	
 		$category = new Category($id);
 		if ($category->Delete()) { 		
-		       $info .= 'Категория удалена.';
-		} else $info .= 'Категория не найдена.';
+		       $info .= _('CAT_DELETED');
+		} else $info .= _('CAT_NOT_EXIST');
 		
 		$id = false;
 	}
@@ -339,21 +331,21 @@ if ($do) {
 	
 	if (!$id and isset($_POST['name'])) {  
 		$new_group = new Group();
-		if ($new_group->Create($_POST['name'], $_POST)) $info .= 'Группа создана.';
-		else  $info .= 'Группа с таким названием уже существует.';
+		if ($new_group->Create($_POST['name'], $_POST)) $info .= _('GROUP_COMPLITE');
+		else  $info .= _('GROUP_EXIST');
 		
 	} elseif ($id and isset($_POST['edit']) and isset($_POST['name'])) { 
 	
 		$new_group = new Group($id);
-		if ($new_group->Edit($_POST['name'], $_POST)) $info .= 'Группа изменена.';
-		else  $info .= 'Группа с таким названием уже существует.';
+		if ($new_group->Edit($_POST['name'], $_POST)) $info .= _('GROUP_UPDATED');
+		else  $info .= _('GROUP_EXIST');
 		
 	} elseif ($id and isset($_POST['delete'])) {  
 	
 		$new_group = new Group($id);
 		if ($new_group->Delete()) { 		
-		       $info .= 'Группа удалена.';
-		} else $info .= 'Группа не найдена.';
+		       $info .= _('GROUP_DELETED');
+		} else $info .= _('GROUP_NOT_EXIST');
 		
 		$id = false;
 	}
@@ -406,7 +398,7 @@ if ($do) {
 		    
 			$server = new Server($id);
 		
-			if (!$server->Exist()) { $info .= 'Сервер не найден.'; break; }
+			if (!$server->Exist()) { $info .=  _('SERVER_NOT_EXIST'); break; }
 			
 			if ($serv_name)     $server->SetText($serv_name, 'name');
 			if ($serv_info)     $server->SetText($serv_info, 'info');
@@ -415,15 +407,15 @@ if ($do) {
 			
 			if ($serv_address and $serv_port) $server->SetConnectWay($serv_address, $serv_port);
 			
-			$info .= 'Данные сервера обновлены.';
+			$info .= _('SERVER_UPDATED');
 
 		} else {
 		
-		  if (is_bool($serv_method)) { $info .= 'Пароль для выбранного типа подключения не указан.'; break; }
+		  if (is_bool($serv_method)) { $info .= _('SERVER_PASS_EMPTY'); break; }
 		  
 		  $server = new Server();
 		  
-		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info) == 1) $info .= 'Отслеживаемый сервер добавлен.';
+		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info) == 1) $info .= _('SERVER_COMPLITE');
 		  else { $info .= 'Настройки подключения не выбраны.'; break; }
 		  
 		  $server->UpdateState(true);
@@ -440,8 +432,8 @@ if ($do) {
 	
 		$server = new Server($id);
 		if ($server->Delete()) { 		
-		       $info .= 'Сервер удален.';
-		} else $info .= 'Сервер не найден.';
+		       $info .= _('SERVER_DELETED');
+		} else $info .= _('SERVER_NOT_EXIST');
 		
 		$id = false;
 	}
@@ -452,7 +444,7 @@ if ($do) {
 		$server->UpdateState(true);
         $server_info = $server->ShowHolder('mon','adm');	
 		
-		if (!$server->Exist()) { $info .= 'Сервер не найден.'; break; }
+		if (!$server->Exist()) { $info .= _('SERVER_NOT_EXIST'); break; }
 		
 		$serv_name     = TextBase::HTMLDestruct($server->name());		
         $serv_method   = $server->method();	
@@ -483,11 +475,11 @@ if ($do) {
 	$keywords    = (isset($_POST['site_keyword']))? TextBase::HTMLDestruct($_POST['site_keyword']) : '';	
 	
 	if ( TextBase::StringLen($keywords) > 200 ) {
-	$info .= 'Ключевые слова занимают больше 200 символов ('.TextBase::StringLen($keywords).').';
+	$info .= _('INCORRECT_LEN') . ' (' . _('ADMIN_KEY_WORDS') . ') ' . _('TO') . ' 200 '. _('CHARACTERS');
 	break;
 	}
 	if ( !TextBase::StringLen($site_name)){	
-	$info .= 'Укажите название сайта.';
+	$info .= _('INCORRECT') . ' (' . _('ADMIN_SITE_NAME') . ') ';
 	break;
 	}
 
@@ -506,7 +498,7 @@ if ($do) {
 	$config['offline']		= $site_offline	;
 	$config['smtp']			= $smtp			;
 	
-	if (SaveOptions()) $info .= 'Файл настроек обновлен.';
+	if (SaveOptions()) $info .= _('OPTIONS_COMPLETE');
 
 		if ($config['smtp']) {
 		
@@ -551,7 +543,7 @@ if ($do) {
 	
 	$ip = $_GET['ip']; BD("DELETE FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ip)."'");
 		                  
-    $info .= 'IP '.$ip.' разблокирован для регистрации. ';
+    $info .= _('IP_UNBANNED') . ' ( '.$ip.') ';
 	} 
     break;
   }

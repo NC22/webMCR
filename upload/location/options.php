@@ -3,7 +3,7 @@ if (!defined('MCR')) exit;
 if (empty($user) or $user->lvl() <= 0) { header("Location: ".BASE_URL); exit; }
 
 /* Default vars */
-$page    = 'Настройки аккаунта';
+$page = _('PAGE_OPTIONS');
 
 $user_img_get = '?user_id='.$player_id.'&refresh='.rand(1000,9999);
 $menu->SetItemActive('options');

@@ -13,7 +13,7 @@ if (isset($_GET['cid'])) {
 
 /* Default vars */
 
-$page    = 'Главная страница - Новости';
+$page    = _('PAGE_NEWS');
 $curlist = 1; 
 
 /* Get \ Post options */

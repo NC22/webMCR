@@ -3,8 +3,11 @@
 
 define('MCR', 1);  
 define('MCR_ROOT', dirname(__FILE__).'/');
+define('MCR_LANG', 'ru_RU');
 
 if (!file_exists(MCR_ROOT.'config.php')) { header("Location: install/install.php"); exit; }
+
+if (file_exists(MCR_ROOT.'instruments/locale/'.MCR_LANG.'.ini')) require(MCR_ROOT.'instruments/locale/'.MCR_LANG.'.ini');
 
 require(MCR_ROOT.'config.php');
 
@@ -36,8 +39,8 @@ global $link;
 function BDConnect($log_script = 'default') {
 global $link, $config;
 
-$link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_login'], $config['db_passw']) or die("ОШИБКА MySQL Базы данных. Сервер не отвечает или не удается пройти авторизацию");
-        mysql_select_db($config['db_name'], $link) or die("ОШИБКА MySQL Базы данных. Не найдена база данных с именем ".$config['db_name']);
+$link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_login'], $config['db_passw']) or die(_('BD_ERROR')._('BD_AUTH_FAIL'));
+        mysql_select_db($config['db_name'], $link) or die(_('BD_ERROR').'. '._('BD_NOT_EXIST').' ('.$config['db_name'].')');
 	
 	BD("SET time_zone = '".date('P')."'");
 	BD("SET character_set_client='utf8'"); 
@@ -49,6 +52,12 @@ $link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_log
 }
 
 /* Системные функции */
+
+function _($key, $lang = false) {
+
+	$c = ($lang ? $lang : MCR_LANG ).'::'.strtoupper($key);
+	return defined($c) ? constant($c) : $key;
+}
 
 function tmp_name($folder, $pre = '', $ext = 'tmp'){
     $name  = $pre.time().'_';
@@ -103,7 +112,7 @@ function POSTSafeMove($post_name, $tmp_dir = false) {
 	$tmp_file = tmp_name($tmp_dir);
 	if (!move_uploaded_file( $_FILES[$post_name]['tmp_name'], $tmp_dir.$tmp_file )) { 
 
-	vtxtlog('[Ошибка модуля загрузки] Убедитесь, что папка "'.$tmp_dir.'" доступна для ЗАПИСИ.');
+	vtxtlog('[POSTSafeMove] --> "'.$tmp_dir.'" <-- '._('WRITE_FAIL'));
 	return false;
 	}
 
@@ -179,8 +188,8 @@ if (!$config['log']) return;
 $log_file = MCR_ROOT.'log.txt';
 
 	if (file_exists($log_file) and round(filesize ($log_file) / 1048576) >= 50) unlink($log_file);
-	
-	if ( !$fp = fopen($log_file,'a') ) exit('[system.php] Ошибка открытия файла '.$log_file.' убедитесь, что файл доступен для ЗАПИСИ');
+
+	if ( !$fp = fopen($log_file,'a') ) exit('[vtxtlog]  --> '.$log_file.' <-- '._('WRITE_FAIL'));
 	
 	fwrite($fp, date("H:i:s d-m-Y").' < '.$string.PHP_EOL); 
 	fclose($fp);	
@@ -232,7 +241,7 @@ global $link, $bd_names;
 	
 		mysql_close( $link );
 		
-		if ( $ban_type == 2 ) exit('(-_-)zzZ <br> IP in blacklist or query limit is reached ');
+		if ( $ban_type == 2 ) exit('(-_-)zzZ <br>'._('IP_BANNED'));
 		return false;
 	}
 	

@@ -24,7 +24,7 @@ require('./system.php');
 
 require(MCR_ROOT.'instruments/ajax.php');
 
-if ($config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') aExit(1,'Регистрация заблокирована. Используются скрипты авторизации сторонней CMS.');
+if ($config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') aExit(1,'Registration is blocked. Used auth script from main CMS');
 
 BDConnect('register');
 
@@ -43,15 +43,15 @@ global $rcodes;
         $modifed = true;
 
 			switch ($rcodes[$i]) {
-                case 2 :  $message .= 'Логин введен некорректно.'; break;
-                case 3 :  $message .= 'Пароль введен некорректно.'; break;
-				case 4 :  $message .= 'Повтор пароля введен некорректно.'; break;
-                case 12 : $message .= 'Emai\'l введен некорректно.'; break;
-                case 6 :  $message .= 'Логин должен содержать не меньше 4 символов и не больше 8.'; break;
-                case 7 :  $message .= 'Пароль должен содержать не меньше 4 символов и не больше 15.'; break;
-                case 8 :  $message .= 'Повтор пароля должен содержать не меньше 4 символов и не больше 15.'; break;
-                case 9 :  $message .= 'Пароли не совпадают.'; break;
-                case 13 : $message .= 'Почтовый адресс должен содержать не больше 50 символов.'; break;
+                case 2 :  $message .= _('INCORRECT').'. ('._('LOGIN').')'; break;
+                case 3 :  $message .= _('INCORRECT').'. ('._('PASS').')'; break;
+				case 4 :  $message .= _('INCORRECT').'. ('._('REPASS').')'; break;
+                case 12 : $message .= _('INCORRECT').'. ('._('EMAIL').')'; break;
+                case 6 :  $message .= _('INCORRECT_LEN').'. ('._('LOGIN').')'; break;
+                case 7 :  $message .= _('INCORRECT_LEN').'. ('._('PASS').')'; break;
+                case 8 :  $message .= _('INCORRECT_LEN').'. ('._('REPASS').')';  break;
+                case 9 :  $message .= _('REPASSVSPASS'); break;
+                case 13 : $message .= _('INCORRECT_LEN').'. ('._('EMAIL').')'; break;
                 default : $modifed = false; break;
             }	
 
@@ -80,9 +80,9 @@ $repass = $_POST['repass'];
 $female = (!(int)$_POST['female'])? 0 : 1;
 $email  = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL); 
 	
-if (!CanAccess()) aExit(11,'Регистрация временно запрещена.');
+if (!CanAccess()) aExit(11, _('IP_BANNED'));
 	
-if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) aExit(1,'Не все поля заполнены.');
+if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) aExit(1, _('INCOMPLETE_FORM'));
     
 	if (!preg_match("/^[a-zA-Z0-9_-]+$/", $login))  $rcodes[] = 2; 
     if (!preg_match("/^[a-zA-Z0-9_-]+$/", $pass))   $rcodes[] = 3;
@@ -94,12 +94,12 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
     $result = BD("SELECT COUNT(*) FROM `{$bd_names['users']}` WHERE `{$bd_users['login']}`='".TextBase::SQLSafe($login)."'");
 	$line   = mysql_fetch_array($result, MYSQL_NUM );
 	
-	if ($line[0]) aExit(5, 'Пользователь с таким именем уже существует.');
+	if ($line[0]) aExit(5, _('AUTH_EXIST_LOGIN'));
 	
     $result = BD("SELECT COUNT(*) FROM `{$bd_names['users']}` WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($email)."'");
 	$line   = mysql_fetch_array($result, MYSQL_NUM );	
 	
-	if ($line[0]) aExit(15, 'Почтовый адресс уже используется другим пользователем.');
+	if ($line[0]) aExit(15, _('AUTH_EXIST_EMAIL'));
 
 	if ((strlen($login) < 4)  or (strlen($login) > 15))  $rcodes[] = 6;
 	if ((strlen($pass) < 4)   or (strlen($pass) > 15))   $rcodes[] = 7;
@@ -126,16 +126,16 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 	BD("INSERT INTO `{$bd_names['ip_banning']}` (`IP`,`time_start`,`ban_until`) VALUES ('".TextBase::SQLSafe($_SERVER['REMOTE_ADDR'])."',NOW(),NOW()+INTERVAL $next_reg HOUR)");
 	
 	if (!$verification)
-		aExit(0,'Регистрация успешно завершена. <a href="#" class="btn" onclick="Login();">Войти</a>');						   			    
+		aExit(0, _('REG_COMPLETE') . '. <a href="#" class="btn" onclick="Login();">'._('ENTER').'</a>');						   			    
 	else {	
 		
-		$subject = 'Подтверждение регистрации '.$_SERVER['SERVER_NAME'];
+		$subject = _('REG_CONFIRM').' '.$_SERVER['SERVER_NAME'];
 		$http_link = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$tmp_user->id().'&verificate='.$tmp_user->getVerificationStr(); 
-		$message = '<html><body><p>Для завершения регистрации необходимо пройти по ссылке. <a href="'.$http_link.'">Открыть</a></p></body></html>';
+		$message = '<html><body><p>'._('REG_CONFIRM_MES').'. <a href="'.$http_link.'">'._('OPEN').'</a></p></body></html>';
 		
-		if ( !EMail::Send($email, $subject, $message) ) aExit(14, 'Ошибка отправки подтверждения на почтовый ящик.');
+		if ( !EMail::Send($email, $subject, $message) ) aExit(14, _('MAIL_FAIL'));
 	
-	    aExit(0,'Аккаунт успешно создан. Перейдите по ссылке, отправленой на ваш почтовый ящик для завершения регистрации.');
+	    aExit(0, _('REG_COMPLETE') . _('REG_CONFIRM_INFO'));
 	}
 	unset($tmp_user);
 ?>

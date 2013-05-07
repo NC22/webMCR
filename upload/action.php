@@ -21,7 +21,7 @@ switch ($method) {
 		if ($method == 'upload' or $method == 'delete_file') require(MCR_ROOT.'instruments/upload.class.php');
 	elseif ($method == 'profile') require(MCR_ROOT.'instruments/skin.class.php');
 	elseif ($method == 'restore' and $config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') 
-		aExit(1,'Восстановление пароля невозможно. Используются скрипты авторизации сторонней CMS.');
+		aExit(1,'Change password is not available');
 	
 	BDConnect('action_'.$method);
 	MCRAuth::userLoad();
@@ -51,13 +51,13 @@ switch ($method) {
 		$error  = '';
 		
 		switch($result) {
-			case 1: $error = 'Ошибка при загрузке файла. ( Допустимые форматы файла - jpg, png, zip, rar, exe, jar, pdf, doc, txt )'; break;
-			case 3: $error = 'Текстовый идентификатор содержит недопустимые символы.'; break;
-			case 4: $error = 'Файл с таким идентификатором уже существует.'; break;
+			case 1: $error = _('UPLOAD_FAIL').'. ( '._('UPLOAD_FORMATS').' - jpg, png, zip, rar, exe, jar, pdf, doc, txt )'; break;
+			case 3: $error = _('INCORRECT').'. ('._('TXT_ID').')'; break;
+			case 4: $error = _('TXT_ID_EXIST'); break;
 			case 2: 
-			case 5: $error = 'Ошибка добавления файла. Включите лог для просмотра подробной информации.'; break;
-			case 6: $error = 'Ошибка при удалении файла с одинаковым идентификатором.'; break;
-			case 7: $error = 'Найден идентичный файл.'; break;
+			case 5: $error = _('UPLOAD_FAIL'); break;
+			case 6: $error = _('DEL_FAIL'); break;
+			case 7: $error = _('FILE_EXIST'); break;
 		}
 
 		if ($result > 0 and $result != 7) aExit($result, $error);
@@ -118,14 +118,14 @@ switch ($method) {
 	break;
     case 'restore':   
     
-        if (empty($_POST['email'])) aExit(1,'Не все поля заполнены.'); 
+        if (empty($_POST['email'])) aExit(1, _('INCOMPLETE_FORM')); 
     
         CaptchaCheck(2); 
 
         $email = $_POST['email'];  
 	    
 		$result = BD("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($email)."'"); 
-		if ( !mysql_num_rows($result) ) aExit(3, 'Пользователь с таким почтовым адрессом не найден.');
+		if ( !mysql_num_rows($result) ) aExit(3, _('RESTORE_NOT_EXIST'));
 		
 		$line = mysql_fetch_array( $result, MYSQL_NUM );
         
@@ -133,21 +133,21 @@ switch ($method) {
 	     
 		$new_pass = randString(8);
 	   
-	    $subject = 'Восстановление пароля';
-		$message = '<html><body><p>Система восстановления пароля. Ваш логин: '.$restore_user->name().'. Ваш новый пароль : '.$new_pass.'</p></body></html>';
+	    $subject = _('RESTORE_TITLE');
+		$message = '<html><body><p>'._('RESTORE_TITLE').'. '._('RESTORE_NEW').' '_('LOGIN').': '.$restore_user->name().'. '._('PASS').': '.$new_pass.'</p></body></html>';
 		
-		if ( !EMail::Send($email, $subject, $message) ) aExit(4, 'Ошибка службы отправки сообщений.');
+		if ( !EMail::Send($email, $subject, $message) ) aExit(4, _('MAIL_FAIL'));
 		
 		if ( $restore_user->changePassword($new_pass) != 1 ) aExit(5, '');
 		
-		aExit(0, 'Новый пароль отправлен вам на Email.');	
+		aExit(0, _('RESTORE_COMPLETE'));	
 
     break;
 	case 'comment': 
 	
-        if (empty($user) or empty($_POST['comment']) or empty($_POST['item_id']) or empty($_POST['antibot'])) aExit(1, 'Ошибка отправки сообщения.'); 
+        if (empty($user) or empty($_POST['comment']) or empty($_POST['item_id']) or empty($_POST['antibot'])) aExit(1, _('MESS_FAIL')); 
 
-	    if ( !$user->canPostComment() ) aExit(1, 'Отправлять сообщения можно не чаще чем раз в минуту.'); 
+	    if ( !$user->canPostComment() ) aExit(1, _('MESS_TIMEOUT')); 
 
 	    CaptchaCheck(3); 
 			
@@ -156,10 +156,10 @@ switch ($method) {
 		$comments_item = new Comments_Item();				
 		$rcode = $comments_item->Create($_POST['comment'],(int)$_POST['item_id']);
         
-            if ( $rcode == 1701 ) aExit(1, 'Сообщение слишком короткое.');       
-        elseif ( $rcode == 1702 ) aExit(2, 'Комментируемая статья или новость не найдена.');       
-        elseif ( $rcode == 1 )    aExit(0, 'Сообщение успешно отправлено ');          
-        else                      aExit(3, 'Ошибка отправки сообщения.');  
+            if ( $rcode == 1701 ) aExit(1, _('MESS_SHORT'));       
+        elseif ( $rcode == 1702 ) aExit(2, _('MESS_NOT_FOUND'));       
+        elseif ( $rcode == 1 )    aExit(0, _('MESS_COMPLITE'));          
+        else                      aExit(3, _('MESS_FAIL'));  
 
     break;
     case 'del_com':
@@ -191,10 +191,10 @@ switch ($method) {
 							  'active_last' => 0,
 							  'play_last' => 0);
 
-        if (empty($_POST['id'])) aExit(1, 'Поисковой индекс не задан.'); 
+        if (empty($_POST['id'])) aExit(1, 'Empty POST param ID'); 
          
         $inf_user = new User((int) $_POST['id'],$bd_users['id']);
-        if (!$inf_user->id()) aExit(2, 'Пользователь не найден.'); 
+        if (!$inf_user->id()) aExit(2, _('USER_NOT_EXIST')); 
         
         $ajax_message['name']   = $inf_user->name();
         $ajax_message['group']  = $inf_user->getGroupName();
@@ -233,7 +233,7 @@ switch ($method) {
         if ($user->lvl() >= 15 and !empty($_POST['user_id'])) 
         $mod_user = new User((int) $_POST['user_id'], $bd_users['id']);
 
-        if (!$mod_user->id()) aExit(2, 'Пользователь не найден.'); 
+        if (!$mod_user->id()) aExit(2, _('USER_NOT_EXIST')); 
 		
 	    if ($user->lvl() >= 15){
 		
@@ -286,39 +286,39 @@ switch ($method) {
 
 			switch ((int) $rcodes[$i]) {
                 case 0 : $message .= 'error'; break;
-                case 1401 : $message .= 'Логин введен некорректно.'.$rnum  ; break;
-				case 1402 : $message .= 'Пользователь с таким именем уже существует.'; break;
-			    case 1403 : $message .= 'Логин должен содержать не меньше 4 символов и не больше 8.'; break;   
-				case 1501 : $message .= 'Пароль введен некорректно.'; break;
-                case 1502 : $message .= 'Текущий пароль неверен.'; break;
-                case 1503 : $message .= 'Пароль должен содержать не меньше 4 символов и не больше 15.'; break;
-                case 1504 : $message .= 'Пароли не совпадают.'; break;
+                case 1401 : $message .= _('INCORRECT').'. ('._('LOGIN').')'; break;
+				case 1402 : $message .= _('AUTH_EXIST_LOGIN'); break;
+			    case 1403 : $message .= _('INCORRECT_LEN').'. ('._('LOGIN').')'; break;   
+				case 1501 : $message .= _('INCORRECT').'. ('._('PASS').')'; break;
+                case 1502 : $message .= _('CURPASS_FAIL'); break;
+                case 1503 : $message .= _('INCORRECT_LEN').'. ('._('PASS').')'; break;
+                case 1504 : $message .= _('REPASSVSPASS'); break;
                 case 1601 : 
-                $message .= "Файл больше ".$user->getPermission('max_fsize')." кб ( загрузка скина )"; 				  
+                $message .= _('MAX_FILE_SIZE').' '.$user->getPermission('max_fsize')._('KB').' ( '._('SKIN_UPLOAD').' )'; 				  
 				break;                
 				case 16011 : 
-				$message .= "Файл больше ".$user->getPermission('max_fsize')." кб ( загрузка плаща )"; 
+				$message .= _('MAX_FILE_SIZE').' '.$user->getPermission('max_fsize')._('KB').' ( '._('CLOAK_UPLOAD').' )';  
 				break;
                 case 1602 : 
 				$tmpm = $user->getPermission('max_ratio');
-				$message .= "Размеры изображения заданы неверно. ( Рекомендуемое соотношение сторон для скина ".(62*$tmpm)."x".(32*$tmpm)." )"; 
+				$message .= _('MAX_FILE_RATIO').' '.(62*$tmpm)."x".(32*$tmpm).' ( '._('SKIN_UPLOAD').' )'; 
 				unset($tmpm);
 				break;
                 case 16021 : 
 				$tmpm = $user->getPermission('max_ratio');
-				$message .= "Размеры изображения заданы неверно. ( Рекомендуемое соотношение сторон для плаща ".(22*$tmpm)."x".(17*$tmpm)." )";
+				$message .= _('MAX_FILE_RATIO').' '.(22*$tmpm)."x".(17*$tmpm).' ( '._('CLOAK_UPLOAD').' )';
                 unset($tmpm);
 				break;
-                case 1604 : $message .= 'Ошибка при загрузке скина. ( Рекомендуемый формат файла .png )'; break;
-                case 16041 : $message .= 'Ошибка при загрузке плаща. ( Рекомендуемый формат файла .png )'; break;
-                case 1605 : $message .= 'Доступ к загрузке скинов ограничен.'; break;                
-				case 16051 : $message .= 'Доступ к загрузке плащей ограничен.'; break;
-                case 1610 : $message .= 'Системная папка заблокирована для работы с файлами. Включите лог, чтобы диагностировать проблему.'; 
+                case 1604 : $message .= _('UPLOAD_FAIL').' ( '._('SKIN_UPLOAD').' ) '._('UPLOAD_FORMATS').' - .png'; break;
+                case 16041 : $message .= _('UPLOAD_FAIL').' ( '._('CLOAK_UPLOAD').' ) '._('UPLOAD_FORMATS').' - .png'; break;
+                case 1605 : $message .= _('PERMISSION_FAIL'); break;                
+				case 16051 : $message .= _('PERMISSION_FAIL'); break;
+                case 1610 : $message .= _('UPLOAD_FAIL'); 
 				case 16101 :
                 case 1611 : 
 				case 16111 : break;				
-				case 1901 : $message .= 'Emai\'l введен некорректно.'; break;
-				case 1902 : $message .= 'Почтовый ящик уже используется другим пользователем.'; break;
+				case 1901 : $message .= _('INCORRECT').'. ('._('EMAIL').')'; break;
+				case 1902 : $message .= _('AUTH_EXIST_EMAIL'); break;
                 default : $modifed = false; break; 
             }	
 
@@ -334,7 +334,7 @@ switch ($method) {
 
         	if ($message) aExit(2, $message  ); // some bad news 
 		elseif (!$rnum)  aExit(100, $message ); //nothing changed
-        else aExit(0, 'Профиль успешно обновлен.');  
+        else aExit(0, _('PROFILE_COMPLITE'));  
 
     break;
 } 
