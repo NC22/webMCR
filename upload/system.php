@@ -7,8 +7,7 @@ define('MCR_LANG', 'ru_RU');
 
 if (!file_exists(MCR_ROOT.'config.php')) { header("Location: install/install.php"); exit; }
 
-if (file_exists(MCR_ROOT.'instruments/locale/'.MCR_LANG.'.ini')) require(MCR_ROOT.'instruments/locale/'.MCR_LANG.'.ini');
-
+require(MCR_ROOT.'instruments/locale/'.MCR_LANG.'.php');
 require(MCR_ROOT.'config.php');
 
 define('MCRAFT', MCR_ROOT.$site_ways['mcraft']);
@@ -54,9 +53,9 @@ $link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_log
 /* Системные функции */
 
 function _($key, $lang = false) {
+global $MCR_LANG;
 
-	$c = ($lang ? $lang : MCR_LANG ).'::'.strtoupper($key);
-	return defined($c) ? constant($c) : $key;
+	return isset($MCR_LANG[$key]) ? $MCR_LANG[$key] : $key;
 }
 
 function tmp_name($folder, $pre = '', $ext = 'tmp'){
