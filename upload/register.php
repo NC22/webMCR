@@ -24,7 +24,9 @@ require('./system.php');
 
 require(MCR_ROOT.'instruments/ajax.php');
 
-if ($config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') aExit(1,'Registration is blocked. Used auth script from main CMS');
+if (	$config['p_logic'] != 'usual' 
+	and $config['p_logic'] != 'xauth'
+	and $config['p_logic'] != 'authme') aExit(1,'Registration is blocked. Used auth script from main CMS');
 
 BDConnect('register');
 

@@ -11,6 +11,7 @@ switch ($mode) { /* Допустимые идентификаторы CMS */
 	case 'wp':			$main_cms = 'WordPress';			break; /* [+] */	
 	case 'joomla':		$main_cms = 'Joomla!';				break; /* [+] */
 	case 'xauth':		$main_cms = 'xAuth';				break; /* [+] */
+	case 'authme':		$main_cms = 'AuthMe';				break; /* [+] */
 	default :			$main_cms = false; $mode = 'usual';	break;
 } 	
 
@@ -337,6 +338,7 @@ switch ($step) {
 		case 'usual':  include('./style/install_user.html'); break;
 		case 'xenforo': 
 		case 'xauth': include('./style/install_'.$mode.'.html'); break;
+		case 'authme': include('./style/install_xauth.html'); break;
 		case 'ipb': 
 		case 'joomla':		
 		case 'dle':

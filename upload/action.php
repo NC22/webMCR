@@ -20,7 +20,10 @@ switch ($method) {
 	
 		if ($method == 'upload' or $method == 'delete_file') require(MCR_ROOT.'instruments/upload.class.php');
 	elseif ($method == 'profile') require(MCR_ROOT.'instruments/skin.class.php');
-	elseif ($method == 'restore' and $config['p_logic'] != 'usual' and $config['p_logic'] != 'xauth') 
+	elseif ($method == 'restore' and 
+			$config['p_logic'] != 'usual' and 
+			$config['p_logic'] != 'xauth' and
+			$config['p_logic'] != 'authme') 
 		aExit(1,'Change password is not available');
 	
 	BDConnect('action_'.$method);
