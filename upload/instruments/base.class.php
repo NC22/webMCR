@@ -467,7 +467,7 @@ private $style;
 					
 					$this->menu_items[$i][$key]['access'] = false;
 					
-			elseif ( array_key_exists('config', $value) and is_bool($config[$value['config']]) and !$config[$value['config']])
+			elseif ( array_key_exists('config', $value) and $value['config'] != -1 and is_bool($config[$value['config']]) and !$config[$value['config']])
 			
 					$this->menu_items[$i][$key]['access'] = false;
 			
@@ -477,18 +477,18 @@ private $style;
 				
 					$this->menu_items[$i][$key]['access'] = false;			
 		  
-			if ( $value['parent_id'] == -1 or !$this->menu_items[$i][$key]['access'] ) continue;		
+			if ( $value['parent_id'] <= -1 or !$this->menu_items[$i][$key]['access'] ) continue;		
 		  
 			$this->menu_items[$i][$value['parent_id']]['inner_html'] .= $this->ShowItem($value);
 			
-			if ($value['active'] and $value['parent_id'] != -1) 
+			if ($value['active'] and $value['parent_id'] > -1) 
 			
 				$this->menu_items[$i][$value['parent_id']]['active'] = true;
 		}	
 	
 		foreach ($this->menu_items[$i] as $key => $value) {
 		  
-			if ( $value['parent_id'] != -1 or !$value['access'] ) continue;
+			if ( $value['parent_id'] > -1 or ( $value['parent_id'] == -2 and !$value['inner_html'] ) or !$value['access'] ) continue;
 
 		    $menu_content .= $this->ShowItem($value, 'menu_item');
 		}
@@ -514,6 +514,7 @@ private $style;
 		!$info['name']				or
 		!is_int($info['lvl'])		or
 		(is_int($info['parent_id']) and $info['parent_id'] != -1) or
+		(isset($info['config']) and is_int($info['config']) and $info['config'] != -1) or
 		(is_int($info['permission']) and $info['permission'] != -1))
 
 		return false;
@@ -521,7 +522,7 @@ private $style;
 	for ($i = 0; $i < 2; $i ++) 
 	
 		if ( array_key_exists($id, $this->menu_items[$i]) ) return false;
-		
+	
 	$new_item =  array (
 		
 			'name'			=> $info['name'],
@@ -529,13 +530,14 @@ private $style;
 			'parent_id'		=> ($info['parent_id'])? $info['parent_id'] : -1,
 			'lvl'			=> (is_int($info['parent_id']))-1,
 			'permission'	=> $info['permission'],
-			'active'		=> (isset($info['active']))? $info['active'] : false,
+			'config'		=> (isset($info['config']))? $info['config'] : -1,
+			'active'		=> (isset($info['active']))? $info['active'] : false,			
 			'inner_html'	=> '',
 		);
 	
 	if ($insert_before) {
 	
-		if (!Menu::array_insert_before($this->menu_items[$menu_id], array( $id => $new_item ), $insert_before))
+		if (!self::array_insert_before($this->menu_items[$menu_id], array( $id => $new_item ), $insert_before))
 		
 			$this->menu_items[$menu_id][$id] = $new_item;		
 	

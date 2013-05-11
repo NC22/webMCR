@@ -7,6 +7,8 @@ require(MCR_ROOT.'instruments/catalog.class.php');
 
 $page = 'Добавить новость';    
 
+LoadTinyMCE();
+
 $news_manager = new NewsMenager(null, MCR_STYLE.'news/');
 $files_manager = new FileMenager();
 

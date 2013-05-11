@@ -9,6 +9,24 @@ MCRAuth::userLoad();
 
 function GetRandomAdvice() { return ($quotes = @file(MCR_STYLE.'sovet.txt'))? $quotes[rand(0, sizeof($quotes)-1)] : "Советов нет"; }
 
+function LoadTinyMCE() {
+global $addition_events, $content_js;
+ 
+	if (!file_exists(MCR_ROOT.'instruments/tinymce/tinymce.min.js') ) return false;
+
+	$tmce = 'tinymce.init({';
+	$tmce .= 'selector: "textarea.tinymce",';
+	$tmce .= 'language : "ru",';
+	$tmce .= 'plugins: "code preview image link",';
+	$tmce .= 'toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | link image | preview",';
+	$tmce .= '});';
+
+	$addition_events .= $tmce;
+	$content_js .= '<script type="text/javascript" src="instruments/tinymce/tinymce.min.js"></script>';
+	
+	return true;
+}
+
 $menu = new Menu();
 
 if ($config['offline'] and (empty($user) or $user->group() != 3)) exit(Menager::ShowStaticPage(MCR_STYLE.'site_closed.html'));
@@ -23,7 +41,9 @@ $player_group = $user->getGroupName();
 $player_money = $user->getMoney();
 }
 
-$content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $mode = $config['s_dpage'];
+$content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $content_js = '';
+
+$mode = $config['s_dpage'];
 
 	if (isset($_GET['id'])) $mode = 'news_full'; 
 elseif (isset($_GET['mode'])) $mode = $_GET['mode']; 
