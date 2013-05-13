@@ -34,7 +34,7 @@ $result = file_put_contents(MCR_ROOT.'config.php', $txt);
 
 	if (is_bool($result) and $result == false) {
 
-	$info .= _('WRITE_FAIL').' ( '.MCR_ROOT.'config.php )';	
+	$info .= lng('WRITE_FAIL').' ( '.MCR_ROOT.'config.php )';	
 	return false;
 	}
 
@@ -44,7 +44,7 @@ return true;
 $menu->SetItemActive('admin');
 
 /* Default vars */
-$page    = _('PAGE_ADMIN');
+$page    = lng('PAGE_ADMIN');
 
 $curlist = (isset($_GET['l']))? (int) $_GET['l'] : 1;
 $do      = (isset($_GET['do']))? $_GET['do'] : 'all'; 
@@ -147,7 +147,7 @@ if ($do) {
 	  
 	  sqlConfigSet('email-verification',(isset($_POST['emailver']))? 1 : 0);
 	  
-	 $info .= _('OPTIONS_COMPLETE');
+	 $info .= lng('OPTIONS_COMPLETE');
 	 
     } elseif (  POSTGood('def_skin_male')  or POSTGood('def_skin_female')) {		
 
@@ -165,13 +165,13 @@ if ($do) {
 		if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir.$new_file_info['tmp_name']) and rename( $tmp_dir.$new_file_info['tmp_name'], $default_skin)) {
 		
 			chmod($default_skin, 0777);
-			$info .= _('SKIN_CHANGED').' ('.(($female)? _('MALE') : _('FEMALE')).') <br/>';  
+			$info .= lng('SKIN_CHANGED').' ('.(($female)? lng('MALE') : lng('FEMALE')).') <br/>';  
 					
 			if (file_exists($default_skin_md5) ) unlink($default_skin_md5);	
 			if (file_exists($way_buffer_mini) )  unlink($way_buffer_mini);
 			if (file_exists($way_buffer) )       unlink($way_buffer);
 			
-		} else $info .= _('UPLOAD_FAIL').'. ('.(($female)? _('MALE') : _('FEMALE')).') <br/>';  
+		} else $info .= lng('UPLOAD_FAIL').'. ('.(($female)? lng('MALE') : lng('FEMALE')).') <br/>';  
 	}	
   
 	$timeout = (int)sqlConfigGet('next-reg-time');
@@ -206,7 +206,7 @@ if ($do) {
 	
 	if (isset($_POST['confirm']) and $ban_user) {     
 		$ban_user->changeGroup(2);			
-		$info .= _('USER_BANNED');
+		$info .= lng('USER_BANNED');
 	}
 	
 	if ($ban_user) include MCR_STYLE.'admin/user_ban.html'; 
@@ -222,12 +222,12 @@ if ($do) {
 		BD("DELETE FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ban_user->ip())."'");	
 		BD("INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type) VALUES ('".TextBase::SQLSafe($ban_user->ip())."', NOW(), NOW()+INTERVAL ".TextBase::SQLSafe($ban_time)." DAY, '".$ban_type."')");
 		
-		$info .= _('ADMIN_BAN_IP').' (IP '.$ban_user->ip().') <br/>';
+		$info .= lng('ADMIN_BAN_IP').' (IP '.$ban_user->ip().') <br/>';
 		
 		if ($ban_user_t) {
 			
 			$ban_user->changeGroup(2);			
-			$info .= _('USER_BANNED');
+			$info .= lng('USER_BANNED');
 		} 
 	}		
 	if ($ban_user) include MCR_STYLE.'admin/user_ban_ip.html';    
@@ -236,7 +236,7 @@ if ($do) {
 	if (isset($_POST['confirm']) and $ban_user) {     
 	
 		$ban_user->Delete();
-		$html .= _('ADMIN_USER_DEL');
+		$html .= lng('ADMIN_USER_DEL');
 		unset($ban_user);
 		
 	} elseif ($ban_user) include MCR_STYLE.'admin/user_del.html';  
@@ -275,11 +275,11 @@ if ($do) {
 			
 		if ($link_win or $link_lin or $game_news or $new_build or $new_version_l) 
 			
-			if (SaveOptions()) $info .= _('OPTIONS_COMPLETE');
+			if (SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
 					
         $game_lver  = sqlConfigGet('launcher-version');
         $game_build = sqlConfigGet('latest-game-build');
-		$cat_list = '<option value="-1">'._('NEWS_LAST').'</option>';	
+		$cat_list = '<option value="-1">'.lng('NEWS_LAST').'</option>';	
 		$cat_list .= CategoryMenager::GetList($config['game_news']);	
 		
 		include MCR_STYLE.'admin/game.html';   		 
@@ -288,21 +288,21 @@ if ($do) {
 	
 	if (!$id and isset($_POST['name']) and isset($_POST['lvl']) and isset($_POST['desc'])) {  
 		$new_category = new Category();
-		if ($new_category->Create($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= _('CAT_COMPLITE');
-		else  $info .= _('CAT_EXIST');
+		if ($new_category->Create($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= lng('CAT_COMPLITE');
+		else  $info .= lng('CAT_EXIST');
 		
 	} elseif ($id and isset($_POST['edit']) and isset($_POST['name']) and isset($_POST['lvl']) and isset($_POST['desc'])) { 
 	
 		$category = new Category($id);
-		if ($category->Edit($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= _('CAT_UPDATED');
-		else  $info .= _('CAT_EXIST');
+		if ($category->Edit($_POST['name'], $_POST['lvl'], $_POST['desc'])) $info .= lng('CAT_UPDATED');
+		else  $info .= lng('CAT_EXIST');
 		
 	} elseif ($id and isset($_POST['delete'])) {  
 	
 		$category = new Category($id);
 		if ($category->Delete()) { 		
-		       $info .= _('CAT_DELETED');
-		} else $info .= _('CAT_NOT_EXIST');
+		       $info .= lng('CAT_DELETED');
+		} else $info .= lng('CAT_NOT_EXIST');
 		
 		$id = false;
 	}
@@ -331,21 +331,21 @@ if ($do) {
 	
 	if (!$id and isset($_POST['name'])) {  
 		$new_group = new Group();
-		if ($new_group->Create($_POST['name'], $_POST)) $info .= _('GROUP_COMPLITE');
-		else  $info .= _('GROUP_EXIST');
+		if ($new_group->Create($_POST['name'], $_POST)) $info .= lng('GROUP_COMPLITE');
+		else  $info .= lng('GROUP_EXIST');
 		
 	} elseif ($id and isset($_POST['edit']) and isset($_POST['name'])) { 
 	
 		$new_group = new Group($id);
-		if ($new_group->Edit($_POST['name'], $_POST)) $info .= _('GROUP_UPDATED');
-		else  $info .= _('GROUP_EXIST');
+		if ($new_group->Edit($_POST['name'], $_POST)) $info .= lng('GROUP_UPDATED');
+		else  $info .= lng('GROUP_EXIST');
 		
 	} elseif ($id and isset($_POST['delete'])) {  
 	
 		$new_group = new Group($id);
 		if ($new_group->Delete()) { 		
-		       $info .= _('GROUP_DELETED');
-		} else $info .= _('GROUP_NOT_EXIST');
+		       $info .= lng('GROUP_DELETED');
+		} else $info .= lng('GROUP_NOT_EXIST');
 		
 		$id = false;
 	}
@@ -398,7 +398,7 @@ if ($do) {
 		    
 			$server = new Server($id);
 		
-			if (!$server->Exist()) { $info .=  _('SERVER_NOT_EXIST'); break; }
+			if (!$server->Exist()) { $info .=  lng('SERVER_NOT_EXIST'); break; }
 			
 			if ($serv_name)     $server->SetText($serv_name, 'name');
 			if ($serv_info)     $server->SetText($serv_info, 'info');
@@ -407,15 +407,15 @@ if ($do) {
 			
 			if ($serv_address and $serv_port) $server->SetConnectWay($serv_address, $serv_port);
 			
-			$info .= _('SERVER_UPDATED');
+			$info .= lng('SERVER_UPDATED');
 
 		} else {
 		
-		  if (is_bool($serv_method)) { $info .= _('SERVER_PASS_EMPTY'); break; }
+		  if (is_bool($serv_method)) { $info .= lng('SERVER_PASS_EMPTY'); break; }
 		  
 		  $server = new Server();
 		  
-		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info) == 1) $info .= _('SERVER_COMPLITE');
+		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info) == 1) $info .= lng('SERVER_COMPLITE');
 		  else { $info .= 'Настройки подключения не выбраны.'; break; }
 		  
 		  $server->UpdateState(true);
@@ -432,8 +432,8 @@ if ($do) {
 	
 		$server = new Server($id);
 		if ($server->Delete()) { 		
-		       $info .= _('SERVER_DELETED');
-		} else $info .= _('SERVER_NOT_EXIST');
+		       $info .= lng('SERVER_DELETED');
+		} else $info .= lng('SERVER_NOT_EXIST');
 		
 		$id = false;
 	}
@@ -444,7 +444,7 @@ if ($do) {
 		$server->UpdateState(true);
         $server_info = $server->ShowHolder('mon','adm');	
 		
-		if (!$server->Exist()) { $info .= _('SERVER_NOT_EXIST'); break; }
+		if (!$server->Exist()) { $info .= lng('SERVER_NOT_EXIST'); break; }
 		
 		$serv_name     = TextBase::HTMLDestruct($server->name());		
         $serv_method   = $server->method();	
@@ -475,11 +475,11 @@ if ($do) {
 	$keywords    = (isset($_POST['site_keyword']))? TextBase::HTMLDestruct($_POST['site_keyword']) : '';	
 	
 	if ( TextBase::StringLen($keywords) > 200 ) {
-	$info .= _('INCORRECT_LEN') . ' (' . _('ADMIN_KEY_WORDS') . ') ' . _('TO') . ' 200 '. _('CHARACTERS');
+	$info .= lng('INCORRECT_LEN') . ' (' . lng('ADMIN_KEY_WORDS') . ') ' . lng('TO') . ' 200 '. lng('CHARACTERS');
 	break;
 	}
 	if ( !TextBase::StringLen($site_name)){	
-	$info .= _('INCORRECT') . ' (' . _('ADMIN_SITE_NAME') . ') ';
+	$info .= lng('INCORRECT') . ' (' . lng('ADMIN_SITE_NAME') . ') ';
 	break;
 	}
 
@@ -498,7 +498,7 @@ if ($do) {
 	$config['offline']		= $site_offline	;
 	$config['smtp']			= $smtp			;
 	
-	if (SaveOptions()) $info .= _('OPTIONS_COMPLETE');
+	if (SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
 
 		if ($config['smtp']) {
 		
@@ -543,7 +543,7 @@ if ($do) {
 	
 	$ip = $_GET['ip']; BD("DELETE FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ip)."'");
 		                  
-    $info .= _('IP_UNBANNED') . ' ( '.$ip.') ';
+    $info .= lng('IP_UNBANNED') . ' ( '.$ip.') ';
 	} 
     break;
   }

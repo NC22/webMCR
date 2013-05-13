@@ -13,7 +13,7 @@ if (isset($_GET['cid'])) {
 
 /* Default vars */
 
-$page    = _('PAGE_NEWS');
+$page    = lng('PAGE_NEWS');
 $curlist = 1; 
 
 /* Get \ Post options */

@@ -54,13 +54,13 @@ switch ($method) {
 		$error  = '';
 		
 		switch($result) {
-			case 1: $error = _('UPLOAD_FAIL').'. ( '._('UPLOAD_FORMATS').' - jpg, png, zip, rar, exe, jar, pdf, doc, txt )'; break;
-			case 3: $error = _('INCORRECT').'. ('._('TXT_ID').')'; break;
-			case 4: $error = _('TXT_ID_EXIST'); break;
+			case 1: $error = lng('UPLOAD_FAIL').'. ( '.lng('UPLOAD_FORMATS').' - jpg, png, zip, rar, exe, jar, pdf, doc, txt )'; break;
+			case 3: $error = lng('INCORRECT').'. ('.lng('TXT_ID').')'; break;
+			case 4: $error = lng('TXT_ID_EXIST'); break;
 			case 2: 
-			case 5: $error = _('UPLOAD_FAIL'); break;
-			case 6: $error = _('DEL_FAIL'); break;
-			case 7: $error = _('FILE_EXIST'); break;
+			case 5: $error = lng('UPLOAD_FAIL'); break;
+			case 6: $error = lng('DEL_FAIL'); break;
+			case 7: $error = lng('FILE_EXIST'); break;
 		}
 
 		if ($result > 0 and $result != 7) aExit($result, $error);
@@ -121,14 +121,14 @@ switch ($method) {
 	break;
     case 'restore':   
     
-        if (empty($_POST['email'])) aExit(1, _('INCOMPLETE_FORM')); 
+        if (empty($_POST['email'])) aExit(1, lng('INCOMPLETE_FORM')); 
     
         CaptchaCheck(2); 
 
         $email = $_POST['email'];  
 	    
 		$result = BD("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($email)."'"); 
-		if ( !mysql_num_rows($result) ) aExit(3, _('RESTORE_NOT_EXIST'));
+		if ( !mysql_num_rows($result) ) aExit(3, lng('RESTORE_NOT_EXIST'));
 		
 		$line = mysql_fetch_array( $result, MYSQL_NUM );
         
@@ -136,21 +136,21 @@ switch ($method) {
 	     
 		$new_pass = randString(8);
 	   
-	    $subject = _('RESTORE_TITLE');
-		$message = '<html><body><p>'._('RESTORE_TITLE').'. '._('RESTORE_NEW').' '._('LOGIN').': '.$restore_user->name().'. '._('PASS').': '.$new_pass.'</p></body></html>';
+	    $subject = lng('RESTORE_TITLE');
+		$message = '<html><body><p>'.lng('RESTORE_TITLE').'. '.lng('RESTORE_NEW').' '.lng('LOGIN').': '.$restore_user->name().'. '.lng('PASS').': '.$new_pass.'</p></body></html>';
 		
-		if ( !EMail::Send($email, $subject, $message) ) aExit(4, _('MAIL_FAIL'));
+		if ( !EMail::Send($email, $subject, $message) ) aExit(4, lng('MAIL_FAIL'));
 		
 		if ( $restore_user->changePassword($new_pass) != 1 ) aExit(5, '');
 		
-		aExit(0, _('RESTORE_COMPLETE'));	
+		aExit(0, lng('RESTORE_COMPLETE'));	
 
     break;
 	case 'comment': 
 	
-        if (empty($user) or empty($_POST['comment']) or empty($_POST['item_id']) or empty($_POST['antibot'])) aExit(1, _('MESS_FAIL')); 
+        if (empty($user) or empty($_POST['comment']) or empty($_POST['item_id']) or empty($_POST['antibot'])) aExit(1, lng('MESS_FAIL')); 
 
-	    if ( !$user->canPostComment() ) aExit(1, _('MESS_TIMEOUT')); 
+	    if ( !$user->canPostComment() ) aExit(1, lng('MESS_TIMEOUT')); 
 
 	    CaptchaCheck(3); 
 			
@@ -159,10 +159,10 @@ switch ($method) {
 		$comments_item = new Comments_Item();				
 		$rcode = $comments_item->Create($_POST['comment'],(int)$_POST['item_id']);
         
-            if ( $rcode == 1701 ) aExit(1, _('MESS_SHORT'));       
-        elseif ( $rcode == 1702 ) aExit(2, _('MESS_NOT_FOUND'));       
-        elseif ( $rcode == 1 )    aExit(0, _('MESS_COMPLITE'));          
-        else                      aExit(3, _('MESS_FAIL'));  
+            if ( $rcode == 1701 ) aExit(1, lng('MESS_SHORT'));       
+        elseif ( $rcode == 1702 ) aExit(2, lng('MESS_NOT_FOUND'));       
+        elseif ( $rcode == 1 )    aExit(0, lng('MESS_COMPLITE'));          
+        else                      aExit(3, lng('MESS_FAIL'));  
 
     break;
     case 'del_com':
@@ -197,7 +197,7 @@ switch ($method) {
         if (empty($_POST['id'])) aExit(1, 'Empty POST param ID'); 
          
         $inf_user = new User((int) $_POST['id'],$bd_users['id']);
-        if (!$inf_user->id()) aExit(2, _('USER_NOT_EXIST')); 
+        if (!$inf_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
         
         $ajax_message['name']   = $inf_user->name();
         $ajax_message['group']  = $inf_user->getGroupName();
@@ -236,7 +236,7 @@ switch ($method) {
         if ($user->lvl() >= 15 and !empty($_POST['user_id'])) 
         $mod_user = new User((int) $_POST['user_id'], $bd_users['id']);
 
-        if (!$mod_user->id()) aExit(2, _('USER_NOT_EXIST')); 
+        if (!$mod_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
 		
 	    if ($user->lvl() >= 15){
 		
@@ -289,39 +289,39 @@ switch ($method) {
 
 			switch ((int) $rcodes[$i]) {
                 case 0 : $message .= 'error'; break;
-                case 1401 : $message .= _('INCORRECT').'. ('._('LOGIN').')'; break;
-				case 1402 : $message .= _('AUTH_EXIST_LOGIN'); break;
-			    case 1403 : $message .= _('INCORRECT_LEN').'. ('._('LOGIN').')'; break;   
-				case 1501 : $message .= _('INCORRECT').'. ('._('PASS').')'; break;
-                case 1502 : $message .= _('CURPASS_FAIL'); break;
-                case 1503 : $message .= _('INCORRECT_LEN').'. ('._('PASS').')'; break;
-                case 1504 : $message .= _('REPASSVSPASS'); break;
+                case 1401 : $message .= lng('INCORRECT').'. ('.lng('LOGIN').')'; break;
+				case 1402 : $message .= lng('AUTH_EXIST_LOGIN'); break;
+			    case 1403 : $message .= lng('INCORRECT_LEN').'. ('.lng('LOGIN').')'; break;   
+				case 1501 : $message .= lng('INCORRECT').'. ('.lng('PASS').')'; break;
+                case 1502 : $message .= lng('CURPASS_FAIL'); break;
+                case 1503 : $message .= lng('INCORRECT_LEN').'. ('.lng('PASS').')'; break;
+                case 1504 : $message .= lng('REPASSVSPASS'); break;
                 case 1601 : 
-                $message .= _('MAX_FILE_SIZE').' '.$user->getPermission('max_fsize')._('KB').' ( '._('SKIN_UPLOAD').' )'; 				  
+                $message .= lng('MAX_FILE_SIZE').' '.$user->getPermission('max_fsize').lng('KB').' ( '.lng('SKIN_UPLOAD').' )'; 				  
 				break;                
 				case 16011 : 
-				$message .= _('MAX_FILE_SIZE').' '.$user->getPermission('max_fsize')._('KB').' ( '._('CLOAK_UPLOAD').' )';  
+				$message .= lng('MAX_FILE_SIZE').' '.$user->getPermission('max_fsize').lng('KB').' ( '.lng('CLOAK_UPLOAD').' )';  
 				break;
                 case 1602 : 
 				$tmpm = $user->getPermission('max_ratio');
-				$message .= _('MAX_FILE_RATIO').' '.(62*$tmpm)."x".(32*$tmpm).' ( '._('SKIN_UPLOAD').' )'; 
+				$message .= lng('MAX_FILE_RATIO').' '.(62*$tmpm)."x".(32*$tmpm).' ( '.lng('SKIN_UPLOAD').' )'; 
 				unset($tmpm);
 				break;
                 case 16021 : 
 				$tmpm = $user->getPermission('max_ratio');
-				$message .= _('MAX_FILE_RATIO').' '.(22*$tmpm)."x".(17*$tmpm).' ( '._('CLOAK_UPLOAD').' )';
+				$message .= lng('MAX_FILE_RATIO').' '.(22*$tmpm)."x".(17*$tmpm).' ( '.lng('CLOAK_UPLOAD').' )';
                 unset($tmpm);
 				break;
-                case 1604 : $message .= _('UPLOAD_FAIL').' ( '._('SKIN_UPLOAD').' ) '._('UPLOAD_FORMATS').' - .png'; break;
-                case 16041 : $message .= _('UPLOAD_FAIL').' ( '._('CLOAK_UPLOAD').' ) '._('UPLOAD_FORMATS').' - .png'; break;
-                case 1605 : $message .= _('PERMISSION_FAIL'); break;                
-				case 16051 : $message .= _('PERMISSION_FAIL'); break;
-                case 1610 : $message .= _('UPLOAD_FAIL'); 
+                case 1604 : $message .= lng('UPLOAD_FAIL').' ( '.lng('SKIN_UPLOAD').' ) '.lng('UPLOAD_FORMATS').' - .png'; break;
+                case 16041 : $message .= lng('UPLOAD_FAIL').' ( '.lng('CLOAK_UPLOAD').' ) '.lng('UPLOAD_FORMATS').' - .png'; break;
+                case 1605 : $message .= lng('PERMISSION_FAIL'); break;                
+				case 16051 : $message .= lng('PERMISSION_FAIL'); break;
+                case 1610 : $message .= lng('UPLOAD_FAIL'); 
 				case 16101 :
                 case 1611 : 
 				case 16111 : break;				
-				case 1901 : $message .= _('INCORRECT').'. ('._('EMAIL').')'; break;
-				case 1902 : $message .= _('AUTH_EXIST_EMAIL'); break;
+				case 1901 : $message .= lng('INCORRECT').'. ('.lng('EMAIL').')'; break;
+				case 1902 : $message .= lng('AUTH_EXIST_EMAIL'); break;
                 default : $modifed = false; break; 
             }	
 
@@ -337,7 +337,7 @@ switch ($method) {
 
         	if ($message) aExit(2, $message  ); // some bad news 
 		elseif (!$rnum)  aExit(100, $message ); //nothing changed
-        else aExit(0, _('PROFILE_COMPLITE'));  
+        else aExit(0, lng('PROFILE_COMPLITE'));  
 
     break;
 } 

@@ -38,8 +38,8 @@ global $link;
 function BDConnect($log_script = 'default') {
 global $link, $config;
 
-$link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_login'], $config['db_passw']) or die(_('BD_ERROR')._('BD_AUTH_FAIL'));
-        mysql_select_db($config['db_name'], $link) or die(_('BD_ERROR').'. '._('BD_NOT_EXIST').' ('.$config['db_name'].')');
+$link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_login'], $config['db_passw']) or die(lng('BD_ERROR').lng('BD_AUTH_FAIL'));
+        mysql_select_db($config['db_name'], $link) or die(lng('BD_ERROR').'. '.lng('BD_NOT_EXIST').' ('.$config['db_name'].')');
 	
 	BD("SET time_zone = '".date('P')."'");
 	BD("SET character_set_client='utf8'"); 
@@ -52,7 +52,7 @@ $link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_log
 
 /* Системные функции */
 
-function _($key, $lang = false) {
+function lng($key, $lang = false) {
 global $MCR_LANG;
 
 	return isset($MCR_LANG[$key]) ? $MCR_LANG[$key] : $key;
@@ -111,7 +111,7 @@ function POSTSafeMove($post_name, $tmp_dir = false) {
 	$tmp_file = tmp_name($tmp_dir);
 	if (!move_uploaded_file( $_FILES[$post_name]['tmp_name'], $tmp_dir.$tmp_file )) { 
 
-	vtxtlog('[POSTSafeMove] --> "'.$tmp_dir.'" <-- '._('WRITE_FAIL'));
+	vtxtlog('[POSTSafeMove] --> "'.$tmp_dir.'" <-- '.lng('WRITE_FAIL'));
 	return false;
 	}
 
@@ -188,7 +188,7 @@ $log_file = MCR_ROOT.'log.txt';
 
 	if (file_exists($log_file) and round(filesize ($log_file) / 1048576) >= 50) unlink($log_file);
 
-	if ( !$fp = fopen($log_file,'a') ) exit('[vtxtlog]  --> '.$log_file.' <-- '._('WRITE_FAIL'));
+	if ( !$fp = fopen($log_file,'a') ) exit('[vtxtlog]  --> '.$log_file.' <-- '.lng('WRITE_FAIL'));
 	
 	fwrite($fp, date("H:i:s d-m-Y").' < '.$string.PHP_EOL); 
 	fclose($fp);	
@@ -240,7 +240,7 @@ global $link, $bd_names;
 	
 		mysql_close( $link );
 		
-		if ( $ban_type == 2 ) exit('(-_-)zzZ <br>'._('IP_BANNED'));
+		if ( $ban_type == 2 ) exit('(-_-)zzZ <br>'.lng('IP_BANNED'));
 		return false;
 	}
 	
