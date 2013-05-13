@@ -330,9 +330,9 @@ private $db;
 			case ItemType::Comment: $this->bd_content = $bd_names['comments']; break; 
 			case ItemType::Skin: 
 			
-			if (array_key_exists('skins', $bd_names)) 
+			if (array_key_exists('sp_skins', $bd_names)) 
 			
-				$this->bd_content = $bd_names['skins']; 
+				$this->bd_content = $bd_names['sp_skins']; 
 			
 			break; 
 			default:  return false; break;

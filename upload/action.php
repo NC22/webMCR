@@ -137,7 +137,7 @@ switch ($method) {
 		$new_pass = randString(8);
 	   
 	    $subject = _('RESTORE_TITLE');
-		$message = '<html><body><p>'._('RESTORE_TITLE').'. '._('RESTORE_NEW').' '_('LOGIN').': '.$restore_user->name().'. '._('PASS').': '.$new_pass.'</p></body></html>';
+		$message = '<html><body><p>'._('RESTORE_TITLE').'. '._('RESTORE_NEW').' '._('LOGIN').': '.$restore_user->name().'. '._('PASS').': '.$new_pass.'</p></body></html>';
 		
 		if ( !EMail::Send($email, $subject, $message) ) aExit(4, _('MAIL_FAIL'));
 		
