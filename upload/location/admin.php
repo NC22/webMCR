@@ -165,13 +165,13 @@ if ($do) {
 		if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir.$new_file_info['tmp_name']) and rename( $tmp_dir.$new_file_info['tmp_name'], $default_skin)) {
 		
 			chmod($default_skin, 0777);
-			$info .= lng('SKIN_CHANGED').' ('.(($female)? lng('MALE') : lng('FEMALE')).') <br/>';  
+			$info .= lng('SKIN_CHANGED').' ('.((!$female)? lng('MALE') : lng('FEMALE')).') <br/>';  
 					
 			if (file_exists($default_skin_md5) ) unlink($default_skin_md5);	
 			if (file_exists($way_buffer_mini) )  unlink($way_buffer_mini);
 			if (file_exists($way_buffer) )       unlink($way_buffer);
 			
-		} else $info .= lng('UPLOAD_FAIL').'. ('.(($female)? lng('MALE') : lng('FEMALE')).') <br/>';  
+		} else $info .= lng('UPLOAD_FAIL').'. ('.((!$female)? lng('MALE') : lng('FEMALE')).') <br/>';  
 	}	
   
 	$timeout = (int)sqlConfigGet('next-reg-time');

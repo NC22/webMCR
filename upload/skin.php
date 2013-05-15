@@ -1,14 +1,14 @@
 <?php
 header ("Content-type: image/png");
 require('./system.php');
+require(MCR_ROOT.'instruments/skin.class.php');	
 
 $use_default_skin = true;
 
 if ( (isset($_GET["mini"]) and (int)$_GET['mini'] != -1 ) or isset($_GET["user_id"]) or isset($_GET["user_name"]) and !isset($_GET['female'])) { 
 
 	BDConnect('skin_viewer');
-	require(MCR_ROOT.'instruments/user.class.php');
-	require(MCR_ROOT.'instruments/skin.class.php');	
+	require(MCR_ROOT.'instruments/user.class.php');	
 	$use_default_skin = false; 
 }
 
