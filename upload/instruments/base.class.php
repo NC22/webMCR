@@ -467,7 +467,8 @@ private $style;
 					
 					$this->menu_items[$i][$key]['access'] = false;
 					
-			elseif ( array_key_exists('config', $value) and $value['config'] != -1 and is_bool($config[$value['config']]) and !$config[$value['config']])
+			elseif (array_key_exists('config', $value) and $value['config'] != -1 and 
+					array_key_exists($value['config'], $config) and is_bool($config[$value['config']]) and !$config[$value['config']])
 			
 					$this->menu_items[$i][$key]['access'] = false;
 			
