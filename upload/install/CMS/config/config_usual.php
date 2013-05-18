@@ -27,7 +27,7 @@ $config = array (
 
 /* site constants */
   
-	's_name'		=> 'MCR 2.1',
+	's_name'		=> 'MCR 2.15',
 	's_about'		=> 'Личный кабинет для онлайн сервера игры Minecraft',
 	's_keywords'	=> 'сервер игра онлайн NC22 Minecraft',
 	's_dpage'		=> 'news',  
@@ -86,6 +86,7 @@ $bd_users = array (
   'email' => 'email',
   'female' => 'female',
   'group' => 'group',
+  'deadtry' => 'deadtry',
   'tmp' => 'tmp',
   'session' => 'session',
   'server' => 'server',

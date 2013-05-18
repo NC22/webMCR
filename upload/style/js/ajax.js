@@ -351,9 +351,18 @@ function UpdateProfile(admTrg) {
 }
 
 function Login() {
+
+	var addition_post = '' 
 	
 	var login = getValById('auth-login')
 	var pass  = getValById('auth-pass')
+		
+	if (GetById('login-antibot-form').style.display != 'none' ) {
+	
+		var antibot = GetById('auth-antibot')
+		if (antibot.value.length != 4) return false		
+		addition_post = '&antibot=' + encodeURIComponent(antibot.value)	
+	}
     
 	var save_session = 0
 	if (GetById("auth-save").checked) save_session = 1
@@ -369,12 +378,35 @@ function Login() {
 		var messageBoxText = GetById('loginform-error-text')
 
 		if (response['code'] == 0) { document.location.reload(true); return false; }
+	
+	else if (response['code'] == 6 || response['auth_fail_num'] >= 5 ) {
+	
+		var img_obj =  GetById('login-img-visual') 
+		var img_src =  base_url + 'instruments/captcha/captcha.php?refresh=' + rand(1337,31337)
+		if (img_obj == null ) {
+
+			var image = new Image()	
+			image.src = img_src	
+			image.onload = function(){
 			
+				BlockVisible('login-antibot-form', true)	
+				
+				image.id = "login-img-visual"
+				image.className = "img-polaroid"
+				image.width = 70
+				image.height = 30
+				GetById('login-img-holder').appendChild(image)
+			}
+			
+		} else img_obj.src = img_src		
+			
+	}
+		
 		messageBoxText.innerHTML = response['message']
 		BlockVisible('loginform-error',true)	
 		toggleButton('login')				
 	}
 
-	SendByXmlHttp('login.php', 'login=' + encodeURIComponent(login) + '&pass=' + encodeURIComponent(pass) + '&save=' + encodeURIComponent(save_session), event)	
+	SendByXmlHttp('login.php', 'login=' + encodeURIComponent(login) + '&pass=' + encodeURIComponent(pass) + '&save=' + encodeURIComponent(save_session) + addition_post, event)	
 	return false
 }

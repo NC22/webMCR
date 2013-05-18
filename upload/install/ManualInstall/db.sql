@@ -77,8 +77,6 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `name`   char(64) NOT NULL,
   `lvl`     int(10) NOT NULL DEFAULT 1,
   `system` tinyint(1) NOT NULL DEFAULT 0,
-  `sp_upload` tinyint(1) NOT NULL DEFAULT 0,
-  `skinposer` tinyint(1) NOT NULL DEFAULT 0,
   `change_skin` tinyint(1) NOT NULL DEFAULT 0,
   `change_pass` tinyint(1) NOT NULL DEFAULT 0,
   `change_login` tinyint(1) NOT NULL DEFAULT 0,
@@ -119,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `tmp` char(32) NOT NULL DEFAULT '0',
   `ip` varchar(16) DEFAULT NULL,
   `group` int(10) NOT NULL DEFAULT 1,
+  `deadtry` tinyint(1) DEFAULT 0,
 
 -- Статистические данные --
 

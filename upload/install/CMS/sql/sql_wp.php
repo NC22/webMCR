@@ -19,6 +19,7 @@ DROP `default_skin`;");
 }
 
 BD("ALTER TABLE `{$bd_names['users']}` 
+ADD   `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0,
 ADD `{$bd_users['session']}` varchar(255) default NULL,
 ADD `{$bd_users['server']}` varchar(255) default NULL,
 ADD `{$bd_users['tmp']}` char(32) NOT NULL DEFAULT '0',

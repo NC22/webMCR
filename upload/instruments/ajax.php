@@ -10,12 +10,14 @@ $ajax_message = array('code' => 0, 'message' => '');
 
 function CaptchaCheck($exit_mess = 2) { 
 
+	if (!isset($_SESSION)) session_start();
+	
 	if ( empty($_SESSION['code']) or 
          empty($_POST['antibot']) or 
          $_SESSION['code'] != (int)$_POST['antibot'] ) {
        
             if (isset($_SESSION['code'])) unset($_SESSION['code']);
-            aExit($exit_mess, 'Защитный код введен не верно.');
+            aExit($exit_mess, lng('CAPTCHA_FAIL'));
 
     }
 	unset($_SESSION['code']);

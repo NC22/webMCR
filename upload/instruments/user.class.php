@@ -20,6 +20,8 @@ private $group;
 private $gender;	
 private $female;
 
+private $deadtry;
+
 	public function User($input, $method) {
 	global $bd_users, $bd_names;	
 	
@@ -30,6 +32,7 @@ private $female;
 					   `{$bd_users['tmp']}`,
 					   `{$bd_users['ip']}`,
 					   `{$bd_users['email']}`,
+					   `{$bd_users['deadtry']}`,
 					   `{$bd_users['female']}`,
 					   `{$bd_users['group']}` FROM `{$this->db}` WHERE `".TextBase::SQLSafe($method)."`='".TextBase::SQLSafe($input)."'";
 						   
@@ -49,7 +52,8 @@ private $female;
 		$this->ip     = $line[$bd_users['ip']];
             
 		$this->email  = $line[$bd_users['email']];
-			
+		$this->deadtry  = (int)$line[$bd_users['deadtry']];
+		
 		/* Пол персонажа */
 		$gender = $line[$bd_users['female']]; 
 		
@@ -74,8 +78,15 @@ private $female;
 		$line = mysql_fetch_array( $result, MYSQL_NUM);
 		
 		$auth_info = array( 'pass_db' => $line[0], 'pass' => $pass, 'user_id' => $this->id, 'user_name' => $this->name );
+		$test_pass = MCRAuth::checkPass($auth_info);
 		
-		return (MCRAuth::checkPass($auth_info))? true : false;
+		if ( !$test_pass ) {
+			
+			BD("UPDATE `{$this->db}` SET `{$bd_users['deadtry']}`= {$bd_users['deadtry']} + 1 WHERE `{$bd_users['id']}`='".$this->id."'");	
+			$this->deadtry++; 
+		}
+		
+		return ($test_pass)? true : false;
 	}
 	
 	public function login($tmp, $ip, $save = false) {
@@ -88,7 +99,7 @@ private $female;
 		if ($config['p_logic'] != 'usual' and $config['p_sync'])
 			MCMSAuth::login($this->id());	
 			
-		BD("UPDATE `{$this->db}` SET `{$bd_users['tmp']}`='".TextBase::SQLSafe($tmp)."', `{$bd_users['ip']}`='".TextBase::SQLSafe($ip)."' WHERE `{$bd_users['id']}`='".$this->id."'");
+		BD("UPDATE `{$this->db}` SET `{$bd_users['deadtry']}` = '0', `{$bd_users['tmp']}`='".TextBase::SQLSafe($tmp)."', `{$bd_users['ip']}`='".TextBase::SQLSafe($ip)."' WHERE `{$bd_users['id']}`='".$this->id."'");
 	
 		$this->tmp = $tmp;
 		
@@ -650,6 +661,10 @@ private $female;
 		return $this->group;
 	}
 	
+	public function auth_fail_num() {
+		return $this->deadtry;
+	}
+	
 	public function name() {
 		return $this->name;
 	}
@@ -660,13 +675,13 @@ private $db;
 private $id;
 private $pavailable;
 
-    public function Group($id = false) {
+    public function Group($id = false, $addon = false) {
 	global $bd_names;
 		
 		$this->db = $bd_names['groups'];
 		$this->id = (int)$id;
-		$this->pavailable = array(/*"sp_upload",*/
-								  /*"skinposer",*/
+		$this->pavailable = array("sp_upload",
+								  "sp_change",
 								  "change_skin", 
 		                          "change_pass",
 								  "lvl",
@@ -676,7 +691,9 @@ private $pavailable;
 								  "max_ratio",
 								  "add_news",
 								  "adm_comm",
-								  "add_comm");								  
+								  "add_comm");
+		
+		if ( is_array($addon) ) $this->pavailable = array_merge ( $this->pavailable, $addon ); 
 	}
 	
 	public function GetPermission($param) {

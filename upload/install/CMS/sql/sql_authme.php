@@ -6,6 +6,7 @@ DROP   `{$bd_users['female']}`,
 DROP   `{$bd_users['email']}`,
 DROP   `{$bd_users['tmp']}`,
 DROP   `{$bd_users['group']}`,
+DROP   `{$bd_users['deadtry']}`,
 DROP   `comments_num`,
 DROP   `gameplay_last`,
 DROP   `{$bd_users['ctime']}`,
@@ -17,6 +18,7 @@ DROP   `{$bd_users['session']}`,
 DROP   `{$bd_users['server']}`;");	
 
 BD("ALTER TABLE `{$bd_names['users']}` 
+ADD   `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0,
 ADD   `{$bd_users['female']}` tinyint(1) NOT NULL DEFAULT '2',
 ADD   `{$bd_users['email']}` varchar(50) default NULL,
 ADD   `{$bd_users['tmp']}` char(32) NOT NULL DEFAULT '0',

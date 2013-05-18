@@ -36,7 +36,7 @@ if (!empty($user)) {
 $player       = $user->name();
 $player_id    = $user->id();
 $player_lvl   = $user->lvl();
-$player_email = $user->email(); if (empty($player_email)) $player_email = 'Отсутствует'; 
+$player_email = $user->email(); if (empty($player_email)) $player_email = lng('NOT_SET'); 
 $player_group = $user->getGroupName();
 $player_money = $user->getMoney();
 }

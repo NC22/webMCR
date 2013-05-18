@@ -10,7 +10,8 @@ $bd_users = array (
 	'ctime' 	=> 'register_date',
   
 /* Required MCR fields */
-  
+
+  'deadtry' 	=> 'mcr_deadtry',  
   'password' 	=> 'mcr_default', 
   'ip' 			=> 'mcr_ip',  
   'group' 		=> 'mcr_group',

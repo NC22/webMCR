@@ -11,6 +11,7 @@ $bd_users = array (
   
 /* Required MCR fields */
  
+	'deadtry' 	=> 'mcr_deadtry',
 	'female'	=> 'mcr_gender',
 	'ip' 		=> 'mcr_ip',  
 	'group' 	=> 'mcr_group',

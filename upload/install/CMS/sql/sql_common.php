@@ -178,6 +178,12 @@ BD("ALTER TABLE `{$bd_names['comments']}`	ADD KEY `user_id` (`user_id`),
 BD("ALTER TABLE `{$bd_names['users']}`	ADD	KEY `group_id` (`{$bd_users['group']}`);");	
 }	
 
+/* 2.15 UPDATE */
+if (!BD_ColumnExist($bd_names['users'], $bd_users['deadtry'])) {
+
+BD("ALTER TABLE `{$bd_names['users']}`	ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");	
+}
+
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['action_log']}` (
   `IP` varchar(16) NOT NULL,
   `first_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

@@ -167,7 +167,7 @@ function GetRealIp(){
 	 
 	$ip = $_SERVER['REMOTE_ADDR'];
  
-return $ip; 
+return substr($ip, 0, 16);
 }
 
 function RefreshBans() {

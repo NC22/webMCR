@@ -6,6 +6,7 @@ ALTER TABLE `news` ADD `dislikes` int(10) DEFAULT 0;
 ALTER TABLE `news` ADD `likes` int(10) DEFAULT 0;
   
 ALTER TABLE `accounts` ADD `female` tinyint(1) NOT NULL DEFAULT '2';
+ALTER TABLE `accounts` ADD `deadtry` tinyint(1) NOT NULL DEFAULT 0;
 ALTER TABLE `accounts` ADD `group` int(10) NOT NULL DEFAULT 1;
 ALTER TABLE `accounts` ADD `comments_num` int(10) NOT NULL;
 ALTER TABLE `accounts` ADD `create_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';
@@ -77,8 +78,6 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `name`   char(64) NOT NULL,
   `lvl`     int(10) NOT NULL DEFAULT 1,
   `system` tinyint(1) NOT NULL DEFAULT 0,
-  `sp_upload` tinyint(1) NOT NULL DEFAULT 0,
-  `skinposer` tinyint(1) NOT NULL DEFAULT 0,
   `change_skin` tinyint(1) NOT NULL DEFAULT 0,
   `change_pass` tinyint(1) NOT NULL DEFAULT 0,
   `change_login` tinyint(1) NOT NULL DEFAULT 0,
