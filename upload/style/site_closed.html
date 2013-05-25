@@ -32,7 +32,14 @@
 			<p><input id="auth-pass" type="password" name="pass" placeholder="Пароль:" /></p>
 			
 			<input type="hidden" id="auth-save" name="save" value="1" />
+			
+			<div id="login-antibot-form" style="margin-bottom: 10px; display: none;">
+			 
+				<div style="display: inline-block;" id="login-img-holder"></div>
+				<input id="auth-antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" style="width: 40px; margin-top: 8px;"/>
 
+			</div>
+		
 			<p><input type="submit" class="btn" id="login" onclick="Login(); return false;" value="Войти"></p>
 		</form>
 		
