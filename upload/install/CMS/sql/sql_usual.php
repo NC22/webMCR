@@ -1,6 +1,4 @@
 <?php 
-/* webMCR 2.X */
-
 if ($mysql_rewrite) 
 BD("DROP TABLE IF EXISTS `{$bd_names['users']}`;");
 

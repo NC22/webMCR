@@ -17,21 +17,20 @@ DROP   `default_skin`,
 DROP   `{$bd_users['session']}`,
 DROP   `{$bd_users['server']}`;");	
 
-BD("ALTER TABLE `{$bd_names['users']}` 
-ADD   `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0,
-ADD   `{$bd_users['female']}` tinyint(1) NOT NULL DEFAULT '2',
-ADD   `{$bd_users['email']}` varchar(50) default NULL,
-ADD   `{$bd_users['tmp']}` char(32) NOT NULL DEFAULT '0',
-ADD   `{$bd_users['group']}` int(10) NOT NULL DEFAULT 1,
-ADD   `comments_num` int(10) NOT NULL DEFAULT 0,
-ADD   `gameplay_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-ADD   `{$bd_users['ctime']}` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-ADD   `active_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-ADD   `play_times` int(10) NOT NULL DEFAULT 0,
-ADD   `undress_times` int(10) NOT NULL DEFAULT 0,
-ADD   `default_skin` tinyint(1) NOT NULL DEFAULT '1',
-ADD   `{$bd_users['session']}` varchar(255) default NULL,
-ADD   `{$bd_users['server']}` varchar(255) default NULL;");
+BD($bd_alter_users."ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");
+BD($bd_alter_users."ADD `{$bd_users['female']}` tinyint(1) NOT NULL DEFAULT '2';");
+BD($bd_alter_users."ADD `{$bd_users['email']}` varchar(50) DEFAULT NULL;");
+BD($bd_alter_users."ADD `{$bd_users['tmp']}` char(32) NOT NULL DEFAULT '0';");
+BD($bd_alter_users."ADD `{$bd_users['group']}` int(10) NOT NULL DEFAULT 1;");
+BD($bd_alter_users."ADD `comments_num` int(10) NOT NULL DEFAULT 0;");
+BD($bd_alter_users."ADD `gameplay_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';");
+BD($bd_alter_users."ADD `{$bd_users['ctime']}` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';");
+BD($bd_alter_users."ADD `active_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';");
+BD($bd_alter_users."ADD `play_times` int(10) NOT NULL DEFAULT 0;");
+BD($bd_alter_users."ADD `undress_times` int(10) NOT NULL DEFAULT 0;");
+BD($bd_alter_users."ADD `default_skin` tinyint(1) NOT NULL DEFAULT '1';");
+BD($bd_alter_users."ADD `{$bd_users['session']}` varchar(255) DEFAULT NULL;");
+BD($bd_alter_users."ADD `{$bd_users['server']}` varchar(255) DEFAULT NULL;");
 
 BD("INSERT INTO `{$bd_names['groups']}` 
 (`id`,`name`,`lvl`,`system`,`change_skin`,`change_pass`,`change_login`,`change_cloak`,`add_news`,`add_comm`,`adm_comm`) VALUES 

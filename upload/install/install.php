@@ -247,6 +247,7 @@ switch ($step) {
 	if ($main_cms) {
 		
 		$bd_names['users']  = ConfigPostStr('bd_accounts_mcms');		
+		$bd_alter_users = "ALTER TABLE `{$bd_names['users']}` ";
 		
 		include './CMS/sql/sql_'.$mode.'.php';	
 		

@@ -1,6 +1,4 @@
 <?php 
-/* xenForo */
-
 if ($mysql_rewrite) {
 
 BD("ALTER TABLE `{$bd_names['users']}` 
@@ -18,20 +16,19 @@ DROP `undress_times`,
 DROP `default_skin`;");					 
 }
 
-BD("ALTER TABLE `{$bd_names['users']}` 
-ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0,
-ADD `{$bd_users['session']}` varchar(255) default NULL,
-ADD `{$bd_users['server']}` varchar(255) default NULL,
-ADD `{$bd_users['password']}` char(32) DEFAULT NULL,
-ADD `{$bd_users['tmp']}` char(32) NOT NULL DEFAULT '0',
-ADD `{$bd_users['ip']}` varchar(16) DEFAULT NULL,
-ADD `{$bd_users['group']}` int(10) NOT NULL DEFAULT 1,
-ADD `comments_num` int(10) NOT NULL DEFAULT 0,
-ADD `gameplay_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-ADD `active_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-ADD `play_times` int(10) NOT NULL DEFAULT 0,
-ADD `undress_times` int(10) NOT NULL DEFAULT 0,
-ADD `default_skin` tinyint(1) NOT NULL DEFAULT '1';");
+BD($bd_alter_users."ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");
+BD($bd_alter_users."ADD `{$bd_users['session']}` varchar(255) DEFAULT NULL;");
+BD($bd_alter_users."ADD `{$bd_users['server']}` varchar(255) DEFAULT NULL;");
+BD($bd_alter_users."ADD `{$bd_users['password']}` char(32) DEFAULT NULL;");
+BD($bd_alter_users."ADD `{$bd_users['tmp']}` char(32) NOT NULL DEFAULT '0';");
+BD($bd_alter_users."ADD `{$bd_users['ip']}` varchar(16) DEFAULT NULL;");
+BD($bd_alter_users."ADD `{$bd_users['group']}` int(10) NOT NULL DEFAULT 1;");
+BD($bd_alter_users."ADD `comments_num` int(10) NOT NULL DEFAULT 0;");
+BD($bd_alter_users."ADD `gameplay_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';");
+BD($bd_alter_users."ADD `active_last` datetime NOT NULL DEFAULT '0000-00-00 00:00:00';");
+BD($bd_alter_users."ADD `play_times` int(10) NOT NULL DEFAULT 0;");
+BD($bd_alter_users."ADD `undress_times` int(10) NOT NULL DEFAULT 0;");
+BD($bd_alter_users."ADD `default_skin` tinyint(1) NOT NULL DEFAULT '1';");
 
 /* Права для групп. Нет возможности изменить пароль */
 
