@@ -94,7 +94,7 @@ private $rcon;
 	BD("UPDATE `".$this->db."` SET `method`='".TextBase::SQLSafe($method)."',`rcon`='".TextBase::SQLSafe($rcon)."' WHERE `id`='".$this->id."'"); 	
 	
 	$this->method = $method;
-	$thid->rcon   = $rcon;
+	$this->rcon   = $rcon;
    }   
    
    public function SetConnectWay($address, $port) {
@@ -109,7 +109,7 @@ private $rcon;
 	BD("UPDATE `".$this->db."` SET `address`='".TextBase::SQLSafe($address)."',`port`='".TextBase::SQLSafe($port)."' WHERE `id`='".$this->id."'"); 
 	
 	$this->address = $address;
-	$thid->port    = $port;
+	$this->port    = $port;
 	return true;
    }
    
