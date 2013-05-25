@@ -680,9 +680,7 @@ private $pavailable;
 		
 		$this->db = $bd_names['groups'];
 		$this->id = (int)$id;
-		$this->pavailable = array("sp_upload",
-								  "sp_change",
-								  "change_skin", 
+		$this->pavailable = array("change_skin", 
 		                          "change_pass",
 								  "lvl",
 								  "change_cloak",
@@ -692,7 +690,12 @@ private $pavailable;
 								  "add_news",
 								  "adm_comm",
 								  "add_comm");
+								  
+		if (isset($bd_names['sp_skins'])) {
 		
+			$this->pavailable[] = "sp_upload";
+			$this->pavailable[] = "sp_change";		
+		}
 		if ( is_array($addon) ) $this->pavailable = array_merge ( $this->pavailable, $addon ); 
 	}
 	
