@@ -139,7 +139,9 @@ var $category_id;
              $ban_ip    = $line['IP'];
              $ban_start = $line['time_start'];
              $ban_end   = $line['ban_until'];
-
+			 $ban_type  = $line['ban_type'];
+			 $ban_reason  = $line['reason'];			 
+			 
 		     include $this->style.'admin/ban_ip_string.html'; 
         
         }
