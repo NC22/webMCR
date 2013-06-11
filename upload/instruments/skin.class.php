@@ -1,5 +1,5 @@
 <?php
-/* WEB-APP : WebMCR (С) 2013 NC22 */
+/* WEB-APP : WebMCR (С) 2013 NC22 | License : GPLv3 */
 
 if (!defined('MCR')) exit;
 

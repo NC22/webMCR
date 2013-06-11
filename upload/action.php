@@ -1,5 +1,5 @@
 <?php
-/* WEB-APP : WebMCR (С) 2013 NC22 */
+/* WEB-APP : WebMCR (С) 2013 NC22 | License : GPLv3 */
 
 if (empty($_POST['method']) and empty($_GET['method'])) exit;
 $method = (isset($_POST['method']))? $_POST['method'] : $_GET['method'];
