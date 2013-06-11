@@ -1,6 +1,7 @@
 ** webMCR
 
  Author : NC22 
+ 
  Website : https://github.com/NC22/webMCR  
  Wiki : https://github.com/NC22/webMCR/wiki
 
@@ -9,7 +10,7 @@
  GNU General Public License v3 
  http://www.gnu.org/licenses/gpl.html 
 
-** Short information 
+** Information:
 
 CMS with scripts for realize "online-mode" in Minecraft.
 
