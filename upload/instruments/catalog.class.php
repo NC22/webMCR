@@ -193,6 +193,7 @@ private $user_id;
 		if ( BD("INSERT INTO `{$this->db}` ( `message`, `time` , `item_id`, `user_id`) values ('".TextBase::SQLSafe($message)."', NOW(), '".TextBase::SQLSafe($item_id)."' , '".$user->id()."')") ) {
 			
 		$this->id = mysql_insert_id();
+		$this->user_id = $user->id();
 		
 		BD("UPDATE {$bd_names['users']} SET comments_num=comments_num+1 WHERE {$bd_users['id']}='".$user->id()."'"); 		
 		}
@@ -673,32 +674,34 @@ private $category_id;
 		$line = mysql_fetch_array($result);
 		  
 		$commentnum = $line[0];
-		if (!$commentnum) return $html_news;
+		if ($commentnum) {
 		
-		$comm_pnum = $config['comm_by_page']; 
-		$comm_order = ($config['comm_revers'])? 'ASC' : 'DESC';	
+			$comm_pnum = $config['comm_by_page']; 
+			$comm_order = ($config['comm_revers'])? 'ASC' : 'DESC';	
+			
+			$list_def = ($config['comm_revers'])? ceil($commentnum / $comm_pnum) : 1;	
+			$list = ($list <= 0)? $list_def : (int)$list;		
+			
+			$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE item_id='".TextBase::SQLSafe($id)."' ORDER by time $comm_order LIMIT ".($comm_pnum*($list-1)).",".$comm_pnum); 
+			if ( mysql_num_rows( $result ) != 0 ) {
+			
+			$comments_html = '';
+			
+			  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
+			  
+					 $comments_item = new Comments_Item($line[0],$this->style);
+					 
+					 $comments_html.= $comments_item->Show(); 
+					 unset($comments_item);
+			  }
+			  
+			$html_news .= $this->arrowsGenerator($this->work_skript, $list, $commentnum, $comm_pnum);		  
+			}
+		}
 		
-		$list_def = ($config['comm_revers'])? ceil($commentnum / $comm_pnum) : 1;	
-		$list = ($list <= 0)? $list_def : (int)$list;
-		
-		$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE item_id='".TextBase::SQLSafe($id)."' ORDER by time $comm_order LIMIT ".($comm_pnum*($list-1)).",".$comm_pnum); 
-		if ( mysql_num_rows( $result ) != 0 ) {
-		
-	      ob_start(); include $this->style.'comments_header.html';					  
-	      $html_news .= ob_get_clean();
-		  
-		  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
-		  
-		         $comments_item = new Comments_Item($line[0],$this->style);
-				 
-		         $html_news.= $comments_item->Show(); 
-				 unset($comments_item);
-		  }
-
-		$html_news .= $this->arrowsGenerator($this->work_skript,$list,$commentnum,$comm_pnum);
-		  
-		} else $html_news .= Menager::ShowStaticPage($this->style.'comments_empty.html');
-		
+	ob_start(); include $this->style.'comments_container.html';					  
+	$html_news .= ob_get_clean();
+	
 	return $html_news;	
 	}	
 }

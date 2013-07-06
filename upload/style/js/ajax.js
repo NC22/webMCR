@@ -10,7 +10,8 @@ function DeleteComment(id) {
         if ( response['code'] == 1 ) return false
 
 		$('#comment-byid-' + id).fadeOut(200, function (){
-			
+		
+		$(this).hide()
 		var commentTrash = GetById('comment-byid-' + id)
 				
 		if ( commentTrash == null ) document.location.reload(true)
@@ -81,18 +82,29 @@ function PostComment() {
 	
 	toggleButton('comment-button')
 	
-        if ( response['code'] == 0 ) { document.location.reload(true); return false; }
-        else {
+        if ( response['code'] == 0 ) {
 		
-			var antibot = GetById('antibot')
-			if (antibot != null ) {
-			    antibot.value = ''
-				GetById('comment-captcha').src = base_url + 'instruments/captcha/captcha.php?refresh=' + rand(1337,31337) 			 
-			}
-		}
-			 
-	GetById('comment-error-text').innerHTML = response['message']
-	BlockVisible('comment-error',true)		
+		var new_comment = document.createElement("div")
+			new_comment.innerHTML += response['comment_html']	
+		
+		if ( response['comment_revers'] ) GetById('comments-main').appendChild(new_comment)	
+		else insertInBegin(new_comment, GetById('comments-main'))
+
+		$(new_comment).hide().fadeIn(1000);		
+		} 
+		
+	var antibot = GetById('antibot')
+	if (antibot != null ) {
+	    antibot.value = ''
+		GetById('comment-captcha').src = base_url + 'instruments/captcha/captcha.php?refresh=' + rand(1337,31337) 			 
+	}
+	
+	if ( response['code'] != 0 ) {
+		GetById('comment-error-text').innerHTML = response['message']
+		BlockVisible('comment-error', true)		
+		
+	} else BlockVisible('comment-error', false)	
+	
 	}
 	
 	SendByXmlHttp('action.php', 'method=comment&comment=' + encodeURIComponent(text) + '&item_id=' + encodeURIComponent(item_id) + addition_post, event)

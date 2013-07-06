@@ -156,13 +156,17 @@ switch ($method) {
 			
 	    require_once(MCR_ROOT.'instruments/catalog.class.php');
 				
-		$comments_item = new Comments_Item();				
+		$comments_item = new Comments_Item(false, MCR_STYLE.'news/');				
 		$rcode = $comments_item->Create($_POST['comment'],(int)$_POST['item_id']);
         
             if ( $rcode == 1701 ) aExit(1, lng('MESS_SHORT'));       
         elseif ( $rcode == 1702 ) aExit(2, lng('MESS_NOT_FOUND'));       
-        elseif ( $rcode == 1 )    aExit(0, lng('MESS_COMPLITE'));          
-        else                      aExit(3, lng('MESS_FAIL'));  
+        elseif ( $rcode == 1 ) { 		
+									$ajax_message['comment_html'] = $comments_item->Show(); 
+									$ajax_message['comment_revers'] = $config['comm_revers'];
+									aExit(0, lng('MESS_COMPLITE')); 
+ 									
+        } else                      aExit(3, lng('MESS_FAIL'));  
 
     break;
     case 'del_com':

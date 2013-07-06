@@ -228,6 +228,14 @@ else return el.value
 
 }
 
+function insertInBegin(elem, refElem) {
+	if(typeof refElem.firstChild == 'undefined')
+    return refElem.appendChild(elem)
+    else 
+    return refElem.insertBefore(elem, refElem.firstChild);
+}
+
+
 function getIframeDocument(iframeNode) {
 
 	  if (iframeNode.contentDocument) return iframeNode.contentDocument
