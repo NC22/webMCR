@@ -16,7 +16,7 @@ $sessionid	= $_GET['sessionId'];
 
 $sessionidv16 =  explode (":", $sessionid);
 
-if ( ($sessionidv16[0] == "token") && ($sessionidv16[2] == "1") ){
+if ( ($sessionidv16[0] == "token") && ($sessionidv16[2] == "2") ){
     $sessionid = $sessionidv16[1];
 }
 
