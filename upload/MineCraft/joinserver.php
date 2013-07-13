@@ -14,6 +14,12 @@ $login 		= $_GET['user'];
 $serverid	= $_GET['serverId'];
 $sessionid	= $_GET['sessionId'];
 
+$sessionidv16 =  explode (":", $sessionid);
+
+if ( ($sessionidv16[0] == "token") && ($sessionidv16[2] == "1") ){
+    $sessionid = $sessionidv16[1];
+}
+
 if (!preg_match("/^[a-zA-Z0-9_-]+$/", $login) or 
 	!preg_match("/^[0-9]+$/", $sessionid) or
 	!preg_match("/^[a-z0-9_-]+$/", $serverid)) {

@@ -19,6 +19,10 @@ RewriteRule ^get/([^/]+)/?$ action.php?method=download&file=$1 [L]
 
 RewriteRule ^go/([^/]+)/?$ index.php?mode=$1 [L]
 
+RewriteRule  ^authenticate$ MineCraft/auth16x.php [L]
+RewriteRule  ^invalidate$ MineCraft/invalidate16x.php [L]
+RewriteRule  ^refresh$ MineCraft/refresh16x.php [L]
+
 RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?mode=404

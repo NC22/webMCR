@@ -3,6 +3,7 @@ if ($mysql_rewrite)
 
 BD("ALTER TABLE `{$bd_names['users']}` 
 DROP `{$bd_users['session']}`,
+DROP `{$bd_users['clientToken']}`,    
 DROP `{$bd_users['server']}`,
 DROP `{$bd_users['tmp']}`,
 DROP `{$bd_users['female']}`,
@@ -17,6 +18,7 @@ DROP `default_skin`;");
 
 BD($bd_alter_users."ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");
 BD($bd_alter_users."ADD `{$bd_users['session']}` varchar(255) DEFAULT NULL;");
+BD($bd_alter_users."ADD `{$bd_users['clientToken']}` varchar(255) DEFAULT NULL;");
 BD($bd_alter_users."ADD `{$bd_users['server']}` varchar(255) DEFAULT NULL;");
 BD($bd_alter_users."ADD `{$bd_users['tmp']}` char(32) NOT NULL DEFAULT '0';");
 BD($bd_alter_users."ADD `{$bd_users['female']}` tinyint(1) NOT NULL DEFAULT '0';");

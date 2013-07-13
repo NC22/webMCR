@@ -19,6 +19,7 @@ $bd_users = array (
 	'tmp' 		=> 'mcr_tmp',
 	'session'	=> 'mcr_session',
 	'server' 	=> 'mcr_server',
+        'clientToken'   => 'mcr_clientToken'  
 );
 
 $bd_names['users'] 	= 'dle_users';
