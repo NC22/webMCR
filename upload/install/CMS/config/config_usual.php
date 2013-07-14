@@ -90,5 +90,6 @@ $bd_users = array (
   'tmp' => 'tmp',
   'session' => 'session',
   'server' => 'server',
+  'clientToken'   => 'mcr_clientToken',
   'ctime' => 'create_time',
 );

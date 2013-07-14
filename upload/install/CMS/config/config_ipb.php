@@ -20,6 +20,7 @@ $bd_users = array (
 	'session'	=> 'mcr_session',
 	'action_log' => 'mcr_action_log',
 	'server' 	=> 'mcr_server',
+        'clientToken'   => 'mcr_clientToken'    
 );
 
 /* Exists IPB fields */

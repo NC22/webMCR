@@ -20,6 +20,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['users']}` (
   `undress_times` int(10) NOT NULL DEFAULT 0,
   `default_skin` tinyint(1) NOT NULL DEFAULT '1',
   `{$bd_users['session']}` varchar(255) default NULL,
+  `{$bd_users['clientToken']}` varchar(255) default NULL,
   `{$bd_users['server']}` varchar(255) default NULL,  
 
   PRIMARY KEY (`{$bd_users['id']}`),
