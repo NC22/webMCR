@@ -22,6 +22,7 @@ RewriteRule ^go/([^/]+)/?$ index.php?mode=$1 [L,NE]
 RewriteRule  ^authenticate$ MineCraft/auth16x.php [L]
 RewriteRule  ^invalidate$ MineCraft/invalidate16x.php [L]
 RewriteRule  ^refresh$ MineCraft/refresh16x.php [L]
+RewriteRule  ^game/joinserver.jsp MineCraft/joinserver.php [L,NE]
 
 RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteCond %{SCRIPT_FILENAME} !-d

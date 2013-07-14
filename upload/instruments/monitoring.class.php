@@ -50,18 +50,20 @@ private $rcon;
 	}
 	
 	public function Create($address, $port, $method = 0, $rcon = false, $name = '', $info = '') {
-	
+                
 		if ($this->Exist()) return 0; 
 		
 		if (!$address or !TextBase::StringLen($address)) return false;
 				
 			$method = (int)$method;
-		if ($method < 0 or $method > 2) $method = 0;
+		if ($method < 0 or $method > 3) $method = 0;
 		
-		if ($rcon and $method != 2) $rcon = '';
+		if ($rcon and !($method == 2 or $method == 3)) $rcon = '';
 		
-		if (!$rcon and $method == 2) return 2;
-		
+		if (!$rcon and ( $method == 2 or $method == 3)) return 2;
+
+                error_log(print_r("mon.class:Create $address, $port, $method, $rcon",TRUE));
+                
 		$port = (int) $port;
 		if (!$port) $port = 25565;
 
@@ -86,10 +88,10 @@ private $rcon;
 	if (!$this->Exist()) return false;
 		    
 		$method = (int)$method;
-	if ($method < 0 or $method > 2) $method = 0;
+	if ($method < 0 or $method > 3) $method = 0;
 	
-	if ($rcon and $method != 2) $rcon = '';
-	if (!$rcon and $method == 2) return false;
+	if ($rcon and !( $method == 2 or $method == 3)) $rcon = '';
+	if (!$rcon and ( $method == 2 or $method == 3)) return false;
 		
 	BD("UPDATE `".$this->db."` SET `method`='".TextBase::SQLSafe($method)."',`rcon`='".TextBase::SQLSafe($rcon)."' WHERE `id`='".$this->id."'"); 	
 	
@@ -138,6 +140,7 @@ private $rcon;
 	}
 	
 	public function UpdateState($extra = false) {
+        global $config;
     
 	if ((!$extra and !$this->IsTimeToUpdate()) or !$this->Exist()) return;
 	
@@ -150,9 +153,10 @@ private $rcon;
     }
 	
 	BD("UPDATE `".$this->db."` SET last_update=NOW() WHERE id='".$this->id."'"); 
-	
-	if ($this->method == 2) {
-	
+        switch ($this->method) {
+//      RCON Connect            
+        case 2:
+            
 		require_once(MCR_ROOT.'instruments/rcon.class.php');
 		
 		try	{
@@ -174,13 +178,27 @@ private $rcon;
 		
 		if (!empty($names)) for($i=0;$i<sizeof($names);$i++) trim($names[$i]); 
 		if (!$names[0]=='') $users_list = $names;  
-		
-	} else {
+                break;
+        case 3:
+            //Array ( [um] => � [hostname] => A Minecraft Server [gametype] => SMP [game_id] => MINECRAFT [version] => 1.6.2 [plugins] => CraftBukkit on Bukkit 1.6.2-R0.1-SNAPSHOT: Vault 1.2.25-b333; JSONAPI 4.3.6; Herochat 5.6.6-b214 [map] => world [numplayers] => 1 [maxplayers] => 20 [hostport] => 25565 [hostip] => 78.140.52.23 [players] => Array ( [0] => test ) )
+            require_once (MCR_ROOT.'instruments/JSONAPI.php');
+                $api = new JSONAPI($this->address, $this->port, $config['JSONAPI_user'], $this->rcon, $config['JSONAPI_salt']);
+                
+                $apiresult = $api->call(array("getPlayerLimit","getPlayerCount"), array(NULL,NULL));
+                
+                if (!$apiresult) {
+                    BD("UPDATE `".$this->db."` SET online='0' WHERE id='".$this->id."'"); 
+                    return;
+                }
+                $full_state = array('numpl'=>$apiresult["success"][1]["success"],'maxplayers'=>$apiresult["success"][0]["success"] );
+            break;
+// query, simple query		
+        default :
 	
 		require_once(MCR_ROOT.'instruments/query.function.php');
 		 
 		$full_state = ($this->method == 1)? mcraftQuery($this->address, $this->port ) : mcraftQuery_SE($this->address, $this->port );		 
-		 
+		error_log(print_r($full_state), TRUE);
 		if (empty($full_state) or isset($full_state['too_many'])) {
 		
 		   BD("UPDATE `".$this->db."` SET online='".((isset($full_state['too_many']))? '1' : '0')."' WHERE id='".$this->id."'"); 
@@ -191,7 +209,7 @@ private $rcon;
 		elseif (!empty($full_state['players'])) $users_list = $full_state['players']; 
 		
 	}
-	
+        
 	$this->online = true;	
 	  
 	$system_users = '';

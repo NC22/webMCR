@@ -2,7 +2,7 @@
 function ServerConnectMethod() {
   var con_method = GetById('serv_conn_method')
   
-  if (con_method.selectedIndex == 2) BlockVisible('rcon_pass_holder',true)
+  if ((con_method.selectedIndex == 2 ) || (con_method.selectedIndex == 3)) BlockVisible('rcon_pass_holder',true)
   else BlockVisible('rcon_pass_holder',false)
   
   return false

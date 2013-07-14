@@ -63,6 +63,10 @@ $config = array (
 	'action_max'	=> 10,		// maximum exec php script's times ( server monitorings, page refresh, profile edit and etc.)
 	'action_time'	=> 1,		// per seconds. 
 	'action_ban'	=> 60,		// ban time in seconds
+    
+/* JSONAPI */    
+        'JSONAPI_user'  => 'webmcr',
+        'JSONAPI_salt'  => md5(rand(1000000000, 2147483647).rand(1000000000, 2147483647)),
 );
   
 $site_ways = array (

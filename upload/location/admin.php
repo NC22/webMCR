@@ -374,7 +374,7 @@ if ($do) {
     include MCR_STYLE.'admin/server_edit_header.html';  
 	
 	if (isset($_POST['address']) and isset($_POST['port']) and isset($_POST['method'])) {  
-	    		 
+	    		 error_log(print_r($_POST,TRUE));
 		 $serv_address  = $_POST['address'];
 		 
 		 $serv_port     = (int)$_POST['port'];
@@ -383,9 +383,9 @@ if ($do) {
 		 $serv_name     = (isset($_POST['name']))? $_POST['name'] : '';		 
 		 $serv_info     = (isset($_POST['info']))? $_POST['info'] : '';	
 		 
-		 $serv_rcon     = (isset($_POST['rcon_pass']) and $serv_method == 2) ? $_POST['rcon_pass'] : false;
+		 $serv_rcon     = (isset($_POST['rcon_pass']) and ( $serv_method == 2 or $serv_method == 3)) ? $_POST['rcon_pass'] : false;
 		 
-		 if ($serv_method == 2 and !$serv_rcon) $serv_method = false;
+		 if (($serv_method == 2 or $serv_method == 3) and !$serv_rcon) $serv_method = false;
 		 
 		 $serv_ref      = (isset($_POST['timeout']))? (int)$_POST['timeout'] : 5;	
 		 $serv_priority = (isset($_POST['priority']))? (int)$_POST['priority'] : 0;
@@ -393,7 +393,8 @@ if ($do) {
 		 $serv_side     = (isset($_POST['main_page']))? true : false;
 		 $serv_game     = (isset($_POST['game_page']))? true : false;
 		 $serv_mon      = (isset($_POST['stat_page']))? true : false;	
-		 
+
+                 error_log(print_r("$id, $serv_rcon, $serv_address, $serv_port, $serv_method",TRUE));
 		if ($id) {
 		    
 			$server = new Server($id);
@@ -415,6 +416,7 @@ if ($do) {
 		  
 		  $server = new Server();
 		  
+                  error_log(print_r("$serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info",TRUE));
 		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info) == 1) $info .= lng('SERVER_COMPLITE');
 		  else { $info .= 'Настройки подключения не выбраны.'; break; }
 		  

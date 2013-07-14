@@ -16,10 +16,11 @@
 
 		<option value="0" <?php echo (!$serv_method)?'selected':'' ?>>Simple Query</option>
 		<option value="1" <?php echo ($serv_method==1)?'selected':'' ?>>Query</option>
-        <option value="2" <?php echo ($serv_method==2)?'selected':'' ?>>RCON</option>
+                <option value="2" <?php echo ($serv_method==2)?'selected':'' ?>>RCON</option>
+                <option value="3" <?php echo ($serv_method==3)?'selected':'' ?>>JSONAPI</option>
 	</select>
 	<div style="display: none;" id="rcon_pass_holder">
-	<label>RCON пароль</label>
+	<label>RCON/JSONAPI пароль</label>
 	<input type="password" name="rcon_pass" value="">
 	</div>
 	<label>Адрес сервера</label>
