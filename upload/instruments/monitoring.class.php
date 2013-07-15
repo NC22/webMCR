@@ -152,7 +152,9 @@ private $rcon;
 	
 	BD("UPDATE `".$this->db."` SET last_update=NOW() WHERE id='".$this->id."'"); 
         switch ($this->method) {
-//      RCON Connect            
+		
+// RCON Connect 
+           
         case 2:
             
 		require_once(MCR_ROOT.'instruments/rcon.class.php');
@@ -176,10 +178,15 @@ private $rcon;
 		
 		if (!empty($names)) for($i=0;$i<sizeof($names);$i++) trim($names[$i]); 
 		if (!$names[0]=='') $users_list = $names;  
-                break;
-        case 3:
-            //Array ( [um] => � [hostname] => A Minecraft Server [gametype] => SMP [game_id] => MINECRAFT [version] => 1.6.2 [plugins] => CraftBukkit on Bukkit 1.6.2-R0.1-SNAPSHOT: Vault 1.2.25-b333; JSONAPI 4.3.6; Herochat 5.6.6-b214 [map] => world [numplayers] => 1 [maxplayers] => 20 [hostport] => 25565 [hostip] => 78.140.52.23 [players] => Array ( [0] => test ) )
-            require_once (MCR_ROOT.'instruments/JSONAPI.php');
+		
+        break;
+        case 3:        
+		//Array ( [um] => � [hostname] => A Minecraft Server [gametype] => SMP [game_id] => MINECRAFT [version] => 1.6.2 [plugins] => CraftBukkit on Bukkit 1.6.2-R0.1-SNAPSHOT: Vault 1.2.25-b333; JSONAPI 4.3.6; Herochat 5.6.6-b214 [map] => world [numplayers] => 1 [maxplayers] => 20 [hostport] => 25565 [hostip] => 78.140.52.23 [players] => Array ( [0] => test ) )
+        
+		require_once (MCR_ROOT.'instruments/bukkit/json_api.php');
+		
+		// ToDo add json auth options in to server properties
+		
                 $api = new JSONAPI($this->address, $this->port, $config['JSONAPI_user'], $this->rcon, $config['JSONAPI_salt']);
                 
                 $apiresult = $api->call(array("getPlayerLimit","getPlayerCount"), array(NULL,NULL));
@@ -188,9 +195,12 @@ private $rcon;
                     BD("UPDATE `".$this->db."` SET online='0' WHERE id='".$this->id."'"); 
                     return;
                 }
+				
                 $full_state = array('numpl'=>$apiresult["success"][1]["success"],'maxplayers'=>$apiresult["success"][0]["success"] );
             break;
-// query, simple query		
+			
+// query, simple query	
+	
         default :
 	
 		require_once(MCR_ROOT.'instruments/query.function.php');
