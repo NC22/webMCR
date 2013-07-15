@@ -62,8 +62,6 @@ private $rcon;
 		
 		if (!$rcon and ( $method == 2 or $method == 3)) return 2;
 
-                error_log(print_r("mon.class:Create $address, $port, $method, $rcon",TRUE));
-                
 		$port = (int) $port;
 		if (!$port) $port = 25565;
 
@@ -198,7 +196,6 @@ private $rcon;
 		require_once(MCR_ROOT.'instruments/query.function.php');
 		 
 		$full_state = ($this->method == 1)? mcraftQuery($this->address, $this->port ) : mcraftQuery_SE($this->address, $this->port );		 
-		error_log(print_r($full_state), TRUE);
 		if (empty($full_state) or isset($full_state['too_many'])) {
 		
 		   BD("UPDATE `".$this->db."` SET online='".((isset($full_state['too_many']))? '1' : '0')."' WHERE id='".$this->id."'"); 

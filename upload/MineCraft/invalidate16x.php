@@ -48,7 +48,6 @@ $clientToken = $json->clientToken;
 if (!preg_match("/^[a-f0-9-]+$/", $sessionid) or
         !preg_match("/^[a-f0-9-]+$/", $clientToken))
     logExit("[invalidate16x.php] login process [Bad symbols] Session [$sessionid] clientToken [$clientToken]");
-vtxtlog("SELECT `{$bd_users['email']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['session']}`='" . TextBase::SQLSafe($sessionid) . "' AND `{$bd_users['clientToken']}`='" . TextBase::SQLSafe($clientToken) . "'");
 $result = BD("SELECT `{$bd_users['email']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['session']}`='" . TextBase::SQLSafe($sessionid) . "' AND `{$bd_users['clientToken']}`='" . TextBase::SQLSafe($clientToken) . "'");
 
 if (mysql_num_rows($result) != 1)

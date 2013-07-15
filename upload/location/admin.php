@@ -374,7 +374,6 @@ if ($do) {
     include MCR_STYLE.'admin/server_edit_header.html';  
 	
 	if (isset($_POST['address']) and isset($_POST['port']) and isset($_POST['method'])) {  
-	    		 error_log(print_r($_POST,TRUE));
 		 $serv_address  = $_POST['address'];
 		 
 		 $serv_port     = (int)$_POST['port'];
@@ -394,7 +393,6 @@ if ($do) {
 		 $serv_game     = (isset($_POST['game_page']))? true : false;
 		 $serv_mon      = (isset($_POST['stat_page']))? true : false;	
 
-                 error_log(print_r("$id, $serv_rcon, $serv_address, $serv_port, $serv_method",TRUE));
 		if ($id) {
 		    
 			$server = new Server($id);
@@ -416,7 +414,6 @@ if ($do) {
 		  
 		  $server = new Server();
 		  
-                  error_log(print_r("$serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info",TRUE));
 		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info) == 1) $info .= lng('SERVER_COMPLITE');
 		  else { $info .= 'Настройки подключения не выбраны.'; break; }
 		  
