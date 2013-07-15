@@ -1,4 +1,21 @@
 <?php
+/*
+    This file is part of webMCR.
+ 
+    webMCR is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    webMCR is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with webMCR.  If not, see <http://www.gnu.org/licenses/>.
+
+ */
 
 require('../system.php');
 
@@ -31,7 +48,6 @@ $clientToken = $json->clientToken;
 if (!preg_match("/^[a-f0-9-]+$/", $sessionid) or
         !preg_match("/^[a-f0-9-]+$/", $clientToken))
     logExit("[invalidate16x.php] login process [Bad symbols] Session [$sessionid] clientToken [$clientToken]");
-vtxtlog("SELECT `{$bd_users['email']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['session']}`='" . TextBase::SQLSafe($sessionid) . "' AND `{$bd_users['clientToken']}`='" . TextBase::SQLSafe($clientToken) . "'");
 $result = BD("SELECT `{$bd_users['email']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['session']}`='" . TextBase::SQLSafe($sessionid) . "' AND `{$bd_users['clientToken']}`='" . TextBase::SQLSafe($clientToken) . "'");
 
 if (mysql_num_rows($result) != 1)

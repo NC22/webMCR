@@ -99,7 +99,8 @@ var $category_id;
 			switch ((int)$line['method']) {
 			case 0: $server_method = 'Simple query'; break;
 			case 1: $server_method = 'Query'; break; 
-			case 2:  $server_method = 'RCON'; break;
+			case 2: $server_method = 'RCON'; break;
+                        case 3: $server_method = 'JSONAPI'; break;
 			}			
 			$server_id       = $line['id'];
 		
