@@ -2,15 +2,11 @@
 if (!defined('MCR')) exit;
 
 Class ControlMenager extends Menager {
-var $style;
-var $work_skript;
-var $category_id;
+private $work_skript;
 
-    function ControlMenager($style = false, $work_skript = '?mode=control') { 
-	
-		$this->style = (!$style)? MCR_STYLE : $style;
-		
-		parent::Menager($this->style);
+    function ControlMenager($style_sd = false, $work_skript = '?mode=control') { 
+
+		parent::Menager($style_sd);
 		
 		$this->work_skript = $work_skript;	
 	}
@@ -38,9 +34,9 @@ var $category_id;
 		ob_start(); 		
 
 	          $resnum =  mysql_num_rows( $result );	
-	    if ( !$resnum ) { include $this->style.'admin/user_not_found.html'; return ob_get_clean(); }  
+	    if ( !$resnum ) { include $this->GetView('admin/user_not_found.html'); return ob_get_clean(); }  
 		
-        include $this->style.'admin/user_find_header.html'; 
+        include $this->GetView('admin/user_find_header.html'); 
   
 		while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 		
@@ -54,10 +50,10 @@ var $category_id;
 			
             unset($inf_user);
 			
-            include $this->style.'admin/user_find_string.html'; 
+            include $this->GetView('admin/user_find_string.html'); 
         } 
 		
-		include $this->style.'admin/user_find_footer.html'; 
+		include $this->GetView('admin/user_find_footer.html'); 
 
         $html = ob_get_clean();
 
@@ -77,16 +73,16 @@ var $category_id;
 
     ob_start(); 	
 	
-    include $this->style.'admin/servers_caption.html';
+    include $this->GetView('admin/servers_caption.html');
 	
 	// TODO increase priority by votes
 	
     $result = BD("SELECT * FROM `{$bd_names['servers']}` ORDER BY priority DESC LIMIT ".(10*($list-1)).",10");  
     $resnum = mysql_num_rows( $result );
 	
-	if ( !$resnum ) { include $this->style.'admin/servers_not_found.html'; return ob_get_clean(); }  
+	if ( !$resnum ) { include $this->GetView('admin/servers_not_found.html'); return ob_get_clean(); }  
 		
-	include $this->style.'admin/servers_header.html'; 
+	include $this->GetView('admin/servers_header.html'); 
 		
 		while ( $line = mysql_fetch_array( $result ) ) {
 		
@@ -104,10 +100,10 @@ var $category_id;
 			}			
 			$server_id       = $line['id'];
 		
-		include $this->style.'admin/servers_string.html';         
+		include $this->GetView('admin/servers_string.html');         
         }
         
-	include $this->style.'admin/servers_footer.html'; 
+	include $this->GetView('admin/servers_footer.html'); 
 	$html = ob_get_clean();
 	
 		$result = BD("SELECT COUNT(*) FROM `{$bd_names['servers']}`");
@@ -126,14 +122,14 @@ var $category_id;
 
     ob_start(); 	
 	
-    include $this->style.'admin/ban_ip_caption.html';
+    include $this->GetView('admin/ban_ip_caption.html');
 	
     $result = BD("SELECT * FROM `{$bd_names['ip_banning']}` ORDER BY ban_until DESC LIMIT ".(10*($list-1)).",10");  
     $resnum = mysql_num_rows( $result );
 	
-	if ( !$resnum ) { include $this->style.'admin/ban_ip_not_found.html'; return ob_get_clean(); }  
+	if ( !$resnum ) { include $this->GetView('admin/ban_ip_not_found.html'); return ob_get_clean(); }  
 		
-	include $this->style.'admin/ban_ip_header.html'; 
+	include $this->GetView('admin/ban_ip_header.html'); 
 		
 		while ( $line = mysql_fetch_array( $result ) ) {
 		
@@ -143,11 +139,11 @@ var $category_id;
 			 $ban_type  = $line['ban_type'];
 			 $ban_reason  = $line['reason'];			 
 			 
-		     include $this->style.'admin/ban_ip_string.html'; 
+		     include $this->GetView('admin/ban_ip_string.html'); 
         
         }
         
-	include $this->style.'admin/ban_ip_footer.html'; 
+	include $this->GetView('admin/ban_ip_footer.html'); 
 	$html = ob_get_clean();
 	
 		$result = BD("SELECT COUNT(*) FROM `{$bd_names['ip_banning']}`");

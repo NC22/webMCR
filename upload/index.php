@@ -93,5 +93,5 @@ $content_servers = $servManager->Show('side');
 
 unset($servManager);
 
-include MCR_STYLE.'index.html';
+include View::Get('index.html');
 ?>

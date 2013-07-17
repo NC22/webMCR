@@ -67,6 +67,11 @@ Class View {
 		return ob_get_clean(); 	
 	}	
 	
+	protected function GetView($way) {
+	
+		return self::Get($way, $this->st_subdir);		
+	}
+	
 	public static function Get($way, $base_ = false) {
 	global $config;
 
@@ -300,9 +305,9 @@ Class Menager extends View {
 	 
 				if ($curpage > 1) { 
 				
-				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include self::Get($prefix.'_list_item.html'); } 
+				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include $this->GetView($prefix.'_list_item.html'); } 
 				  
-				  $var = $curpage-1; $text = '<'; include self::Get($prefix.'_list_item.html'); 
+				  $var = $curpage-1; $text = '<'; include $this->GetView($prefix.'_list_item.html'); 
 				
 				}
 				
@@ -311,16 +316,16 @@ Class Menager extends View {
 					$var  = $i; 
 					$text = $i;
 					
-						if ($i == $curpage) include self::Get($prefix.'_list_item_selected.html'); 
-						else			    include self::Get($prefix.'_list_item.html'); 
+						if ($i == $curpage) include $this->GetView($prefix.'_list_item_selected.html'); 
+						else			    include $this->GetView($prefix.'_list_item.html'); 
 						
 					}
 					
 				if ($curpage < $numoflists) { 
 				
-				  $var = $curpage+1; $text = '>'; include self::Get($prefix.'_list_item.html'); 
+				  $var = $curpage+1; $text = '>'; include $this->GetView($prefix.'_list_item.html'); 
 				  
-				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include self::Get($prefix.'_list_item.html'); } 
+				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include $this->GetView($prefix.'_list_item.html'); } 
 				
 				}
 				
@@ -332,7 +337,7 @@ Class Menager extends View {
 		
 			ob_start(); 
 			  
-			include self::Get($prefix.'_list.html');	
+			include $this->GetView($prefix.'_list.html');	
 			  
 			return ob_get_clean();			  
 		}
@@ -459,7 +464,7 @@ private $menu_items;
 		
 		$type = ($button_links)? 'menu_dropdown_item' : 'menu_item'; 
 
-		ob_start(); include self::Get($type.'.html');
+		ob_start(); include $this->GetView($type.'.html');
 		
 		return ob_get_clean();		
 	}
@@ -525,7 +530,7 @@ private $menu_items;
 		
 		$menu_align = ($i == 1) ? 'pull-right' : 'pull-left';
 		
-		ob_start(); include self::Get('menu.html');
+		ob_start(); include $this->GetView('menu.html');
 		
 		$html_menu .= ob_get_clean();
 		
