@@ -1,5 +1,5 @@
 <?php
-define('PROGNAME', 'WebMCR 2.15');
+define('PROGNAME', 'WebMCR 2.3b');
 define('FEEDBACK', '<a href="http://drop.catface.ru/index.php?nid=17">'.PROGNAME.'</a> &copy; 2013 NC22');  
 
 /* TODO обобщенная модель для удаления \ проверки существования объекта */
@@ -34,6 +34,48 @@ class ItemType {
 		'smtp-port',
 		'smtp-hello',		
 	);
+}
+
+Class View {
+
+	const def_theme = 'Default';
+	
+	protected $st_subdir;	
+	
+	public function View($style_subdir = '') {
+	
+		if (!$style_subdir) $style_subdir = false;
+		
+		$this->st_subdir = $style_subdir;		
+	}
+	
+	public function ShowPage($way, $out = false) {
+	
+		ob_start(); 
+		
+		include self::Get($way, $this->st_subdir);
+
+		return ob_get_clean(); 	
+	}
+
+	public static function ShowStaticPage($page) {
+	global $config;
+	
+		ob_start(); 
+		include $page;
+		
+		return ob_get_clean(); 	
+	}	
+	
+	public static function Get($way, $base_ = false) {
+	global $config;
+
+		$base = ($base_)? $base_ : '' ;	
+		$theme_dir = empty($config['s_theme']) ? '' : $config['s_theme'] . '/' ;
+		
+		return MCR_STYLE.((file_exists(MCR_STYLE.$theme_dir.$base.$way))? $theme_dir : self::def_theme . '/').$base.$way;
+	} 
+	
 }
 
 Class TextBase {
@@ -221,24 +263,12 @@ Class Message {
 	
 }
 
-Class Menager {
-private $style;
+Class Menager extends View {
 
-	public function Menager($style = false) {
+	public function Menager($style_sd = false) {
 	global $site_ways;
-	
-		$this->style = (!$style)? MCR_STYLE : $style;
 		
-	}
-
-	public static function ShowStaticPage($page) {
-	global $config;
-	
-		ob_start(); 
-		
-		include $page;
-		
-		return ob_get_clean(); 	
+		parent::View($style_sd);
 	}
 
     public function arrowsGenerator($link, $curpage, $itemsnum, $per_page, $prefix = 'news') { 
@@ -270,9 +300,9 @@ private $style;
 	 
 				if ($curpage > 1) { 
 				
-				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include $this->style.$prefix.'_list_item.html'; } 
+				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include self::Get($prefix.'_list_item.html'); } 
 				  
-				  $var = $curpage-1; $text = '<'; include $this->style.$prefix.'_list_item.html'; 
+				  $var = $curpage-1; $text = '<'; include self::Get($prefix.'_list_item.html'); 
 				
 				}
 				
@@ -281,16 +311,16 @@ private $style;
 					$var  = $i; 
 					$text = $i;
 					
-						if ($i == $curpage) include $this->style.$prefix.'_list_item_selected.html'; 
-						else			    include $this->style.$prefix.'_list_item.html'; 
+						if ($i == $curpage) include self::Get($prefix.'_list_item_selected.html'); 
+						else			    include self::Get($prefix.'_list_item.html'); 
 						
 					}
 					
 				if ($curpage < $numoflists) { 
 				
-				  $var = $curpage+1; $text = '>'; include $this->style.$prefix.'_list_item.html'; 
+				  $var = $curpage+1; $text = '>'; include self::Get($prefix.'_list_item.html'); 
 				  
-				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include $this->style.$prefix.'_list_item.html'; } 
+				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include self::Get($prefix.'_list_item.html'); } 
 				
 				}
 				
@@ -302,7 +332,7 @@ private $style;
 		
 			ob_start(); 
 			  
-			include $this->style.$prefix.'_list.html';	
+			include self::Get($prefix.'_list.html');	
 			  
 			return ob_get_clean();			  
 		}
@@ -382,14 +412,13 @@ private $db;
 	}
 }
 
-Class Menu {
+Class Menu extends View {
 private $menu_items;
-private $style;
 
-    public function Menu($style = false, $auto_load = true) {
+    public function Menu($style_sd = false, $auto_load = true) {
 	global $config;
 	
-		$this->style = (!$style)? MCR_STYLE : $style;
+		parent::View($style_sd);
 		
 		if ($auto_load) {
 
@@ -430,7 +459,7 @@ private $style;
 		
 		$type = ($button_links)? 'menu_dropdown_item' : 'menu_item'; 
 
-		ob_start(); include ($this->style.$type.'.html');
+		ob_start(); include self::Get($type.'.html');
 		
 		return ob_get_clean();		
 	}
@@ -496,7 +525,7 @@ private $style;
 		
 		$menu_align = ($i == 1) ? 'pull-right' : 'pull-left';
 		
-		ob_start(); include ($this->style.'menu.html');
+		ob_start(); include self::Get('menu.html');
 		
 		$html_menu .= ob_get_clean();
 		

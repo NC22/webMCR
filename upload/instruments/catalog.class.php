@@ -672,7 +672,9 @@ private $category_id;
 
 		$result = BD("SELECT COUNT(*) FROM `{$bd_names['comments']}` WHERE item_id='".TextBase::SQLSafe($id)."'");
 		$line = mysql_fetch_array($result);
-		  
+		
+		$comments_html = '';  
+		
 		$commentnum = $line[0];
 		if ($commentnum) {
 		
@@ -685,7 +687,7 @@ private $category_id;
 			$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE item_id='".TextBase::SQLSafe($id)."' ORDER by time $comm_order LIMIT ".($comm_pnum*($list-1)).",".$comm_pnum); 
 			if ( mysql_num_rows( $result ) != 0 ) {
 			
-			$comments_html = '';
+			
 			
 			  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 			  

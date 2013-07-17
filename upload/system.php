@@ -1,5 +1,5 @@
 <?php
-// error_reporting(E_ALL);
+error_reporting(E_ALL);
 
 define('MCR', 1);  
 define('MCR_ROOT', dirname(__FILE__).'/');
@@ -10,14 +10,17 @@ if (!file_exists(MCR_ROOT.'config.php')) { header("Location: install/install.php
 require(MCR_ROOT.'instruments/locale/'.MCR_LANG.'.php');
 require(MCR_ROOT.'config.php');
 
+require(MCR_ROOT.'instruments/base.class.php');
+require(MCR_ROOT.'instruments/auth/'.$config['p_logic'].'.php');
+
 define('MCRAFT', MCR_ROOT.$site_ways['mcraft']);
 define('MCR_STYLE', './'.$site_ways['style']); // relative for current exec file
 
-define('STYLE_URL', $site_ways['style']);
-define('BASE_URL', $config['s_root']);
+define('STYLE_URL', $site_ways['style']); // deprecated
+define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
+define('CUR_STYLE_URL', ( empty($config['s_theme']) ? DEF_STYLE_URL : STYLE_URL . $config['s_theme'] . '/' ) );
 
-require(MCR_ROOT.'instruments/base.class.php');
-require(MCR_ROOT.'instruments/auth/'.$config['p_logic'].'.php');
+define('BASE_URL', $config['s_root']);
 
 date_default_timezone_set($config['timezone']);
 
