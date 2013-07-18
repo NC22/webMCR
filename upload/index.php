@@ -25,7 +25,7 @@ BDConnect('index');
 require(MCR_ROOT.'instruments/user.class.php');
 MCRAuth::userLoad();
 
-function GetRandomAdvice() { return ($quotes = @file(MCR_STYLE.'sovet.txt'))? $quotes[rand(0, sizeof($quotes)-1)] : "Советов нет"; }
+function GetRandomAdvice() { return ($quotes = @file(View::Get('sovet.txt')))? $quotes[rand(0, sizeof($quotes)-1)] : "Советов нет"; }
 
 function LoadTinyMCE() {
 global $addition_events, $content_js;

@@ -156,7 +156,7 @@ switch ($method) {
 			
 	    require_once(MCR_ROOT.'instruments/catalog.class.php');
 				
-		$comments_item = new Comments_Item(false, MCR_STYLE.'news/');				
+		$comments_item = new Comments_Item(false, 'news/');				
 		$rcode = $comments_item->Create($_POST['comment'],(int)$_POST['item_id']);
         
             if ( $rcode == 1701 ) aExit(1, lng('MESS_SHORT'));       

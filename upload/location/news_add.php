@@ -9,7 +9,7 @@ $page = 'Добавить новость';
 
 LoadTinyMCE();
 
-$news_manager = new NewsMenager(null, MCR_STYLE.'news/');
+$news_manager = new NewsMenager(null, 'news/');
 $files_manager = new FileMenager();
 
 $menu->SetItemActive('add_news');

@@ -156,19 +156,19 @@ Class CategoryMenager {
 	}
 }
 
-Class Comments_Item extends Message { 
+Class Comments_Item extends View { 
 private $db;
-private $style;
 
 private $id;
 private $user_id;
 
-	public function Comments_Item($id = false, $style = false) {
+	public function Comments_Item($id = false, $style_sd = false) {
 	global $bd_names;	
+
+		parent::View($style_sd);
 	
 		$this->db    = $bd_names['comments'];
-		$this->style = (!$style)? MCR_STYLE : $style;
-		
+	
 		$this->id = (int)$id; if (!$this->id) return false;
 		
 		$result = BD("SELECT `user_id` FROM `{$this->db}` WHERE `id`='".TextBase::SQLSafe($this->id)."'"); 
@@ -184,7 +184,7 @@ private $user_id;
 		if (empty($user) or !$user->canPostComment()) return 0; 
 		
 		$item_id = (int)$item_id;
-		$message = $this->Comment($message);
+		$message = Message::Comment($message);
 		if ( TextBase::StringLen($message) < 2 ) return 1701;
 
 		$result = BD("SELECT `id` FROM `{$bd_names['news']}` WHERE `id`='".TextBase::SQLSafe($item_id)."'"); 
@@ -208,7 +208,7 @@ private $user_id;
 	public function Show() {
 	global $user, $bd_users;
 	
-		if (!$this->Exist()) return Menager::ShowStaticPage($this->style.'comment_not_found.html');
+		if (!$this->Exist()) return $this->ShowPage('comment_not_found.html');
 			
 		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y %H:%i:%S') AS time,message,item_id FROM `{$this->db}` WHERE id='".$this->id."'"); 
 		if (!mysql_num_rows( $result )) return ''; 
@@ -217,7 +217,7 @@ private $user_id;
 			
 		$admin_buttons 	= '';
 		$female_mark	= '';
-		$text 			= $this->BBDecode($line['message']);
+		$text 			= Message::BBDecode($line['message']);
 		$date 			= $line['time'];
 			
 		$id		 = $this->id;		
@@ -239,15 +239,15 @@ private $user_id;
 			
 		if ( !empty($user) and ( $user->getPermission('adm_comm') or $user->id() == $user_id ) ) { 
 
-			ob_start(); include $this->style.'comments_admin.html';			  
+			ob_start(); include $this->GetView('comments_admin.html');			  
 			$admin_buttons = ob_get_clean();
 		}
 
-		if ( $user_female ) $female_mark = Menager::ShowStaticPage($this->style.'comments_girl.html');
+		if ( $user_female ) $female_mark = $this->ShowPage('comments_girl.html');
 		
 		ob_start();	
-		if ( !empty($user) ) include $this->style.'comments.html';
-		else 	             include $this->style.'comments_unauth.html';
+		if ( !empty($user) ) include $this->GetView('comments.html');
+		else 	             include $this->GetView('comments_unauth.html');
 	 
 	return ob_get_clean();		
 	}
@@ -258,7 +258,7 @@ private $user_id;
     }
 
 	public function Edit($message) {
-		$message = $this->Comment($message);				
+		$message = Message::Comment($message);				
 		BD("UPDATE `{$this->db}` SET message='".TextBase::SQLSafe($message)."' WHERE id='".$this->id."'");
 		
 		return true; 
@@ -275,18 +275,18 @@ private $user_id;
 
 /* Класс записи в каталоге */
 
-Class News_Item {
+Class News_Item extends View {
 private $db;
-private $style;
 
 private $id;
 private $category_id;
 private $title;
 
-	public function News_Item($id = false, $style = false) {
+	public function News_Item($id = false, $style_sd = false) {
 	global $bd_names;
 	
-		$this->style = (!$style)? MCR_STYLE : $style;
+		parent::View($style_sd);
+		
 		$this->db = $bd_names['news'];	
 		
 	    $this->id = (int)$id; if (!$this->id) return false;
@@ -349,7 +349,7 @@ private $title;
 	public function Show($full_text = false) {
     global $config, $user, $bd_names;
 	
-	if (!$this->Exist()) return Menager::ShowStaticPage($this->style.'news_not_found.html');
+	if (!$this->Exist()) return $this->ShowPage('news_not_found.html');
 		
 		$result = BD("SELECT COUNT(*) FROM `{$bd_names['comments']}` WHERE item_id='".$this->id."'");
 		$line   = mysql_fetch_array($result, MYSQL_NUM);	  
@@ -386,16 +386,19 @@ private $title;
 		
 		if (!empty($user) and $user->getPermission('add_news')) { 
 
-		ob_start();	include $this->style.'news_admin.html';			  
+		ob_start();	include $this->GetView('news_admin.html');		  
 		$admin_buttons =  ob_get_clean();
 		} 
 
 		ob_start();	
 
 		if ( $full_text )
-		 include $this->style.'news_full.html';
+		
+		 include $this->GetView('news_full.html');
+		 
 		else
-		 include $this->style.'news.html';	
+		
+		 include $this->GetView('news.html');	
 		 
 		return ob_get_clean();				
 	}
@@ -446,15 +449,12 @@ private $title;
 /* Менеджер вывода записей из каталога */
 
 Class NewsMenager extends Menager {
-private $style;
 private $work_skript;
 private $category_id;
 
-    public function NewsMenager($category = 1, $style = false, $work_skript = 'index.php?') { // category = -1 -- all last news
+    public function NewsMenager($category = 1, $style_sd = false, $work_skript = 'index.php?') { // category = -1 -- all last news
 	
-		$this->style = (!$style)? MCR_STYLE : $style;
-
-		parent::Menager($this->style);
+		parent::Menager($style_sd);
 	
 		if ((int) $category <= 0) $category = 0;
 		
@@ -463,8 +463,7 @@ private $category_id;
 	}
 	
 	public function destroy() {
-	
-	  unset($this->style); 
+
 	  unset($this->work_skript); 
 	  unset($this->category_id);   
 	}
@@ -474,7 +473,7 @@ private $category_id;
 	$cat_list .= CategoryMenager::GetList($this->category_id); 
 
 	ob_start();
-	include $this->style.'categorys.html';					  
+	include $this->GetView('categorys.html');
 
 	return ob_get_clean();	
 	}	
@@ -513,7 +512,7 @@ private $category_id;
 				
 				if ($editMode > 0) {
 				
-				    $news_item = new News_Item($editMode, $this->style);
+				    $news_item = new News_Item($editMode, $this->st_subdir);
 				
 				if ($news_item->Edit($editCategory, $title, $mes, $mesFull)) {
 				
@@ -537,7 +536,7 @@ private $category_id;
 				}				
 			}
 			
-			include $this->style.'news_admin_mess.html';
+			include $this->GetView('news_admin_mess.html');
 			$error = ob_get_clean();
 			
 		} elseif (isset($_GET['delete'])) {
@@ -569,7 +568,7 @@ private $category_id;
 	
 	$cat_list = CategoryMenager::GetList($editCategory);
  	
-	include $this->style.'news_add.html';
+	include $this->GetView('news_add.html');
 				  
 	return ob_get_clean();
 
@@ -593,7 +592,7 @@ private $category_id;
 	$category_id = $this->category_id;
 	$category_link = ($config['rewrite'])? 'category/'.$category_id : 'index.php?cid='.$category_id;
 	
-	ob_start(); include $this->style.'news_header.html';					  
+	ob_start(); include $this->GetView('news_header.html');					  
 	$html_news = ob_get_clean();
     $news_pnum  = $config['news_by_page'];
 	
@@ -603,7 +602,7 @@ private $category_id;
 	$newsnum = $line[0];	
 	if (!$newsnum) {
 	
-	$html_news .= Menager::ShowStaticPage($this->style.'news_empty.html');
+	$html_news .= $this->ShowPage('news_empty.html');
 	return $html_news;	
 	}
 	
@@ -613,13 +612,13 @@ private $category_id;
 
 		  while ( $line = mysql_fetch_array( $result , MYSQL_NUM ) ) {
 		  
-		         $news_item = new News_Item($line[0],$this->style);
+		         $news_item = new News_Item($line[0], $this->st_subdir);
 				 
-		         $html_news.= $news_item->Show(); 
+		         $html_news .= $news_item->Show(); 
 				 unset($news_item);				 
 		  }
 
-	$html_news .= $this->arrowsGenerator($this->work_skript,$list,$newsnum,$news_pnum);		  		  
+	$html_news .= $this->arrowsGenerator($this->work_skript, $list, $newsnum, $news_pnum);		  		  
 	}		
 	return $html_news;	
 	}
@@ -629,7 +628,7 @@ private $category_id;
 
 	if (empty($user) or !$user->getPermission('add_comm')) return '';
 	
-         $news_item = new News_Item($id,$this->style);
+         $news_item = new News_Item($id, $this->st_subdir);
 	if (!$news_item->Exist()) return '';
 	
 	$postTitle  = 'Добавить комментарий';
@@ -643,7 +642,7 @@ private $category_id;
 
 	ob_start();
 		
-	include $this->style.'comments_add.html';
+	include $this->GetView('comments_add.html');
 				  
 	return ob_get_clean();
 	}
@@ -654,7 +653,7 @@ private $category_id;
 	$id   = (int) $id;
 	$link  = ($config['rewrite'])? 'news/'.$id : 'index.php?id='.$id;
     
-		$news_item  = new News_Item($id,$this->style); // можно определять некоторые переменные на этапе инициализации н. заглавие
+		$news_item  = new News_Item($id, $this->st_subdir); // можно определять некоторые переменные на этапе инициализации н. заглавие
 		$item_exist = $news_item->Exist();
 		
 		$title      	= ($item_exist)? $news_item->GetTitle() : 'Новость не найдена'; 			
@@ -662,7 +661,7 @@ private $category_id;
 		$category 		= ($item_exist)? CategoryMenager::GetNameByID($category_id) : 'Без категории';
 		$category_link 	= ($config['rewrite'])? 'category/'.$category_id : 'index.php?cid='.$category_id;
 		
-	    ob_start(); include $this->style.'news_full_header.html';					  
+	    ob_start(); include $this->GetView('news_full_header.html');					  
 	    $html_news = ob_get_clean();
 
 		$html_news .= $news_item->Show(1);			
@@ -691,7 +690,7 @@ private $category_id;
 			
 			  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 			  
-					 $comments_item = new Comments_Item($line[0],$this->style);
+					 $comments_item = new Comments_Item($line[0], $this->st_subdir);
 					 
 					 $comments_html.= $comments_item->Show(); 
 					 unset($comments_item);
@@ -701,7 +700,7 @@ private $category_id;
 			}
 		}
 		
-	ob_start(); include $this->style.'comments_container.html';					  
+	ob_start(); include $this->GetView('comments_container.html');					  
 	$html_news .= ob_get_clean();
 	
 	return $html_news;	

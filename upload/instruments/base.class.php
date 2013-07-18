@@ -36,6 +36,8 @@ class ItemType {
 	);
 }
 
+/* Base class for objects with Show method */
+
 Class View {
 
 	const def_theme = 'Default';
@@ -58,7 +60,7 @@ Class View {
 		return ob_get_clean(); 	
 	}
 
-	public static function ShowStaticPage($page) {
+	public static function ShowStaticPage($page) { /* depricated with full patch select */
 	global $config;
 	
 		ob_start(); 
@@ -76,9 +78,16 @@ Class View {
 	global $config;
 
 		$base = ($base_)? $base_ : '' ;	
-		$theme_dir = empty($config['s_theme']) ? '' : $config['s_theme'] . '/' ;
 		
-		return MCR_STYLE.((file_exists(MCR_STYLE.$theme_dir.$base.$way))? $theme_dir : self::def_theme . '/').$base.$way;
+		if ( empty ($config['s_theme']) ) $theme_dir = '';	
+		else {
+			
+			if ( $config['s_theme'] === self::def_theme ) return MCR_STYLE. self::def_theme . '/' . $base . $way;
+			
+			$theme_dir = $config['s_theme'] . '/' ;			
+		}	
+		
+		return MCR_STYLE.((file_exists(MCR_STYLE.$theme_dir.$base.$way))? $theme_dir : self::def_theme . '/'). $base . $way;
 	} 
 	
 }

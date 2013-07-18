@@ -14,7 +14,7 @@ require(MCR_ROOT.'instruments/base.class.php');
 require(MCR_ROOT.'instruments/auth/'.$config['p_logic'].'.php');
 
 define('MCRAFT', MCR_ROOT.$site_ways['mcraft']);
-define('MCR_STYLE', './'.$site_ways['style']); // relative for current exec file
+define('MCR_STYLE', MCR_ROOT.$site_ways['style']); 
 
 define('STYLE_URL', $site_ways['style']); // deprecated
 define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
