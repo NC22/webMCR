@@ -22,7 +22,7 @@ else                    $spec_new = -1;
 
 $news = $news_manager->ShowNewsListing($curlist);
 
-$servManager = new ServerMenager(MCR_STYLE.'launcher/');
+$servManager = new ServerMenager('launcher/');
 $server_state_html = $servManager->Show('game');
 unset($servManager);
 			  

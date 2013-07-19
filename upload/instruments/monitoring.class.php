@@ -1,14 +1,13 @@
 <?php
 if (!defined('MCR')) exit;
 
-Class Server {
+Class Server extends View {
 private $db;
-private $style;
 
 private $id;
 
 private $address;
-private $port; // Порт не игровой, а тот что используется для сбора статистики
+private $port; // port for connection to monitoring service
 private $method; 
 			
 private $name;			
@@ -20,15 +19,16 @@ private $online;
 private $refresh;	
 private $rcon;  
 
-	public function Server($id = false, $style = false) {
+	public function Server($id = false, $style_sd = false) {
 	global $bd_names;
 	
+		parent::View($style_sd);
+	
 		$this->db    = $bd_names['servers'];
-		$this->style = (!$style)? MCR_STYLE : $style;
 		
 	    $this->id = (int)$id; if (!$this->id) return false;
 		
-		$result = BD("SELECT online,address,port,name,numpl,slots,info,refresh_time,method,rcon FROM `".$this->db."` WHERE id='".TextBase::SQLSafe($this->id)."'");
+		$result = BD("SELECT online, address, port, name, numpl, slots, info, refresh_time, method, rcon FROM `".$this->db."` WHERE id='".TextBase::SQLSafe($this->id)."'");
 		if ( mysql_num_rows( $result ) != 1 ) { $this->id = false; return false; }
 			
 		$line = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -181,23 +181,31 @@ private $rcon;
 		
         break;
         case 3:        
-		//Array ( [um] => � [hostname] => A Minecraft Server [gametype] => SMP [game_id] => MINECRAFT [version] => 1.6.2 [plugins] => CraftBukkit on Bukkit 1.6.2-R0.1-SNAPSHOT: Vault 1.2.25-b333; JSONAPI 4.3.6; Herochat 5.6.6-b214 [map] => world [numplayers] => 1 [maxplayers] => 20 [hostport] => 25565 [hostip] => 78.140.52.23 [players] => Array ( [0] => test ) )
-        
+
 		require_once (MCR_ROOT.'instruments/bukkit/json_api.php');
 		
 		// ToDo add json auth options in to server properties
 		
-                $api = new JSONAPI($this->address, $this->port, $config['JSONAPI_user'], $this->rcon, $config['JSONAPI_salt']);
+		$salt = sqlConfigGet('json-verification-salt');
+	
+		if (!$salt) { 
+		
+			$salt = md5(rand(1000000000, 2147483647).rand(1000000000, 2147483647));
+			sqlConfigSet('json-verification-salt', $salt); 	
+		}
+		
+            $api = new JSONAPI($this->address, $this->port, $config['JSONAPI_user'], $this->rcon, $salt);
                 
-                $apiresult = $api->call(array("getPlayerLimit","getPlayerCount"), array(NULL,NULL));
+            $apiresult = $api->call(array("getPlayerLimit","getPlayerCount"), array(NULL,NULL));
                 
-                if (!$apiresult) {
-                    BD("UPDATE `".$this->db."` SET online='0' WHERE id='".$this->id."'"); 
-                    return;
-                }
+            if (!$apiresult) {
+               
+			   BD("UPDATE `".$this->db."` SET online='0' WHERE id='".$this->id."'"); 
+               return;
+            }
 				
-                $full_state = array('numpl'=>$apiresult["success"][1]["success"],'maxplayers'=>$apiresult["success"][0]["success"] );
-            break;
+            $full_state = array('numpl'=>$apiresult["success"][1]["success"],'maxplayers'=>$apiresult["success"][0]["success"] );
+        break;
 			
 // query, simple query	
 	
@@ -351,11 +359,11 @@ private $rcon;
 				
     	switch ($type) {		
 		case 'mon':            
-		case 'side': include $this->style.'serverstate_'.$type.'.html';	break;
+		case 'side': include $this->GetView('serverstate_'.$type.'.html');	break;
 		case 'game':
 		
-		if ( $this->online ) include $this->style.'serverstate_'.$type.'_online.html';  
-		else include $this->style.'serverstate_'.$type.'_offline.html';	
+		if ( $this->online ) include $this->GetView('serverstate_'.$type.'_online.html');  
+		else include $this->GetView('serverstate_'.$type.'_offline.html');	
 		
         break;		
 		default: return false; break;
@@ -439,13 +447,12 @@ private $rcon;
    }   
 }
 
-Class ServerMenager {
-private $style;
+Class ServerMenager extends Menager {
 
-	public function ServerMenager($style = false) { 
+	public function ServerMenager($style_sd = false) { 
 	global $site_ways;
 	
-	   $this->style = (!$style)? MCR_STYLE : $style;
+	   parent::View($style_sd);
 	}
 	
 	public function Show($type = 'side', $update = false) {
@@ -454,7 +461,7 @@ private $style;
 	         $page = self::getPageName($type);
         if (!$page) return false;
 		
-		$html_serv = Menager::ShowStaticPage($this->style.'serverstate_'.$type.'_header.html'); 
+		$html_serv = $this->ShowPage('serverstate_'.$type.'_header.html'); 
 		
 		$result = BD("SELECT `id` FROM `{$bd_names['servers']}` WHERE `$page`=1 ORDER BY priority DESC LIMIT 0,10"); 
 			
@@ -462,16 +469,16 @@ private $style;
 
 		   while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 					
-			$server = new Server($line[0],$this->style);
+			$server = new Server($line[0], $this->st_subdir);
 			if ($update) $server->UpdateState();
             $html_serv .= $server->ShowHolder($type);
 			
 			unset($server);
 		   }
 		   
-		} else $html_serv .= Menager::ShowStaticPage($this->style.'serverstate_'.$type.'_empty.html');
+		} else $html_serv .= $this->ShowPage('serverstate_'.$type.'_empty.html');
 		
-		$html_serv .= Menager::ShowStaticPage($this->style.'serverstate_'.$type.'_footer.html');	
+		$html_serv .= $this->ShowPage('serverstate_'.$type.'_footer.html');	
 		
         return $html_serv;		
 	}	

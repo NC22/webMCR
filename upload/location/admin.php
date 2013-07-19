@@ -438,7 +438,7 @@ if ($do) {
 	}
 	
 	if ($id) {	 
-	    $server = new Server($id,MCR_STYLE.'admin/');
+	    $server = new Server($id, 'admin/');
 		
 		$server->UpdateState(true);
         $server_info = $server->ShowHolder('mon','adm');	

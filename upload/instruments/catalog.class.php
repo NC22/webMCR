@@ -356,8 +356,15 @@ private $title;
 		$comments = $line[0];	
 		
 		$sql = ( $full_text )? ' `message_full`,' : ''; //:%S
+				
+		$sql_hits = ' `hits`,';
+		if ( $full_text ) {
 		
-		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS date,DATE_FORMAT(time,'%H:%i') AS time, `likes`, `dislikes`,".$sql." `message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
+			BD("UPDATE `{$this->db}` SET `hits` = LAST_INSERT_ID( `hits` + 1 ) WHERE `id`='".$this->id."'");
+			$sql_hits = " LAST_INSERT_ID() AS hits,"; 
+		}
+		
+		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS date, DATE_FORMAT(time,'%H:%i') AS time,".$sql_hits." `likes`, `dislikes`,".$sql." `message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
 		if (!mysql_num_rows( $result )) return ''; 
 		
 		$line = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -372,6 +379,7 @@ private $title;
 		$date  = $line['date'];
 		$time  = $line['time'];
 		$likes = $line['likes'];
+		$hits  = $line['hits'];
 		$dlikes = $line['dislikes']; 
 		
 		// можно добавить work_script по аналогии

@@ -21,7 +21,9 @@ class ItemType {
 	 
 		'email-verification',
 		'email-verification-salt',
-	 
+		
+		'json-verification-salt',
+		
 		'latest-game-build',
 		'launcher-version',
 	

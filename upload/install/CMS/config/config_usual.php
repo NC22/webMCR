@@ -66,7 +66,6 @@ $config = array (
     
 /* JSONAPI */    
         'JSONAPI_user'  => 'webmcr',
-        'JSONAPI_salt'  => md5(rand(1000000000, 2147483647).rand(1000000000, 2147483647)),
 );
   
 $site_ways = array (

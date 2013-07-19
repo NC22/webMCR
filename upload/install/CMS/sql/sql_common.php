@@ -47,6 +47,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news']}` (
   `user_id` bigint(20) NOT NULL,
   `dislikes` int(10) DEFAULT 0,
   `likes` int(10) DEFAULT 0,
+  `hits` int(10) DEFAULT 0,
   `title` char(255) NOT NULL,
   `message` TEXT NOT NULL,
   `message_full` MEDIUMTEXT NOT NULL,
@@ -69,6 +70,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['servers']}` (
   `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `online` tinyint(1) DEFAULT 0,
   `rcon` varchar(255) DEFAULT '',
+  `service_user` char(64) NOT NULL,
   `players` text default NULL,
   `method` tinyint(1) DEFAULT 0,
   `address` varchar(255) default NULL,
@@ -180,6 +182,19 @@ BD("ALTER TABLE `{$bd_names['users']}`	ADD	KEY `group_id` (`{$bd_users['group']}
 if (!BD_ColumnExist($bd_names['users'], $bd_users['deadtry'])) {
 
 BD("ALTER TABLE `{$bd_names['users']}`	ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");	
+}
+
+/* 2.25b UPDATE */
+if (!BD_ColumnExist($bd_names['users'], $bd_users['clientToken'])) {
+
+BD("ALTER TABLE `{$bd_names['users']}` ADD `{$bd_users['clientToken']}` varchar(255) DEFAULT NULL;");	
+}
+
+/* 2.3 UPDATE */
+if (!BD_ColumnExist($bd_names['servers'], 'service_user')) {
+
+BD("ALTER TABLE `{$bd_names['servers']}` ADD `service_user` char(64) NOT NULL;");
+BD("ALTER TABLE `{$bd_names['news']}` ADD `hits` int(10) DEFAULT 0;");	
 }
 
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['action_log']}` (
