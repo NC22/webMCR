@@ -62,11 +62,12 @@ Class View {
 		return ob_get_clean(); 	
 	}
 
-	public static function ShowStaticPage($page) { /* depricated with full patch select */
+	public static function ShowStaticPage($way, $st_subdir = false, $out = false ) { /* if st_subdir is FALSE will used depricated method with full patch select */
 	global $config;
-	
+		
 		ob_start(); 
-		include $page;
+		
+		include ( $st_subdir === false ) ? $way : self::Get($way, $st_subdir);
 		
 		return ob_get_clean(); 	
 	}	

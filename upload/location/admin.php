@@ -7,6 +7,8 @@ require(MCR_ROOT.'instruments/catalog.class.php');
 require(MCR_ROOT.'instruments/alist.class.php');
 require(MCR_ROOT.'instruments/monitoring.class.php');
  
+$st_subdir = 'admin/';
+ 
 function RatioList($selectid = 1) {
 
 $html_ratio = '<option value="1" '.((1 == $selectid)?'selected':'').'>64x32 | 22x17</option>';
@@ -80,7 +82,7 @@ if ($do) {
 	if ($user_id) $url .= '&user_id='.$user_id;
 	
 	$files_manager = new FileMenager('other/', $url.'&');
-	$content_main .= Menager::ShowStaticPage(MCR_STYLE.'admin/filelist_info.html');
+	$content_main .= View::ShowStaticPage('filelist_info.html', $st_subdir);
 	$content_main .= $files_manager->ShowAddForm();
 	
 	$html .= $files_manager->ShowFilesByUser($curlist, $user_id);	
@@ -110,8 +112,7 @@ if ($do) {
 	
 	break;
     case 'all':
-	ob_start(); include MCR_STYLE.'admin/user_find.html'; 
-	$html .= ob_get_clean();
+	$html .= View::ShowStaticPage('user_find.html', $st_subdir);
 	
     $controlMenager = new ControlMenager(false, 'index.php?mode=control&');
     $html .= $controlMenager->ShowUserListing($curlist, 'none');
@@ -119,9 +120,8 @@ if ($do) {
 	$do = false;	
 	break;
     case 'search': 
-	
-	ob_start(); include MCR_STYLE.'admin/user_find.html'; 
-	$html .= ob_get_clean();
+
+	$html .= View::ShowStaticPage('user_find.html', $st_subdir);
 	
 	if ( !empty($_GET["sby"]) and 
 	     !empty($_GET['input'])     and 
@@ -176,8 +176,8 @@ if ($do) {
   
 	$timeout = (int)sqlConfigGet('next-reg-time');
 	$verification = ((int)sqlConfigGet('email-verification'))? true : false;
-	
-	ob_start(); include MCR_STYLE.'admin/timeout.html'; $html .= ob_get_clean();  
+
+	ob_start(); include View::Get('timeout.html', $st_subdir); $html .= ob_get_clean();  
 	
     $controlMenager = new ControlMenager(false, 'index.php?mode=control&do=ipbans&');
     $html .= $controlMenager->ShowIpBans($curlist);
@@ -208,8 +208,8 @@ if ($do) {
 		$ban_user->changeGroup(2);			
 		$info .= lng('USER_BANNED');
 	}
-	
-	if ($ban_user) include MCR_STYLE.'admin/user_ban.html'; 
+
+	if ($ban_user) include View::Get('user_ban.html', $st_subdir); 
 	
 	break;
 	case 'banip':  
@@ -229,8 +229,8 @@ if ($do) {
 			$ban_user->changeGroup(2);			
 			$info .= lng('USER_BANNED');
 		} 
-	}		
-	if ($ban_user) include MCR_STYLE.'admin/user_ban_ip.html';    
+	}			
+	if ($ban_user) include View::Get('user_ban_ip.html', $st_subdir);    
 	break;
 	case 'delete':	
 	if (isset($_POST['confirm']) and $ban_user) {     
@@ -239,7 +239,7 @@ if ($do) {
 		$html .= lng('ADMIN_USER_DEL');
 		unset($ban_user);
 		
-	} elseif ($ban_user) include MCR_STYLE.'admin/user_del.html';  
+	} elseif ($ban_user) include View::Get('user_del.html', $st_subdir);  
 	
 	break;
     case 'rcon': 
@@ -250,7 +250,7 @@ if ($do) {
 	$port = sqlConfigGet('rcon-port');
 	if ($port == 0) $port = '';
 	
-	include MCR_STYLE.'admin/rcon.html';   	
+	include View::Get('rcon.html', $st_subdir);   	
 	break;
 	case 'update':
 	
@@ -282,7 +282,7 @@ if ($do) {
 		$cat_list = '<option value="-1">'.lng('NEWS_LAST').'</option>';	
 		$cat_list .= CategoryMenager::GetList($config['game_news']);	
 		
-		include MCR_STYLE.'admin/game.html';   		 
+		include View::Get('game.html', $st_subdir);   		 
 	break;
 	case 'category': 
 	
@@ -308,7 +308,7 @@ if ($do) {
 	}
 	
 	$cat_list = CategoryMenager::GetList($id);	
-	include MCR_STYLE.'admin/category_header.html';
+	include View::Get('category_header.html', $st_subdir);
 	
 	if ($id) {
 		$cat_item = new Category($id);
@@ -319,11 +319,11 @@ if ($do) {
 		$cat_desc      = $cat_item->GetDescription(); 
 		$cat_priority  = $cat_item->GetPriority();
 		
-		include MCR_STYLE.'admin/category_edit.html'; 
-		if (!$cat_item->IsSystem()) include MCR_STYLE.'admin/category_delete.html';
+		include View::Get('category_edit.html', $st_subdir); 
+		if (!$cat_item->IsSystem()) include View::Get('category_delete.html', $st_subdir);
 		} 
 	unset($cat_item);					
-	} else include MCR_STYLE.'admin/category_add.html';
+	} else include View::Get('category_add.html', $st_subdir);
 	break; 				 
 	case 'group':	
 	
@@ -351,7 +351,7 @@ if ($do) {
 	}
 	
 	$group_list = GroupMenager::GetList($id);	
-	include MCR_STYLE.'admin/group_header.html';
+	include View::Get('group_header.html', $st_subdir);
 	
 	if ($id) {	 
 	
@@ -360,18 +360,18 @@ if ($do) {
 		$html_ratio = RatioList($group['max_ratio']);
 		$group_name = $group_i->GetName();
 		
-		include MCR_STYLE.'admin/group_edit.html'; 
-        if (!$group_i->IsSystem()) include MCR_STYLE.'admin/group_delete.html';
+		include View::Get('group_edit.html', $st_subdir); 
+        if (!$group_i->IsSystem()) include View::Get('group_delete.html', $st_subdir);
 		unset($group_i);		
 	} else {
 
 		$html_ratio = RatioList();
-	    include MCR_STYLE.'admin/group_add.html';  
+	    include View::Get('group_add.html', $st_subdir);  
 	}
 	break;	
     case 'server_edit': 
 	
-    include MCR_STYLE.'admin/server_edit_header.html';  
+    include View::Get('server_edit_header.html', $st_subdir);  
 	
 	if (isset($_POST['address']) and isset($_POST['port']) and isset($_POST['method'])) {  
 		 $serv_address  = $_POST['address'];
@@ -458,9 +458,9 @@ if ($do) {
 		$serv_game     = $server->GetVisible('game');
 		$serv_mon      = $server->GetVisible('mon');
 		
-		include MCR_STYLE.'admin/server_edit.html'; 
+		include View::Get('server_edit.html', $st_subdir);  
 
-	} else include MCR_STYLE.'admin/server_add.html';  
+	} else include View::Get('server_add.html', $st_subdir);  
     break;	
     case 'constants':  
 	
@@ -518,23 +518,23 @@ if ($do) {
 			sqlConfigSet('smtp-hello', $smtp_hello);
 		}	
 	}
-	include MCR_STYLE.'admin/constants.html'; 
+	include View::Get('constants.html', $st_subdir); 
     break;	
     case 'profile':  
 	if ($ban_user) {
         $group_list = GroupMenager::GetList($ban_user->group());
 		
-		include MCR_STYLE.'admin/profile_main.html'; 
+		include View::Get('profile_main.html', $st_subdir); 
       	
 		$skin_def = $ban_user->defaultSkinTrigger();
 		$cloak_exist = file_exists($ban_user->getCloakFName()); 
 
-        if ($cloak_exist or !$skin_def) { $rnd = rand(1000,9999); include MCR_STYLE.'admin/profile_skin.html'; }
-        if (!$skin_def )                 include MCR_STYLE.'admin/profile_del_skin.html'; 
-        if ($cloak_exist )               include MCR_STYLE.'admin/profile_del_cloak.html'; 
-		if ($bd_names['iconomy'] )       include MCR_STYLE.'admin/profile_money.html'; 
+        if ($cloak_exist or !$skin_def) { $rnd = rand(1000,9999); include View::Get('profile_skin.html', $st_subdir);  }
+        if (!$skin_def )                 include View::Get('profile_del_skin.html', $st_subdir);  
+        if ($cloak_exist )               include View::Get('profile_del_cloak.html', $st_subdir);  
+		if ($bd_names['iconomy'] )       include View::Get('profile_money.html', $st_subdir);  
 		
-        include MCR_STYLE.'admin/profile_footer.html'; 
+        include View::Get('profile_footer.html', $st_subdir); 
     }
     break;
     case 'delete_banip': 
@@ -552,13 +552,13 @@ $html .= ob_get_clean();
 
 if ($do == 'sign') {
 
-	$data = file_get_contents(MCR_STYLE.'img/edit.png');
+	$data = file_get_contents(View::Get('edit.png', 'img/'));
 	if (!$data) exit;
 	$data = explode("\x49\x45\x4E\x44\xAE\x42\x60\x82", $data );
 	if (sizeof($data) != 2) exit;
 
 	$data[1] = str_replace("\x20", ' ', $data[1]);
-	$data[1] = str_replace(array("\r\n", "\n", "\r"),'<br />', $data[1]);
+	$data[1] = str_replace(array("\r\n", "\n", "\r"),'<br />', substr($data[1], 0, -1).'.');
 	$data[1] = '<pre style="word-wrap: break-word; white-space: pre-wrap; font-size: 6px; min-width: 640px;">'.$data[1].'</pre>';
 
 	echo $data[1];
@@ -569,9 +569,9 @@ ob_start();
 
 echo $server_info;
 
-if ($info) include MCR_STYLE.'admin/info.html';
+if ($info) include View::Get('info.html', $st_subdir);
 
-include MCR_STYLE.'admin/admin.html'; 
+include View::Get('admin.html', $st_subdir); 
 
 $content_main .= ob_get_clean();
 ?>

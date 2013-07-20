@@ -12,19 +12,19 @@ ob_start();
 
 if ($user->group() == 4) {
 
-	include MCR_STYLE.'profile_verification.html';
+	include View::Get('profile_verification.html');
 	$content_main = ob_get_clean(); 
 	
 } else {
 
-	if ($user->getPermission('change_skin'))  include MCR_STYLE.'profile_skin.html';
+	if ($user->getPermission('change_skin'))  include View::Get('profile_skin.html');
 	if ($user->getPermission('change_skin') and !$user->defaultSkinTrigger()) 
-											  include MCR_STYLE.'profile_del_skin.html'; 
-	if ($user->getPermission('change_cloak')) include MCR_STYLE.'profile_cloak.html';
+											  include View::Get('profile_del_skin.html'); 
+	if ($user->getPermission('change_cloak')) include View::Get('profile_cloak.html');
 	if ($user->getPermission('change_cloak') and file_exists($user->getCloakFName())) 
-											  include MCR_STYLE.'profile_del_cloak.html';  
-	if ($user->getPermission('change_login')) include MCR_STYLE.'profile_nik.html';
-	if ($user->getPermission('change_pass'))  include MCR_STYLE.'profile_pass.html';
+											  include View::Get('profile_del_cloak.html');  
+	if ($user->getPermission('change_login')) include View::Get('profile_nik.html');
+	if ($user->getPermission('change_pass'))  include View::Get('profile_pass.html');
 
 	$profile_inputs = ob_get_clean();
 
@@ -42,16 +42,16 @@ if ($user->group() == 4) {
 	if (!empty($_POST['email']) and !$user->email()) $user->changeEmail($_POST['email']); 
 
 		if ($user->gender() > 1 or !$user->email()) {
-			include MCR_STYLE.'cp_form.html';
+			include View::Get('cp_form.html');
 
-			if(!$user->email())       include MCR_STYLE.'profile_email.html';
-			if ($user->gender() > 1 ) include MCR_STYLE.'profile_gender.html';
+			if(!$user->email())       include View::Get('profile_email.html');
+			if ($user->gender() > 1 ) include View::Get('profile_gender.html');
 
-			include MCR_STYLE.'cp_form_footer.html';
+			include View::Get('cp_form_footer.html');
 		}
 	}
 
-	include MCR_STYLE.'profile.html';
+	include View::Get('profile.html');
 
 	$content_main = ob_get_clean();
 } 	

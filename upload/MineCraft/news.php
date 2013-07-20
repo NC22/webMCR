@@ -26,5 +26,5 @@ $servManager = new ServerMenager('launcher/');
 $server_state_html = $servManager->Show('game');
 unset($servManager);
 			  
-include_once View::Get('index.html', 'launcher/');
+include View::Get('index.html', 'launcher/');
 ?>

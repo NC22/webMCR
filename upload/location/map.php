@@ -1,4 +1,4 @@
 <?php if (!defined('MCR')) exit;
-$page = 'Карта'; $content_main = Menager::ShowStaticPage(STYLE_URL.'map.html');
+$page = 'Карта'; $content_main = View::ShowStaticPage('map.html', '');
 $menu->SetItemActive('map');
 ?>

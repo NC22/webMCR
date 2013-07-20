@@ -8,14 +8,14 @@ ob_start();
 if (!empty($user)) {
   
    if ($mode == 'control') 
-   include MCR_STYLE.'admin/side.html';  
-   include MCR_STYLE.'mineprofil.html';    
+   include View::Get('side.html', 'admin/');  
+   include View::Get('mineprofil.html');    
 	
 } else {
 	
 	if ($mode == 'register') $addition_events .= "BlockVisible('reg-box',true); BlockVisible('login-box',false);";
 
-	include MCR_STYLE.'login.html';		    
+	include View::Get('login.html');		    
 }
 
 $content_side .= ob_get_clean();
