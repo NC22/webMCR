@@ -287,8 +287,17 @@ Class Menager extends View {
 		parent::View($style_sd);
 	}
 
-    public function arrowsGenerator($link, $curpage, $itemsnum, $per_page, $prefix = 'news') { 
-
+    public function arrowsGenerator($link, $curpage, $itemsnum, $per_page, $prefix = false) { 
+		
+		if ( !$prefix ) { // Default arrows style
+			
+			$prefix = 'common';
+			$st_subdir = 'other/'; 
+			
+		} else 
+		
+			$st_subdir = $this->st_subdir;
+	
 	  $numoflists = ceil($itemsnum / $per_page);
 	  $arrows = '';
 	  
@@ -316,9 +325,9 @@ Class Menager extends View {
 	 
 				if ($curpage > 1) { 
 				
-				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include $this->GetView($prefix.'_list_item.html'); } 
+				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include $this->Get($prefix.'_list_item.html', $st_subdir); } 
 				  
-				  $var = $curpage-1; $text = '<'; include $this->GetView($prefix.'_list_item.html'); 
+				  $var = $curpage-1; $text = '<'; include $this->Get($prefix.'_list_item.html', $st_subdir); 
 				
 				}
 				
@@ -327,16 +336,16 @@ Class Menager extends View {
 					$var  = $i; 
 					$text = $i;
 					
-						if ($i == $curpage) include $this->GetView($prefix.'_list_item_selected.html'); 
-						else			    include $this->GetView($prefix.'_list_item.html'); 
+						if ($i == $curpage) include $this->Get($prefix.'_list_item_selected.html', $st_subdir); 
+						else			    include $this->Get($prefix.'_list_item.html', $st_subdir); 
 						
 					}
 					
 				if ($curpage < $numoflists) { 
 				
-				  $var = $curpage+1; $text = '>'; include $this->GetView($prefix.'_list_item.html'); 
+				  $var = $curpage+1; $text = '>'; include $this->Get($prefix.'_list_item.html', $st_subdir); 
 				  
-				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include $this->GetView($prefix.'_list_item.html'); } 
+				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include $this->Get($prefix.'_list_item.html', $st_subdir); } 
 				
 				}
 				
@@ -348,7 +357,7 @@ Class Menager extends View {
 		
 			ob_start(); 
 			  
-			include $this->GetView($prefix.'_list.html');	
+			include $this->Get($prefix.'_list.html', $st_subdir);	
 			  
 			return ob_get_clean();			  
 		}

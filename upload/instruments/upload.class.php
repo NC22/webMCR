@@ -3,9 +3,9 @@
 
 if (!defined('MCR')) exit;
 
-Class File { 
+Class File extends View { 
 private $db;
-private $style;
+
 private $base_dir;
 private $formats;
 
@@ -18,12 +18,14 @@ private $size;
 private $hash;
 private $downloads;
 
-	public function File($id = false, $style = false) {
+	public function File($id = false, $style_sd = false) {
 	global $bd_names;	
+		
+		parent::View($style_sd);
 		
 		$this->base_dir	= MCRAFT.'userdata/';
 		$this->db    	= $bd_names['files'];		
-		$this->style 	= (!$style)? MCR_STYLE : $style;
+
 		$this->formats  = array('jpg', 'jpeg', 'gif', 'png', 'zip', 'rar', 'exe', 'jar', 'doc', 'pdf', 'txt');
 		
 		$this->id		= false;
@@ -223,7 +225,7 @@ private $downloads;
 		
 		$file_link	= 'http://'.$_SERVER['SERVER_NAME'].BASE_URL.(($config['rewrite'])? 'get/' : 'action.php?method=download&file=').$file_link_id;
 		
-		ob_start(); include $this->style.'other/file.html';
+		ob_start(); include $this->GetView('file.html');
 		
 	return ob_get_clean();
 	}
@@ -241,22 +243,21 @@ private $downloads;
 }
 
 Class FileMenager extends Menager {
-private $style;
 private $work_skript;
 private $db;
 
-    public function FileMenager($style = false, $work_skript = 'index.php?mode=control&do=filelist&') {
+    public function FileMenager($style_sd = false, $work_skript = 'index.php?mode=control&do=filelist&') {
 	global $bd_names;	
 	
 		$this->db			= $bd_names['files'];	
-		$this->style		= (!$style)? MCR_STYLE : $style;		
 		$this->work_skript	= $work_skript;
 		
-		parent::Menager($this->style);		
+		parent::Menager($style_sd);		
 	}
 	
-	public function ShowAddForm(){		
-		return Menager::ShowStaticPage($this->style.'other/file_add.html');
+	public function ShowAddForm(){	
+	
+		return $this->ShowPage('file_add.html');
 	}
 	
 	public function ShowFilesByUser($list = 1, $user_id = false) {
@@ -272,11 +273,11 @@ private $db;
 			  
 		$num = $line[0];	
 		
-		$html_files = Menager::ShowStaticPage($this->style.'other/files_header.html');
+		$html_files = $this->ShowPage('files_header.html');
 		
 		if (!$num) {
 		
-		$html_files .= Menager::ShowStaticPage($this->style.'other/files_empty.html');	
+		$html_files .= $this->ShowPage('files_empty.html');	
 		return $html_files;
 		}
 		
@@ -289,11 +290,11 @@ private $db;
 		
 		while ( $line = mysql_fetch_array($result, MYSQL_NUM) ) {
 			
-			$file = new File($line[0]);
+			$file = new File($line[0], $this->st_subdir);
 			$html_files .= $file->Show();        
 		}
 		
-		$html_files .= $this->arrowsGenerator($this->work_skript, $list, $num, 10, 'other/common');
+		$html_files .= $this->arrowsGenerator($this->work_skript, $list, $num, 10);
 		return $html_files;
 	}
 }

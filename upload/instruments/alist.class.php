@@ -5,7 +5,9 @@ Class ControlMenager extends Menager {
 private $work_skript;
 
     function ControlMenager($style_sd = false, $work_skript = '?mode=control') { 
-
+		
+		/*	Show subdirs used: /admin */
+		
 		parent::Menager($style_sd);
 		
 		$this->work_skript = $work_skript;	
@@ -63,7 +65,7 @@ private $work_skript;
 	elseif ($search_by == 'lvl' ) $result = BD("SELECT COUNT(*) FROM `{$bd_names['users']}` WHERE `{$bd_users['group']}`='$input'");
 		
 		$line = mysql_fetch_array($result);
-		$html .= $this->arrowsGenerator($this->work_skript,$list,$line[0],10,'other/common');
+		$html .= $this->arrowsGenerator($this->work_skript, $list, $line[0], 10);
       
      return $html;
 	}
@@ -110,7 +112,7 @@ private $work_skript;
 		$line = mysql_fetch_array($result); 
 		$resnum = $line[0];
 					  		  
-		$html .= $this->arrowsGenerator($this->work_skript, $list, $line[0], 10, 'other/common');
+		$html .= $this->arrowsGenerator($this->work_skript, $list, $line[0], 10);
 
     return $html;
     }
@@ -150,7 +152,7 @@ private $work_skript;
 		$line = mysql_fetch_array($result); 
 		$resnum = $line[0];
 					  		  
-		$html .= $this->arrowsGenerator($this->work_skript,$list,$line[0],10,'other/common');
+		$html .= $this->arrowsGenerator($this->work_skript, $list, $line[0], 10);
 
     return $html;
     }

@@ -46,7 +46,7 @@ switch ($method) {
 		
 		if (empty($user) or $user->lvl() < 15) break; // добавить разрешение
 		
-		$file 	= new File();
+		$file 	= new File(false, 'other/');
 		$id_rewrite = (isset($_POST['nf_delete']))? true : false;
 		$id_word 	= (!empty($_POST['nf_id_word']))? $_POST['nf_id_word'] : false;
 		

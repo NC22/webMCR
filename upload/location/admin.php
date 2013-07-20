@@ -79,7 +79,7 @@ if ($do) {
 	$url = 'index.php?mode=control&do=filelist';
 	if ($user_id) $url .= '&user_id='.$user_id;
 	
-	$files_manager = new FileMenager(false, $url.'&');
+	$files_manager = new FileMenager('other/', $url.'&');
 	$content_main .= Menager::ShowStaticPage(MCR_STYLE.'admin/filelist_info.html');
 	$content_main .= $files_manager->ShowAddForm();
 	
@@ -106,7 +106,7 @@ if ($do) {
 		if(@$file[$i]) $html .= $file[$i].'<br>';	
 	
 	$arrGen = new Menager();
-	$html .= $arrGen->arrowsGenerator('index.php?mode=control&do=log&',$curlist,$count,$max,'other/common');
+	$html .= $arrGen->arrowsGenerator('index.php?mode=control&do=log&', $curlist, $count, $max);
 	
 	break;
     case 'all':

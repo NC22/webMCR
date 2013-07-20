@@ -10,7 +10,7 @@ $page = 'Добавить новость';
 LoadTinyMCE();
 
 $news_manager = new NewsMenager(null, 'news/');
-$files_manager = new FileMenager();
+$files_manager = new FileMenager('other/');
 
 $menu->SetItemActive('add_news');
 $content_main = $news_manager->ShowNewsEditor();

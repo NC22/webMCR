@@ -135,7 +135,9 @@ private $deadtry;
 	global $bd_names;
 	
 	   if (!$this->getPermission('add_comm')) return false;
-	    
+	   
+	   if ($this->group() == 3) return true;
+	   
 	/* Интервал по времени 1 минута */
 	
 		$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE user_id='".$this->id."' AND time>NOW()-INTERVAL 1 MINUTE");

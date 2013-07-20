@@ -626,7 +626,7 @@ private $category_id;
 				 unset($news_item);				 
 		  }
 
-	$html_news .= $this->arrowsGenerator($this->work_skript, $list, $newsnum, $news_pnum);		  		  
+	$html_news .= $this->arrowsGenerator($this->work_skript, $list, $newsnum, $news_pnum, 'news');		  		  
 	}		
 	return $html_news;	
 	}
@@ -681,6 +681,7 @@ private $category_id;
 		$line = mysql_fetch_array($result);
 		
 		$comments_html = '';  
+		$arrows_html = '';  
 		
 		$commentnum = $line[0];
 		if ($commentnum) {
@@ -692,9 +693,7 @@ private $category_id;
 			$list = ($list <= 0)? $list_def : (int)$list;		
 			
 			$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE item_id='".TextBase::SQLSafe($id)."' ORDER by time $comm_order LIMIT ".($comm_pnum*($list-1)).",".$comm_pnum); 
-			if ( mysql_num_rows( $result ) != 0 ) {
-			
-			
+			if ( mysql_num_rows( $result ) != 0 ) {			
 			
 			  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 			  
@@ -704,7 +703,7 @@ private $category_id;
 					 unset($comments_item);
 			  }
 			  
-			$html_news .= $this->arrowsGenerator($this->work_skript, $list, $commentnum, $comm_pnum);		  
+			$arrows_html = $this->arrowsGenerator($this->work_skript, $list, $commentnum, $comm_pnum, 'news');		  
 			}
 		}
 		
