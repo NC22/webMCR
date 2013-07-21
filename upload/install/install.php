@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL); 
+
 define('MCR_ROOT', dirname(dirname(__FILE__)).'/');
 
 $mode = (!empty($_POST['mode']) or !empty($_GET['mode']))? ((empty($_GET['mode']))? $_POST['mode'] : $_GET['mode'] ): $mode = 'usual';
@@ -42,14 +44,12 @@ include './CMS/config/config_usual.php';
 }
 
 define('MCR_STYLE', MCR_ROOT.$site_ways['style']);
-define('STYLE_URL', BASE_URL.$site_ways['style']);
-
-
-error_reporting(E_ALL); 
-
 
 require_once(MCR_ROOT.'instruments/base.class.php');
 include MCR_ROOT.'instruments/timezones.php';
+
+define('STYLE_URL', $site_ways['style']);
+define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
 
 $page = 'Настройка '.PROGNAME;
 $content_advice = 'Заполните форму для завершения установки '.PROGNAME;
