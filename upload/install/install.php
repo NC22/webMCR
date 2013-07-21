@@ -50,11 +50,12 @@ include MCR_ROOT.'instruments/timezones.php';
 
 define('STYLE_URL', $site_ways['style']);
 define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
+define('CUR_STYLE_URL', DEF_STYLE_URL);
 
 $page = 'Настройка '.PROGNAME;
 $content_advice = 'Заполните форму для завершения установки '.PROGNAME;
 $content_servers = ''; $content_js = '';
-$content_side = Menager::ShowStaticPage('./style/install_side.html');
+$content_side = Manager::ShowStaticPage('./style/install_side.html');
 
 $addition_events = '';
 $info = '';  $cErr = '';

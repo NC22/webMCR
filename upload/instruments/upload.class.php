@@ -242,17 +242,17 @@ private $downloads;
 	}
 }
 
-Class FileMenager extends Menager {
+Class FileManager extends Manager {
 private $work_skript;
 private $db;
 
-    public function FileMenager($style_sd = false, $work_skript = 'index.php?mode=control&do=filelist&') {
+    public function FileManager($style_sd = false, $work_skript = 'index.php?mode=control&do=filelist&') {
 	global $bd_names;	
 	
 		$this->db			= $bd_names['files'];	
 		$this->work_skript	= $work_skript;
 		
-		parent::Menager($style_sd);		
+		parent::Manager($style_sd);		
 	}
 	
 	public function ShowAddForm(){	

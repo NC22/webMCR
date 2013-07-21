@@ -81,7 +81,7 @@ if ($do) {
 	$url = 'index.php?mode=control&do=filelist';
 	if ($user_id) $url .= '&user_id='.$user_id;
 	
-	$files_manager = new FileMenager('other/', $url.'&');
+	$files_manager = new FileManager('other/', $url.'&');
 	$content_main .= View::ShowStaticPage('filelist_info.html', $st_subdir);
 	$content_main .= $files_manager->ShowAddForm();
 	
@@ -107,15 +107,15 @@ if ($do) {
 	for($i = $first;$i<=$last;$i++)
 		if(@$file[$i]) $html .= $file[$i].'<br>';	
 	
-	$arrGen = new Menager();
+	$arrGen = new Manager();
 	$html .= $arrGen->arrowsGenerator('index.php?mode=control&do=log&', $curlist, $count, $max);
 	
 	break;
     case 'all':
 	$html .= View::ShowStaticPage('user_find.html', $st_subdir);
 	
-    $controlMenager = new ControlMenager(false, 'index.php?mode=control&');
-    $html .= $controlMenager->ShowUserListing($curlist, 'none');
+    $controlManager = new ControlManager(false, 'index.php?mode=control&');
+    $html .= $controlManager->ShowUserListing($curlist, 'none');
 	
 	$do = false;	
 	break;
@@ -132,8 +132,8 @@ if ($do) {
 	$search_by = $_GET["sby"];
 	$input     = $_GET['input'];
  
-    $controlMenager = new ControlMenager(false, 'index.php?mode=control&do=search&sby='.$search_by.'&input='.$input.'&');
-    $html .= $controlMenager->ShowUserListing($curlist, $search_by, $input);	
+    $controlManager = new ControlManager(false, 'index.php?mode=control&do=search&sby='.$search_by.'&input='.$input.'&');
+    $html .= $controlManager->ShowUserListing($curlist, $search_by, $input);	
 	}	
 	
 	$do = false;	
@@ -179,15 +179,15 @@ if ($do) {
 
 	ob_start(); include View::Get('timeout.html', $st_subdir); $html .= ob_get_clean();  
 	
-    $controlMenager = new ControlMenager(false, 'index.php?mode=control&do=ipbans&');
-    $html .= $controlMenager->ShowIpBans($curlist);
+    $controlManager = new ControlManager(false, 'index.php?mode=control&do=ipbans&');
+    $html .= $controlManager->ShowIpBans($curlist);
 	
 	$do = false;	
 	break;
     case 'servers': 
 		
-    $controlMenager = new ControlMenager(false, 'index.php?mode=control&do=servers&');
-    $html .= $controlMenager->ShowServers($curlist);
+    $controlManager = new ControlManager(false, 'index.php?mode=control&do=servers&');
+    $html .= $controlManager->ShowServers($curlist);
 	
 	$do = false;	
 	break;		
@@ -266,7 +266,7 @@ if ($do) {
 		if (!is_bool($game_news)) {
 		
 				if ($game_news <= 0) $config['game_news'] = 0;
-			elseif (CategoryMenager::ExistByID($game_news)) $config['game_news'] = $game_news;
+			elseif (CategoryManager::ExistByID($game_news)) $config['game_news'] = $game_news;
 		}
 		
 		if ($new_build) sqlConfigSet('latest-game-build', $new_build);
@@ -280,7 +280,7 @@ if ($do) {
         $game_lver  = sqlConfigGet('launcher-version');
         $game_build = sqlConfigGet('latest-game-build');
 		$cat_list = '<option value="-1">'.lng('NEWS_LAST').'</option>';	
-		$cat_list .= CategoryMenager::GetList($config['game_news']);	
+		$cat_list .= CategoryManager::GetList($config['game_news']);	
 		
 		include View::Get('game.html', $st_subdir);   		 
 	break;
@@ -307,7 +307,7 @@ if ($do) {
 		$id = false;
 	}
 	
-	$cat_list = CategoryMenager::GetList($id);	
+	$cat_list = CategoryManager::GetList($id);	
 	include View::Get('category_header.html', $st_subdir);
 	
 	if ($id) {
@@ -350,7 +350,7 @@ if ($do) {
 		$id = false;
 	}
 	
-	$group_list = GroupMenager::GetList($id);	
+	$group_list = GroupManager::GetList($id);	
 	include View::Get('group_header.html', $st_subdir);
 	
 	if ($id) {	 
@@ -522,7 +522,7 @@ if ($do) {
     break;	
     case 'profile':  
 	if ($ban_user) {
-        $group_list = GroupMenager::GetList($ban_user->group());
+        $group_list = GroupManager::GetList($ban_user->group());
 		
 		include View::Get('profile_main.html', $st_subdir); 
       	

@@ -12,7 +12,7 @@ BDConnect('news');
 $news = '';
 $page_title = 'Новостная лента';
 
-$news_manager = new NewsMenager($config['game_news'], 'launcher/', $config['s_root'].'index.php?');
+$news_manager = new NewsManager($config['game_news'], 'launcher/', $config['s_root'].'index.php?');
 
 if (isset($_GET['l'])) $curlist = (int) $_GET['l']; 
 else                   $curlist = 1; 
@@ -22,7 +22,7 @@ else                    $spec_new = -1;
 
 $news = $news_manager->ShowNewsListing($curlist);
 
-$servManager = new ServerMenager('launcher/');
+$servManager = new ServerManager('launcher/');
 $server_state_html = $servManager->Show('game');
 unset($servManager);
 			  

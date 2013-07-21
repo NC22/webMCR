@@ -77,6 +77,13 @@ Class View {
 		return self::Get($way, $this->st_subdir);		
 	}
 	
+	public static function GetURL($way) {
+	global $config;
+	
+		if ( DEF_STYLE_URL === CUR_STYLE_URL ) return DEF_STYLE_URL . $way;
+		else return (file_exists( MCR_STYLE . $config['s_theme'] . '/'  . $way )? CUR_STYLE_URL : DEF_STYLE_URL) . $way;	
+	}
+	
 	public static function Get($way, $base_ = false) {
 	global $config;
 
@@ -280,9 +287,9 @@ Class Message {
 	
 }
 
-Class Menager extends View {
+Class Manager extends View {
 
-	public function Menager($style_sd = false) {
+	public function Manager($style_sd = false) {
 	global $site_ways;
 		
 		parent::View($style_sd);

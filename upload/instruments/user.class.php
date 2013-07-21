@@ -859,7 +859,7 @@ private $pavailable;
 	}	
 }
 
-Class GroupMenager {
+Class GroupManager {
 
 	public static function GetList($selected) {
 	global $bd_names;

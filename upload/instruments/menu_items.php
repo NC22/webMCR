@@ -74,7 +74,7 @@ $menu_items = array (
 	
     'control' => array (
 	
-      'name' => 'Управление пользователями',
+      'name' => 'Пользователи',
       'url' => ($config['rewrite'])? 'go/control' : '?mode=control',
       'parent_id' => 'admin',
       'lvl' => 15,

@@ -1,14 +1,14 @@
 <?php
 if (!defined('MCR')) exit;
 
-Class ControlMenager extends Menager {
+Class ControlManager extends Manager {
 private $work_skript;
 
-    function ControlMenager($style_sd = false, $work_skript = '?mode=control') { 
+    function ControlManager($style_sd = false, $work_skript = '?mode=control') { 
 		
 		/*	Show subdirs used: /admin */
 		
-		parent::Menager($style_sd);
+		parent::Manager($style_sd);
 		
 		$this->work_skript = $work_skript;	
 	}

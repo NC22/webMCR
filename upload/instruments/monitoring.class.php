@@ -273,7 +273,7 @@ private $rcon;
 	
 	if (!$this->Exist()) return false;
 	
-	    $page = ServerMenager::getPageName($page);
+	    $page = ServerManager::getPageName($page);
 		if (!$page) return false;
 		
 		$state = ($state)? 1 : 0;
@@ -285,7 +285,7 @@ private $rcon;
 
 		if (!$this->Exist()) return -1;	
 		
-		     $param = ServerMenager::getPageName($param);
+		     $param = ServerManager::getPageName($param);
 		if (!$param) return false;
 		
 		$result = BD("SELECT `$param` FROM `".$this->db."` WHERE `id`='".$this->id."'");
@@ -341,7 +341,7 @@ private $rcon;
    
 	public function ShowHolder($type = 'side', $server_prefix = '') {
 	
-		if (!ServerMenager::getPageName($type)) return false;
+		if (!ServerManager::getPageName($type)) return false;
 	
         ob_start();	
 		
@@ -447,9 +447,9 @@ private $rcon;
    }   
 }
 
-Class ServerMenager extends Menager {
+Class ServerManager extends Manager {
 
-	public function ServerMenager($style_sd = false) { 
+	public function ServerManager($style_sd = false) { 
 	global $site_ways;
 	
 	   parent::View($style_sd);

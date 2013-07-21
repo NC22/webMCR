@@ -6,14 +6,14 @@
 <form action="login.php" method="post" id="loginform">
 <div style="text-align: center;">
 
-    <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span><input id="auth-login" type="email" name="login" placeholder="Логин или e-mail:" /></div>
+    <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span><input id="auth-login" type="email" name="login" placeholder="Логин или e-mail:" class="emailValidationNone" /></div>
     <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span><input id="auth-pass" type="password" name="pass" placeholder="Пароль:" /></div>
     <label style="margin:0 0 0 48px; text-align: left; padding-bottom:2px;" class="checkbox"><input type="checkbox" id="auth-save" name="save" value="1" /> Запомнить</label>
 		 
 		<div id="login-antibot-form" style="margin-bottom: 10px; display: none;">
 		 
 			<div style="display: inline-block;" id="login-img-holder"></div>
-			<input id="auth-antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" style="width: 40px; margin-top: 8px;"/>
+			<input id="auth-antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" class="antibot"/>
 
 		</div>
 		 
@@ -84,7 +84,7 @@ return false
 		 <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span><input type="password" id="register-repass" name="repasswd" placeholder="Повтор пароля:" /></div>
          
 		 <input type="hidden" id="register-female" name="female" value="0" />		 
-         <div class="female-input">Пол: <span id="create-gender">Мальчик</span><img src="<?php echo DEF_STYLE_URL ?>img/ribbon.png" style="display: none; visibility: hidden;" alt="Девочка" id="register-femaleimg"/><a href="#" onclick="return RegisterF()">></a></div>
+         <div class="female-input">Пол: <span id="create-gender">Мальчик</span><img src="<?php echo View::GetUrl('img/ribbon.png') ?>" style="display: none; visibility: hidden;" alt="Девочка" id="register-femaleimg"/><a href="#" onclick="return RegisterF()">></a></div>
 		 
 		<div class="input-append input-prepend">
 			<input type="button" class="btn" id="create" onclick="Register(); return false;" value="Создать">
@@ -112,7 +112,7 @@ return false
 		 <div style="margin-bottom: 10px;">
 		 
 		  <div style="display: inline-block;" id="restore-img-holder"></div>
-		 <input id="antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" style="width: 40px; margin-top: 8px;"/>
+		 <input id="antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" class="antibot"/>
 
 		 </div>
 		 

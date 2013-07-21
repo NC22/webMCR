@@ -12,8 +12,8 @@
     <meta name="description" content="<?php echo $config['s_about'] ?>">
     <meta name="author" content="NC22"><!-- first version of stylesheet was developed by KillerProst -->
 
-    <link href="<?php echo View::GetUrl('css/style.css') ?>" rel="stylesheet">
-	<link href="<?php echo View::GetUrl('css/serverbar.css') ?>" rel="stylesheet">
+    <link href="<?php echo CUR_STYLE_URL ?>css/style.css" rel="stylesheet">
+	<link href="<?php echo CUR_STYLE_URL ?>css/serverbar.css" rel="stylesheet">
 	
 	<?php echo $content_js ?>
 	
@@ -23,18 +23,18 @@
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <link rel="shortcut icon" href="<?php echo View::GetUrl('ico/favicon.ico') ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo View::GetUrl('ico/apple-touch-icon-144-precomposed.png') ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php echo View::GetUrl('ico/apple-touch-icon-114-precomposed.png') ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo View::GetUrl('ico/apple-touch-icon-72-precomposed.png') ?>">
-    <link rel="apple-touch-icon-precomposed" href="<?php echo View::GetUrl('ico/apple-touch-icon-57-precomposed.png') ?>">
+    <link rel="shortcut icon" href="<?php echo DEF_STYLE_URL ?>ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo DEF_STYLE_URL ?>ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php echo DEF_STYLE_URL ?>ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo DEF_STYLE_URL ?>ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="<?php echo DEF_STYLE_URL ?>ico/apple-touch-icon-57-precomposed.png">
 	
 </head>
 
 <body>
 <script type="text/javascript">
 var pbm
-var way_style = '<?php echo DEF_STYLE_URL ?>' // used by smiles.js
+var way_style = '<?php echo DEF_STYLE_URL ?>'
 var base_url  = '<?php echo BASE_URL ?>'
 
 window.onload = function () {
@@ -76,7 +76,7 @@ window.onload = function () {
 
 	<div class="skin-block" >
 	  <div id="customp-skin-front" style="display:inline-block; height: 224px; width: 112px;">
-	     <img id="customp-female" class="female" style="position: relative; display: none;" src="<?php echo View::GetUrl('img/ribbon.png') ?>" alt="Девочка"/>
+	     <img id="customp-female" class="female" style="position: relative; display: none;" src="<?php echo DEF_STYLE_URL ?>img/ribbon.png" alt="Девочка"/>
 	  </div>	  
     </div>   
 
@@ -170,13 +170,13 @@ window.onload = function () {
 			
     </footer>
 	
-	<script src="<?php echo View::GetUrl('js/jquery.js') ?>"></script>
-	<script src="<?php echo View::GetUrl('js/smiles.js') ?>"></script>	
-	<script src="<?php echo View::GetUrl('js/tools.js') ?>"></script>
+	<script src="<?php echo DEF_STYLE_URL ?>js/jquery.js"></script>
+	<script src="<?php echo DEF_STYLE_URL ?>js/smiles.js"></script>	
+	<script src="<?php echo DEF_STYLE_URL ?>js/tools.js"></script>
 	
-	<script src="<?php echo View::GetUrl('js/monitoring.js') ?>"></script>
-	<script src="<?php echo View::GetUrl('js/ajax.js') ?>"></script>
+	<script src="<?php echo DEF_STYLE_URL ?>js/monitoring.js"></script>
+	<script src="<?php echo DEF_STYLE_URL ?>js/ajax.js"></script>
 	
-	<script src="<?php echo View::GetUrl('js/bootstrap.min.js') ?>"></script>
+	<script src="<?php echo DEF_STYLE_URL ?>js/bootstrap.min.js"></script>
   </body>
 </html>

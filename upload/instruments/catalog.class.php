@@ -120,7 +120,7 @@ private $priority;
 	}	
 }
 
-Class CategoryMenager {
+Class CategoryManager {
 
 	public static function GetList($selected = 1) {
 	global $bd_names;
@@ -310,7 +310,7 @@ private $title;
 	    if ( $message_full ) { $sql = '`message_full`, '; $sql2 = "'".TextBase::SQLSafe($message_full)."', "; }
 		
 		$cat_id = (int) $cat_id;
-		if (!CategoryMenager::ExistByID($cat_id)) return false; 
+		if (!CategoryManager::ExistByID($cat_id)) return false; 
 
 		BD("INSERT INTO `{$this->db}` ( `title`, `message`, ".$sql."`time`, `category_id`, `user_id`) VALUES ( '".TextBase::SQLSafe($title)."', '".TextBase::SQLSafe($message)."', ".$sql2."NOW(), '".TextBase::SQLSafe($cat_id)."', '".$user->id()."' )");
 		
@@ -386,7 +386,7 @@ private $title;
 		$link  = ($config['rewrite'])? 'news/'.$id : 'index.php?id='.$id;
 		
 		$category_id = $this->category_id;		
-        $category    = CategoryMenager::GetNameByID($category_id);
+        $category    = CategoryManager::GetNameByID($category_id);
 		
 		$category_link = ($config['rewrite'])? 'category/'.$category_id : 'index.php?cid='.$category_id;
 		
@@ -417,7 +417,7 @@ private $title;
 		if (!$this->Exist() or empty($user) or !$user->getPermission('add_news')) return false; 
 		
 		$cat_id = (int)$cat_id;
-		if (!CategoryMenager::ExistByID($cat_id)) return false; 
+		if (!CategoryManager::ExistByID($cat_id)) return false; 
 				
 		if(!$message_full) $message_full = '';
 				
@@ -456,13 +456,13 @@ private $title;
 
 /* Менеджер вывода записей из каталога */
 
-Class NewsMenager extends Menager {
+Class NewsManager extends Manager {
 private $work_skript;
 private $category_id;
 
-    public function NewsMenager($category = 1, $style_sd = false, $work_skript = 'index.php?') { // category = -1 -- all last news
+    public function NewsManager($category = 1, $style_sd = false, $work_skript = 'index.php?') { // category = -1 -- all last news
 	
-		parent::Menager($style_sd);
+		parent::Manager($style_sd);
 	
 		if ((int) $category <= 0) $category = 0;
 		
@@ -478,7 +478,7 @@ private $category_id;
 
     public function ShowCategorySelect() {
 	$cat_list = '<option value="0">Последние новости</option>';	
-	$cat_list .= CategoryMenager::GetList($this->category_id); 
+	$cat_list .= CategoryManager::GetList($this->category_id); 
 
 	ob_start();
 	include $this->GetView('categorys.html');
@@ -574,7 +574,7 @@ private $category_id;
 
 	ob_start();
 	
-	$cat_list = CategoryMenager::GetList($editCategory);
+	$cat_list = CategoryManager::GetList($editCategory);
  	
 	include $this->GetView('news_add.html');
 				  
@@ -593,7 +593,7 @@ private $category_id;
 	if ( $list <= 0 ) $list = 1; 
  	
 	if ( $this->category_id > 0 )
-	   $category = CategoryMenager::GetNameByID($this->category_id);
+	   $category = CategoryManager::GetNameByID($this->category_id);
 	else
 	   $category = 'Последние новости';
      
@@ -666,7 +666,7 @@ private $category_id;
 		
 		$title      	= ($item_exist)? $news_item->GetTitle() : 'Новость не найдена'; 			
 		$category_id 	= ($item_exist)? $news_item->GetCategoryID() : 0;
-		$category 		= ($item_exist)? CategoryMenager::GetNameByID($category_id) : 'Без категории';
+		$category 		= ($item_exist)? CategoryManager::GetNameByID($category_id) : 'Без категории';
 		$category_link 	= ($config['rewrite'])? 'category/'.$category_id : 'index.php?cid='.$category_id;
 		
 	    ob_start(); include $this->GetView('news_full_header.html');					  

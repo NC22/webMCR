@@ -3,7 +3,7 @@
 	<p class="title"><?php echo $title; ?></p>			    
     <hr />
     <p class="text"><?php echo $text; ?></p>
-	<p style="text-align: right;"><a class="news-link" href="<?php echo $config['s_root'] ?>index.php?id=<?php echo $id; ?>">Подробнее...</a> ( <img style="vertical-align: middle; margin-bottom: 2px;" src="<?php echo DEF_STYLE_URL ?>launcher/comment.png" alt="Комментарии" width="12" height="12"/>
+	<p style="text-align: right;"><a class="news-link" href="index.php?id=<?php echo $id; ?>">Подробнее...</a> ( <img style="vertical-align: middle; margin-bottom: 2px;" src="<?php echo View::GetUrl('launcher/comment.png') ?>" alt="Комментарии" width="12" height="12"/>
 			   <?php echo $comments; ?> )</p>
 	<p class="datetime">Отправлено <?php echo $date; ?> | <?php echo $time; ?> <?php echo $admin_buttons; ?></p>
 

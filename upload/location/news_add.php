@@ -9,8 +9,8 @@ $page = 'Добавить новость';
 
 LoadTinyMCE();
 
-$news_manager = new NewsMenager(null, 'news/');
-$files_manager = new FileMenager('other/');
+$news_manager = new NewsManager(null, 'news/');
+$files_manager = new FileManager('other/');
 
 $menu->SetItemActive('add_news');
 $content_main = $news_manager->ShowNewsEditor();

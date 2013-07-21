@@ -177,7 +177,7 @@ return false
   <div style="float: left; margin-left: 24px;">Осталось <div id="comment-length" style="display: inline-block; color: #17aa4e;">255</div> символов</div>
   <div style="float: right;">
   <img id="comment-captcha" src="instruments/captcha/captcha.php<?php echo $postCaptchaRefresh; ?>" class="img-polaroid" alt="Код подтверждения" width="70" height="30"/>
-  <input id="antibot" type="antibot" name="antibot" placeholder="Код:" maxlength="4" style="width: 40px;"/>
+  <input id="antibot" type="antibot" name="antibot" placeholder="Код:" maxlength="4" class="antibot" style="top: 0px;" />
   <input id="comment-button" class="btn" type="submit" onclick="PostComment(); return false" value="<?php echo $postButton; ?>" />
   </div>
 </form>	

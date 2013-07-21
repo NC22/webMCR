@@ -2,6 +2,33 @@
 
 var iframe;
 
+/* Base init on page load */
+
+function mcr_init () {
+
+var tmpLinks = getByClass('comment-text','DIV')
+
+for (i=0; i<=tmpLinks.length-1; ++i)
+
+   tmpLinks[i].innerHTML = StringWithSmiles(tmpLinks[i].innerHTML)
+
+var tmpCaptcha = getByClass('antibot','INPUT')
+var tmpCaptchaF = function (e) { this.value = this.value.replace (/[A-Za-z-А-Яа-я]/, '') }
+
+for (i=0; i<=tmpCaptcha.length-1; ++i) {
+
+   tmpCaptcha[i].onkeyup = tmpCaptchaF
+   tmpCaptcha[i].onclick = tmpCaptchaF
+   tmpCaptcha[i].onchange = tmpCaptchaF
+   tmpCaptcha[i].onkeypress = tmpCaptchaF
+}
+   
+setTimeout(function() { LoadServers() }, 1000)
+
+pbm = ProgressBarManager('progressbar_meter pbar',true)
+pbm.Live(100,100)
+}
+
 /* Prototypes */
 
 Date.prototype.getLocaleFormat = function(format) {

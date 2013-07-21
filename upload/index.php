@@ -88,7 +88,7 @@ include('./location/side.php');
 
 $content_menu = $menu->Show();
 
-$servManager = new ServerMenager();
+$servManager = new ServerManager();
 $content_servers = $servManager->Show('side');
 
 unset($servManager);

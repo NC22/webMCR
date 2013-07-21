@@ -7,9 +7,9 @@ if (isset($_GET['cid'])) {
 
  $category = (int) $_GET['cid'];
  
- $news_manager = new NewsMenager($category, 'news/', 'index.php?cid='.$category.'&');
+ $news_manager = new NewsManager($category, 'news/', 'index.php?cid='.$category.'&');
  
-} else $news_manager = new NewsMenager(-1, 'news/');
+} else $news_manager = new NewsManager(-1, 'news/');
 
 /* Default vars */
 
