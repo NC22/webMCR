@@ -67,10 +67,9 @@ if ($method == 2) {
 
 	$tmp_user = new User((int)$_GET['id'], $bd_users['id']);
 	
-	if ($tmp_user->id() and !strcmp($tmp_user->getVerificationStr(),$_GET['verificate'])) $tmp_user->changeGroup(1);
-	
-    header("Location: ".BASE_URL);
-	exit;
+	if ($tmp_user->id() and !strcmp($tmp_user->getVerificationStr(), $_GET['verificate'])) $tmp_user->changeGroup(1);
+
+	exit(View::ShowStaticPage('mail_verification_ok.html', 'other/'));
 }
 
 RefreshBans();

@@ -47,6 +47,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news']}` (
   `user_id` bigint(20) NOT NULL,
   `dislikes` int(10) DEFAULT 0,
   `likes` int(10) DEFAULT 0,
+  `hide_vote` tinyint(1) NOT NULL DEFAULT 0,
   `hits` int(10) DEFAULT 0,
   `title` char(255) NOT NULL,
   `message` TEXT NOT NULL,
@@ -70,7 +71,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['servers']}` (
   `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `online` tinyint(1) DEFAULT 0,
   `rcon` varchar(255) DEFAULT '',
-  `service_user` char(64) NOT NULL,
+  `service_user` char(64) default NULL,
   `players` text default NULL,
   `method` tinyint(1) DEFAULT 0,
   `address` varchar(255) default NULL,
@@ -193,9 +194,14 @@ BD("ALTER TABLE `{$bd_names['users']}` ADD `{$bd_users['clientToken']}` varchar(
 /* 2.3 UPDATE */
 if (!BD_ColumnExist($bd_names['servers'], 'service_user')) {
 
-BD("ALTER TABLE `{$bd_names['servers']}` ADD `service_user` char(64) NOT NULL;");
+BD("ALTER TABLE `{$bd_names['servers']}` ADD `service_user` char(64) default NULL;");
 BD("ALTER TABLE `{$bd_names['news']}` ADD `hits` int(10) DEFAULT 0;");	
 }
+
+if (!BD_ColumnExist($bd_names['news'], 'hide_vote'))
+
+BD("ALTER TABLE `{$bd_names['news']}` ADD `hide_vote` tinyint(1) NOT NULL DEFAULT 0;");	
+
 
 BD("CREATE TABLE IF NOT EXISTS `{$bd_names['action_log']}` (
   `IP` varchar(16) NOT NULL,

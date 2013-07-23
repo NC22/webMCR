@@ -1,5 +1,6 @@
 <?php
-define('PROGNAME', 'WebMCR 2.3b');
+define('MCR', '2.3b'); 
+define('PROGNAME', 'webMCR '.MCR);
 define('FEEDBACK', '<a href="http://drop.catface.ru/index.php?nid=17">'.PROGNAME.'</a> &copy; 2013 NC22');  
 
 /* TODO обобщенная модель для удаления \ проверки существования объекта */

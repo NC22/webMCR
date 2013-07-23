@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `dislikes` int(10) DEFAULT 0,
   `likes` int(10) DEFAULT 0,
   `title` char(255) NOT NULL,
+  `hide_vote` tinyint(1) NOT NULL DEFAULT 0,
   `message` TEXT NOT NULL,
   `message_full` MEDIUMTEXT NOT NULL,
   `time` datetime DEFAULT NULL,  
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `servers` (
   `priority` tinyint(1) DEFAULT 0,
   `main` tinyint(1) DEFAULT 0,
   `refresh_time` smallint(3) NOT NULL DEFAULT '5',
+  `service_user` char(64) default NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
@@ -130,7 +132,8 @@ CREATE TABLE IF NOT EXISTS `accounts` (
   `default_skin` tinyint(1) NOT NULL DEFAULT '1',
 
 -- Игровая сессия --
-
+	
+  `clientToken` varchar(255) default NULL
   `session` varchar(255) default NULL,
   `server` varchar(255) default NULL,  
 

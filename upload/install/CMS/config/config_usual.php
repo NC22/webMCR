@@ -27,7 +27,7 @@ $config = array (
 
 /* site constants */
   
-	's_name'		=> 'MCR 2.15',
+	's_name'		=> 'MCR '.MCR,
 	's_about'		=> 'Личный кабинет для онлайн сервера игры Minecraft',
 	's_keywords'	=> 'сервер игра онлайн NC22 Minecraft',
 	's_dpage'		=> 'news',  
@@ -93,6 +93,6 @@ $bd_users = array (
   'tmp' => 'tmp',
   'session' => 'session',
   'server' => 'server',
-  'clientToken'   => 'mcr_clientToken',
+  'clientToken'   => 'clientToken',
   'ctime' => 'create_time',
 );

@@ -1,16 +1,16 @@
 <?php
 error_reporting(E_ALL);
 
-define('MCR', 1);  
 define('MCR_ROOT', dirname(__FILE__).'/');
 define('MCR_LANG', 'ru_RU');
+
+require(MCR_ROOT.'instruments/base.class.php');
 
 if (!file_exists(MCR_ROOT.'config.php')) { header("Location: install/install.php"); exit; }
 
 require(MCR_ROOT.'instruments/locale/'.MCR_LANG.'.php');
 require(MCR_ROOT.'config.php');
 
-require(MCR_ROOT.'instruments/base.class.php');
 require(MCR_ROOT.'instruments/auth/'.$config['p_logic'].'.php');
 
 define('MCRAFT', MCR_ROOT.$site_ways['mcraft']);

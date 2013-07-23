@@ -17,8 +17,9 @@ switch ($mode) { /* Допустимые идентификаторы CMS */
 	default :			$main_cms = false; $mode = 'usual';	break;
 } 	
 
-define('MCR', 1);
 define('BASE_URL', Root_url());
+
+require_once(MCR_ROOT.'instruments/base.class.php');
 
 if (file_exists(MCR_ROOT.'config.php')) {
 include MCR_ROOT.'config.php';
@@ -45,7 +46,6 @@ include './CMS/config/config_usual.php';
 
 define('MCR_STYLE', MCR_ROOT.$site_ways['style']);
 
-require_once(MCR_ROOT.'instruments/base.class.php');
 include MCR_ROOT.'instruments/timezones.php';
 
 define('STYLE_URL', $site_ways['style']);
