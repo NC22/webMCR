@@ -1131,7 +1131,7 @@ input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="color"]:focus,
 .uneditable-input:focus {
-  border: 2px solid #020031 !important;
+  border: 2px solid #08457e !important;
   outline: 0;
   outline: thin dotted \9;
   /* IE6-9 */
@@ -1181,7 +1181,7 @@ select:focus,
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  outline: 2px solid #020031;
+  outline: 2px solid #08457e;
   outline-offset: -2px;
 }
 
@@ -2732,7 +2732,7 @@ table th[class*="span"],
 .dropdown-submenu:focus > a {
   color: #ffffff;
   text-decoration: none;
-  background-color: #020031;
+  background-color: #08457e;
 }
 
 .dropdown-menu > .active > a,
@@ -2740,7 +2740,7 @@ table th[class*="span"],
 .dropdown-menu > .active > a:focus {
   color: #ffffff;
   text-decoration: none;
-  background-color: #020031;
+  background-color: #08457e;
   outline: 0;
 }
 
@@ -2948,8 +2948,8 @@ button.close {
 
 .btn:active,
 .btn.active {
-  background-color: #020031;
-  border: 2px solid #020031;  
+  background-color: #08457e;
+  border: 2px solid #08457e;
   color: #ffffff !important;
 }
 
@@ -3058,26 +3058,6 @@ input[type="button"].btn-block {
   background-color: #003399 \9;
 }
 
-.btn-warning {
-  color: #ffffff;
-  background-color: #faa732;
-}
-
-.btn-warning:hover,
-.btn-warning:focus,
-.btn-warning:active,
-.btn-warning.active,
-.btn-warning.disabled,
-.btn-warning[disabled] {
-  color: #ffffff;
-  background-color: #f89406;
-}
-
-.btn-warning:active,
-.btn-warning.active {
-  background-color: #c67605 \9;
-}
-
 .btn-danger {
   color: #ffffff;
   background-color: #da4f49;
@@ -3113,7 +3093,7 @@ input[type="button"].btn-block {
 
 .btn-success:active,
 .btn-success.active {
-  background-color: #020031;
+  background-color: #08457e;
 }
 
 .btn-info {
@@ -3132,7 +3112,7 @@ input[type="button"].btn-block {
 
 .btn-info:active,
 .btn-info.active {
-  background-color: #020031;
+  background-color: #08457e;
 }
 
 .btn-inverse {
@@ -3858,12 +3838,6 @@ input[type="submit"].btn.btn-mini {
   padding-right: 20px;
   padding-left: 20px;
   background-color: #fafafa;
-  background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
-  background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);
-  background-image: -o-linear-gradient(top, #ffffff, #f2f2f2);
-  background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
-  background-repeat: repeat-x;
   border: 1px solid #d4d4d4;
   *zoom: 1;
 }

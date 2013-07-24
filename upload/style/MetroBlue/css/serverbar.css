@@ -1,0 +1,68 @@
+/* 
+ * MetroBlue theme for webMCR by upisfree
+ * github.com/upisfree
+ * upisfree@outlook.com
+*/
+
+/* Настройка прогресс бара - Красный */
+
+div .redbar {  
+  border: 2px solid #cccccc; 
+  width: 120px;
+  float: right; 
+  margin-right: 6px;
+}
+
+div .redbar div {
+  background: #ff2400;
+}
+
+div .bluebar { 
+  border: 2px solid #cccccc; 
+  width: 124px;
+  float: right; 
+  margin-right: 6px;
+}
+div .bluebar div {
+  background: #42aaff;
+}
+
+/* Настройка прогресс бара - Синий */
+
+div .greenbar { 
+  border: 2px solid #cccccc; 
+  width: 124px;
+  float: right; 
+  margin-right: 6px;
+}
+div .greenbar div {  
+  background: #0bda51;
+}
+
+/* Настройка прогресс бара - Основная настройка - родитель */
+
+div .progressbar_meter {
+  height: 16px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold; 
+  color: #fff; 
+  line-height: 16px; 
+  text-indent: 2px;
+  white-space: nowrap;
+}
+
+/* Статичная подпись - центр прогресс бара */
+
+div .progressbar_overlay {
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold; 
+  color: #fff; 
+  line-height: 20px; 
+  margin-top: 1px;
+  float:left; 
+  display: block; 
+  text-align:center; 
+  width: 100%;
+}

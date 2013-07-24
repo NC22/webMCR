@@ -1,0 +1,11 @@
+<div id="theme-item-<?php echo $theme_info['id'] ?>" <?php if ($theme_info['id'] != $config['s_theme']) { ?> style="display: none;" <?php } ?> >
+
+	<label style="display: none;"><?php echo $theme_info['id'] ?></label>
+
+	<?php foreach ($theme_info as $key => $info) { if ( $key == 'id' ) continue; ?>
+  
+		<p> <?php echo $info ?> </p>
+	
+	<?php } ?>
+	
+</div>

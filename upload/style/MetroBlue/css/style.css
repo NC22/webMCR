@@ -1,11 +1,11 @@
 /* 
- * DarkBlue theme for webMCR by upisfree
+ * MetroBlue theme for webMCR by upisfree
  * github.com/upisfree
  * upisfree@outlook.com
 */
 
-/* style css
--------------------------------------------------- */
+/* style.css */
+
 @import url("bootstrap.css");
 @import url("bootstrap-responsive.css");
 @import url("docs.css");
@@ -58,19 +58,12 @@ textarea {
 /* Base styles upd 210713 */
 
 .emailValidationNone:focus {
-  border-color: rgba(82, 168, 236, 0.8) !important;
+  border-color: #08457e !important;
   color: #555555 !important;
   outline: 0 !important;
-  outline: thin dotted \9 !important;
-  /* IE6-9 */
-
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
-     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
-          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6) !important;
 }
 
 .antibot {
-
 	position: relative;
 	top: 5px; 
 	width: 35px; 	
@@ -78,16 +71,13 @@ textarea {
 
 
 .player-name {
-
   color: #333333;
-
 }
 
 .smile {
  display: inline-block; 
  width: 60px;
  text-align: center;
-
 }
 
 .info { 
@@ -134,7 +124,6 @@ textarea {
 }
 
 .info-big-frame {
-
   display: none;
   z-index: 3; 
   margin: 0px auto;
@@ -174,36 +163,35 @@ textarea {
 /* комментарии - стиль для бантика */
 
 .female {
-
   position: absolute; 
   top: 0;
   right: 0;
 }
 
-.female-input { /* O__o */
-   padding : 6px;
-   font-size: 15px; 
+.female-input {       /* O__o */
+  padding : 6px;
+  font-size: 15px; 
 }
 .female-input a { 
-   margin-left: 10px;
-   margin-right: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 
 }
 
 .female-input span { 
-   margin-left: 10px;
+  margin-left: 10px;
 }
 
 .female-input img { 
-   margin-left: 10px;
-   margin-bottom: 2px;
+  margin-left: 10px;
+  margin-bottom: 2px;
 }
 
 .female-input a{
-padding: 2px 6px 3px 6px;
-text-decoration: none;
-color: #5b5b5b;
-font-weight: bold;
+  padding: 2px 6px 3px 6px;
+  text-decoration: none;
+  color: #5b5b5b;
+  font-weight: bold;
 }
 
 .female-input a:hover{
@@ -227,13 +215,13 @@ font-weight: bold;
   background: #E8E8E8; 
   font-size: 14px;
   margin-bottom: 4px;
-  
 }
 
 /* Новости */
+
 .news-box {
   margin-top: 10px;
-  border: 1px solid #e0edf1;
+  border: 1px solid #e5e5e5;
 }
 
 .news-box .divider {
@@ -247,24 +235,19 @@ text-decoration: none;
 color: #5b5b5b;
 }
 
-
 a.news-link:hover{
   color: #333;
   background: #aed0d9; 
 }
 
-a.news-link:active{
-
-}
 .news-header {
-  background-color: #c1d4d9;
+  background-color: #f5f5f5;
   padding: 6px;
   font-size: 18px;
-  border-bottom: 1px dashed #e0edf1; 
+  border-bottom: 1px solid #e5e5e5; 
 }
 
 .news-text {
-
   font-size: 14px;
   padding: 10px;
 
@@ -272,88 +255,73 @@ a.news-link:active{
   white-space: -moz-pre-line;
   white-space: -pre-line;
   white-space: -o-pre-line;
-  word-wrap: break-word; 
-  
+  word-wrap: break-word;
 }
 
 .news-footer {
   padding: 6px;
   border: 0;
   background-color: #f5f5f5;
-  border-top: 1px dashed #e0edf1; 
+  border-top: 1px solid #e5e5e5; 
 }
 
 /* Комментарии */
 
 .comment-container {
-
-   padding-left: 20px;
-   padding-top: 10px;
-   margin-left: 20px; 
-   margin-bottom: 10px;
-   margin-right: 10px;
-   
+  padding-left: 20px;
+  padding-top: 10px;
+  margin-left: 20px; 
+  margin-bottom: 10px;
+  margin-right: 20px;  
+  border: 1px solid #e5e5e5;
 }
 
 .comment-quote {
-
  border: 1px solid #e5e5e5;
  padding: 4px;
-
 }
 
 .comment-quote-a{
-
  border-bottom: 1px solid #f5f5f5;
  padding-left: 4px;
  padding-right: 12px;
 }
 
 .comment-quote-c{
-
  padding: 4px;
-
-
 }
 
 .comment-self {
-
   padding-left: 5px;
   display: inline-block;
   width: 500px;
-
 }
 
 .comment-info {
-
   padding-right : 4px; 
   padding-top: 4px;
   margin-bottom: 5px;
-
 }
 
 .comment-text {
-
   padding: 4px;
   line-height: 1.4;
   min-height: 40px;
   font-size: 14px;
   width: 500px;
-  font-family: Cambria, Palatino, "Palatino Linotype", "Palatino LT STD", Georgia, serif;
+  font-family: PT Sans, Helvetica, Arial, sans-serif;
   
   /* Перенос длинных слов */
-  white-space: pre-wrap; /* css-3 */
+  white-space: pre-wrap;       /* css-3 */
   white-space: -moz-pre-wrap; /* Mozilla */
-  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -pre-wrap;    /* Opera 4-6 */
   white-space: -o-pre-wrap; /* Opera 7 */
-  word-wrap: break-word; /* Internet Explorer 5.5+ */
+  word-wrap: break-word;   /* Internet Explorer 5.5+ */
 }
 
 .comment-addition {
-
   /*font-weight: bold;*/
   font-size: 12px;
-
 }
 
 /* блок */
@@ -474,27 +442,50 @@ a.news-link:active{
   border-bottom: 1px solid #ffffff;
 }
 
-/* Вывод превью тем ( префикс -- t- ) */
+/* Theme preview */
 
-.t-block {
+.theme-item {
   display: block;
   position: relative;
-  background-color: #ffffff;
-  padding-bottom: 20px; 
-  text-align: center;
-  font-size: 150%;     
-  border: 1px solid #e5e5e5;
+  float: left;
+  padding: 20px;
+  margin: 10px;
+  width: 40%;
+  background: #ffffff;
+  border: 2px solid #e5e5e5;
 }
 
-.t-block:hover {
-  background-color: #e5e5e5;
+.theme-item:hover {
+  background: #f5f5f5;
 }
 
-.t-block:active {
-  background-color: #bbbbbb;
+.theme-item:active {
+  background: #EBEBEB;
 }
 
-.t-block input {
-  display: block;
+.theme-item input {
+  position: relative;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
+}
+
+.theme-item img {
+  margin-bottom: 20px;
+}
+
+.theme-item h3 {
+  text-align: center;
+  margin-top: -10px;
+  font-size: 200%;
+}
+
+.theme-item:nth-child(odd) {
+  left: 0;
+}
+
+.theme-item:nth-child(even) {
+  right: -10px;
 }

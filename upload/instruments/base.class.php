@@ -54,13 +54,16 @@ Class View {
 		$this->st_subdir = $style_subdir;		
 	}
 	
-	public function ShowPage($way, $out = false) {
+// ToDo transform output
 	
-		ob_start(); 
+	public function ShowPage($way, $out = false, $buffer = true) {
+	global $config;
+	
+		if ($buffer) ob_start(); 
 		
 		include self::Get($way, $this->st_subdir);
 
-		return ob_get_clean(); 	
+		if ($buffer) return ob_get_clean(); 	
 	}
 
 	public static function ShowStaticPage($way, $st_subdir = false, $out = false ) { /* if st_subdir is FALSE will used depricated method with full patch select */

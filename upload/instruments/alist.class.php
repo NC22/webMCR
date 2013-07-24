@@ -1,10 +1,148 @@
 <?php
 if (!defined('MCR')) exit;
 
-Class ControlManager extends Manager {
+class ThemeManager extends View {
+
+	private $work_skript;
+	private $theme_info_cache;
+	
+	const sign_file = 'sign.txt';
+
+	/** @const */
+	public static $true_info = array (
+		
+		'name',
+		'version',
+		'author',	
+		'about',	 
+		'date',	 
+		'web',
+		'license',	
+	);	
+
+    public function ThemeManager($style_sd = false, $work_skript = '?mode=control') { 
+		
+		/*	Show subdirs used: /admin */
+		
+		parent::View($style_sd);
+		
+		$this->theme_info_cache = null;
+		$this->work_skript = $work_skript;	
+	}
+	
+	public function isThemesEnabled() {
+	global $config;
+	
+		if ($this->theme_info_cache === 'depricated') return false;
+		
+		if (!isset($config['s_theme']) or file_exists(MCR_STYLE . 'index.html') ) {
+		
+		$this->theme_info_cache = 'depricated';
+		return false;
+		}
+		
+		return true;		
+	}
+	
+	public function GetThemeSelectorOpt() {
+	global $config;
+	
+		if (!$this->isThemesEnabled()) return '<option value="-1">'.lng('NOT_SET').'</option>';
+
+		$theme_list = $this->GetThemeList();
+			
+		$html_list = '';
+
+		for($i=0; $i < sizeof($theme_list); $i++) 
+			
+			$html_list .= '<option value="'.$theme_list[$i]['id'].'" '.(($theme_list[$i]['id'] === $config['s_theme'])? 'selected' : '' ).'>'.$theme_list[$i]['id'].'</option>';
+				
+		return $html_list;
+	}
+	
+	public function ShowThemeInfoFields($buffer = false) {
+	
+	if (!$this->isThemesEnabled()) return '';
+	
+	$theme_list = $this->GetThemeList();
+	
+	if ($buffer) ob_start(); 
+	
+		foreach ($theme_list as $key => $theme_info)
+			
+			include $this->GetView('admin/theme_item.html'); 
+
+    if ($buffer) return ob_get_clean();	
+	}	
+	
+	public function GetThemeList() {
+
+	if ($this->theme_info_cache != null ) return $this->theme_info_cache;
+	
+	if (!$this->isThemesEnabled()) return $this->theme_info_cache; 
+	
+	$this->theme_info_cache = array();		
+	
+	if ($theme_dir = opendir(MCR_STYLE)) { 
+
+       while (false !== ($theme = readdir($theme_dir))) {
+	   
+			if ($theme == '.' or  $theme == '..' or !file_exists(MCR_STYLE. $theme . '/' . self::sign_file)) 
+			
+				continue;
+				
+            else 
+			
+				$this->theme_info_cache[] = self::GetThemeInfo($theme);
+				
+		}
+
+       closedir($theme_dir);  
+	}
+	
+	$this->theme_info_cache = $theme_list;
+	
+	return $this->theme_info_cache;
+	}	
+	
+	public static function GetThemeInfo($theme_id) {
+		
+		$theme_info = array();
+		
+		$theme_info['id'] = $theme_id;		
+		$sign_file = MCR_STYLE . $theme_id . '/' . self::sign_file;
+		
+			if (filesize($sign_file) > 128 * 1024) return $theme_info;
+		
+		$theme_info_txt =  file_get_contents($sign_file);
+		$theme_info_txt =  explode (';', $theme_info_txt);
+			
+			if (!sizeof($theme_info_txt)) return $theme_info;
+			
+			for($i=0; $i < sizeof($theme_info_txt); $i++) {
+			
+				for ($b=0; $b < sizeof(self::$true_info); $b++) {
+				
+					if ( !substr_count($theme_info_txt, self::$true_info[$b])) 
+						
+						continue; 
+						
+						$info_value =  explode ('=', $theme_info_txt[$i]);
+						
+						if (sizeof($info_value) == 2)
+						
+							$theme_info[self::$true_info[$b]] = $info_value[1];					
+				}
+			}
+		
+		return $theme_info;	
+	}
+}
+
+class ControlManager extends Manager {
 private $work_skript;
 
-    function ControlManager($style_sd = false, $work_skript = '?mode=control') { 
+    public function ControlManager($style_sd = false, $work_skript = '?mode=control') { 
 		
 		/*	Show subdirs used: /admin */
 		
@@ -13,7 +151,7 @@ private $work_skript;
 		$this->work_skript = $work_skript;	
 	}
 
-	function ShowUserListing($list = 1, $search_by = 'name', $input = false) {
+	public function ShowUserListing($list = 1, $search_by = 'name', $input = false) {
 	global $bd_users,$bd_names;
 
 		$input = TextBase::SQLSafe($input);
@@ -70,7 +208,7 @@ private $work_skript;
      return $html;
 	}
 	
-    function ShowServers($list) { 
+    public function ShowServers($list) { 
     global $bd_names;
 
     ob_start(); 	
@@ -117,7 +255,7 @@ private $work_skript;
     return $html;
     }
 	
-    function ShowIpBans($list) {
+    public function ShowIpBans($list) {
     global $bd_names;
 
     RefreshBans();
