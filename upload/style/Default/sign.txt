@@ -1,0 +1,6 @@
+name		=	Default				;
+version		=	1.0					;
+author		=	NC22, KillerProst	;
+about		=	Базовая тема, распоространяется по лицензии GPLv3
+				Сайт обратной связи
+				http://webmcr.com			

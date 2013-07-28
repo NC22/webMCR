@@ -18,7 +18,7 @@ define('MCR_STYLE', MCR_ROOT.$site_ways['style']);
 
 define('STYLE_URL', $site_ways['style']); // deprecated
 define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
-define('CUR_STYLE_URL', ( empty($config['s_theme']) ? DEF_STYLE_URL : STYLE_URL . $config['s_theme'] . '/' ) );
+// define('CUR_STYLE_URL', ( empty($config['s_theme']) ? DEF_STYLE_URL : STYLE_URL . $config['s_theme'] . '/' ) );
 
 define('BASE_URL', $config['s_root']);
 

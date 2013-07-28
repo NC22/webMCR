@@ -1,10 +1,8 @@
-<div id="theme-item-<?php echo $theme_info['id'] ?>" <?php if ($theme_info['id'] != $config['s_theme']) { ?> style="display: none;" <?php } ?> >
-
-	<label style="display: none;"><?php echo $theme_info['id'] ?></label>
+<div id="theme-item-<?php echo $theme_info['id'] ?>" <?php if ($theme_info['id'] != $theme_cur) { ?> style="display: none;" <?php } ?> >
 
 	<?php foreach ($theme_info as $key => $info) { if ( $key == 'id' ) continue; ?>
   
-		<p> <?php echo $info ?> </p>
+		<p> <b> <?php echo lng('T_'.strtoupper($key)) ?> </b> : <br /> <?php echo $info ?> </p>
 	
 	<?php } ?>
 	

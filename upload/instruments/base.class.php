@@ -83,9 +83,11 @@ Class View {
 	
 	public static function GetURL($way) {
 	global $config;
-	
-		if ( DEF_STYLE_URL === CUR_STYLE_URL ) return DEF_STYLE_URL . $way;
-		else return (file_exists( MCR_STYLE . $config['s_theme'] . '/'  . $way )? CUR_STYLE_URL : DEF_STYLE_URL) . $way;	
+		
+		$current_st_url = empty($config['s_theme'])? DEF_STYLE_URL : STYLE_URL . $config['s_theme'] . '/' ;
+		
+		if ( DEF_STYLE_URL === $current_st_url ) return DEF_STYLE_URL . $way;
+		else return (file_exists( MCR_STYLE . $config['s_theme'] . '/'  . $way )? $current_st_url : DEF_STYLE_URL) . $way;	
 	}
 	
 	public static function Get($way, $base_ = false) {
@@ -651,4 +653,29 @@ private $menu_items;
 	
 	$this->menu_items[$menu_id][$item_key]['active'] = true;
     }	
+}
+
+Class Rewrite {
+
+	private function IsOn() {
+	
+	global $config;
+	
+		return ($config['rewrite'])? true : false;
+	}
+
+	public function GetURL($page, $sub_page = false) {
+	
+		if (self::IsOn()) {
+		
+			return (!$sub_page)? 'go/'.$page : 'go/'.$sub_page.'/'.$page;
+		}
+		
+		else {
+		
+			return (!$sub_page)? '?mode='.$page : '?mode='.$sub_page.'&do='.$page;
+		}
+	
+	}
+
 }

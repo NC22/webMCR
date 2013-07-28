@@ -55,7 +55,7 @@ $html = ''; $info = ''; $server_info = '';
 
 $user_id = (!empty($_POST['user_id']))? (int)$_POST['user_id'] : false;
 $user_id = (!empty($_GET['user_id']))? (int)$_GET['user_id'] : $user_id;
-$ban_user = new User($user_id,$bd_users['id']);
+$ban_user = new User($user_id, $bd_users['id']);
 
 if ($ban_user->id()) { 
 
@@ -462,8 +462,8 @@ if ($do) {
 
 	} else include View::Get('server_add.html', $st_subdir);  
     break;	
-    case 'constants':  
-	
+    case 'constants':  	
+
 	if (isset($_POST['site_name'])) {
 	
 	$site_name		= InputGet('site_name', 'POST', 'str');
@@ -486,6 +486,14 @@ if ($do) {
 	$rewrite     = InputGet('rewrite', 'POST', 'bool');
 	$log  		 = InputGet('log', 'POST', 'bool');
 	$comm_revers = InputGet('comm_revers', 'POST', 'bool');
+	$theme_id	 = InputGet('theme_name', 'POST', 'str');
+	
+	if ( ThemeManager::GetThemeInfo($theme_id) === false ) $theme_id = false;
+	else {
+	
+		require(MCR_ROOT.'instruments/ajax.php');
+		$config['s_theme']	= $theme_id		;
+	}
 	
 	$config['s_name']		= $site_name	;
 	$config['s_about']		= $site_about	; 	
@@ -518,6 +526,10 @@ if ($do) {
 			sqlConfigSet('smtp-hello', $smtp_hello);
 		}	
 	}
+		
+	$theme_manager = new ThemeManager(false, 'index.php?mode=control&'); 
+	$theme_selector = $theme_manager->ShowThemeSelector();
+	
 	include View::Get('constants.html', $st_subdir); 
     break;	
     case 'profile':  

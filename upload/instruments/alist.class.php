@@ -15,9 +15,6 @@ class ThemeManager extends View {
 		'version',
 		'author',	
 		'about',	 
-		'date',	 
-		'web',
-		'license',	
 	);	
 
     public function ThemeManager($style_sd = false, $work_skript = '?mode=control') { 
@@ -60,19 +57,30 @@ class ThemeManager extends View {
 		return $html_list;
 	}
 	
-	public function ShowThemeInfoFields($buffer = false) {
+	public function ShowThemeSelector() {
+	global $config;
 	
 	if (!$this->isThemesEnabled()) return '';
 	
+	$theme_cur = isset($config['s_theme'])? $config['s_theme'] : View::def_theme;
+	
 	$theme_list = $this->GetThemeList();
 	
-	if ($buffer) ob_start(); 
+	$html_theme_list = $this->GetThemeSelectorOpt();		
+		
+	ob_start(); 
 	
 		foreach ($theme_list as $key => $theme_info)
 			
 			include $this->GetView('admin/theme_item.html'); 
 
-    if ($buffer) return ob_get_clean();	
+    $theme_items_info = ob_get_clean();	
+	
+	ob_start(); 
+	
+		include $this->GetView('admin/theme_select.html');
+	
+	return ob_get_clean();	
 	}	
 	
 	public function GetThemeList() {
@@ -100,8 +108,6 @@ class ThemeManager extends View {
        closedir($theme_dir);  
 	}
 	
-	$this->theme_info_cache = $theme_list;
-	
 	return $this->theme_info_cache;
 	}	
 	
@@ -111,6 +117,8 @@ class ThemeManager extends View {
 		
 		$theme_info['id'] = $theme_id;		
 		$sign_file = MCR_STYLE . $theme_id . '/' . self::sign_file;
+		
+			if (!file_exists($sign_file)) return false;
 		
 			if (filesize($sign_file) > 128 * 1024) return $theme_info;
 		
@@ -123,7 +131,7 @@ class ThemeManager extends View {
 			
 				for ($b=0; $b < sizeof(self::$true_info); $b++) {
 				
-					if ( !substr_count($theme_info_txt, self::$true_info[$b])) 
+					if ( !substr_count($theme_info_txt[$i], self::$true_info[$b])) 
 						
 						continue; 
 						
@@ -131,7 +139,7 @@ class ThemeManager extends View {
 						
 						if (sizeof($info_value) == 2)
 						
-							$theme_info[self::$true_info[$b]] = $info_value[1];					
+							$theme_info[self::$true_info[$b]] = trim( preg_replace('/\s{2,}/', ' ', nl2br($info_value[1]) ) );					
 				}
 			}
 		
