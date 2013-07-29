@@ -1,3 +1,4 @@
-name		=	MetroBlue			;
-version		=	1.0					;
-author		=	upisfree			;			
+name = MetroBlue ;
+version = 1.0 ;
+author = upisfree ;
+about = Синяя тема, вдохновлённая Metro от Microsoft, лицензия GPLv3 		

@@ -30,7 +30,8 @@ $config = array (
 	's_name'		=> 'MCR '.MCR,
 	's_about'		=> 'Личный кабинет для онлайн сервера игры Minecraft',
 	's_keywords'	=> 'сервер игра онлайн NC22 Minecraft',
-	's_dpage'		=> 'news',  
+	's_dpage'		=> 'news', 
+	's_theme'		=> View::def_theme,	
 	's_root'		=> '/',
   
 	'news_by_page'	=> 5,
