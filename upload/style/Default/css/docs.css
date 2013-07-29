@@ -16,6 +16,7 @@ body {
 }
 
 /* Code in headings */
+
 h3 code {
   font-size: 14px;
   font-weight: normal;
@@ -100,7 +101,6 @@ hr.soften {
   background: -o-linear-gradient(45deg,  #58D3F7 0%,#0B4C5F 100%); /* Opera 11.10+ */
   background: -ms-linear-gradient(45deg,  #58D3F7 0%,#0B4C5F 100%); /* IE10+ */
   background: linear-gradient(45deg,  #58D3F7 0%,#0B4C5F 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#58D3F7', endColorstr='#0B4C5F',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 }
 .jumbotron h1 {
   font-size: 80px;
@@ -236,8 +236,6 @@ hr.soften {
   display: inline-block;
   padding: 5px 8px;
   line-height: 1;
-  *display: inline;
-  *zoom: 1;
 }
 
 /* Subhead (other pages)
@@ -560,7 +558,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -590,7 +587,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -620,7 +616,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -650,7 +645,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -680,7 +674,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -710,7 +703,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -740,7 +732,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -770,7 +761,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -800,7 +790,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 2px 19px 10px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -830,7 +819,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 35px 19px 10px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
   -webkit-border-radius: 4px;
@@ -1044,7 +1032,6 @@ form.bs-docs-example {
 }
 .bs-docs-sidenav > li > a {
   display: block;
-  *width: 190px;
   margin: 0 0 -1px;
   padding: 8px 14px;
   border: 1px solid #e5e5e5;

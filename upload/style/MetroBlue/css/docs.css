@@ -229,8 +229,6 @@ hr.soften {
   display: inline-block;
   padding: 5px 8px;
   line-height: 1;
-  *display: inline;
-  *zoom: 1;
 }
 
 /* Subhead (other pages)
@@ -537,7 +535,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -561,7 +558,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -585,7 +581,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -609,7 +604,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -632,7 +626,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -656,7 +649,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -680,7 +672,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -704,7 +695,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 39px 19px 1px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -728,7 +718,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 2px 19px 10px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -752,7 +741,6 @@ h2 + .row {
   position: relative;
   margin: 15px 0;
   padding: 35px 19px 10px;
-  *padding-top: 19px;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -938,7 +926,6 @@ form.bs-docs-example {
 }
 .bs-docs-sidenav > li > a {
   display: block;
-  *width: 190px;
   margin: 0 0 -1px;
   padding: 8px 14px;
   border: 1px solid #e5e5e5;

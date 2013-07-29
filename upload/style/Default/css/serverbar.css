@@ -1,84 +1,89 @@
-/* Настройка прогресс бара - Красный */
+/* РќР°СЃС‚СЂРѕР№РєР° РїСЂРѕРіСЂРµСЃСЃ Р±Р°СЂР° - РљСЂР°СЃРЅС‹Р№ */
 
-div .redbar 
-{  
-border: 1px solid #9d2104; 
-background-color: #646464;
-width: 120px;
-float: right; 
-margin-right: 6px;
-border-radius: 4px;
--o-border-radius: 4px;
--moz-border-radius: 4px;
--webkit-border-radius: 4px;
+div .redbar {  
+  border: 1px solid #9d2104; 
+  background-color: #646464;
+  width: 120px;
+  float: right; 
+  margin-right: 6px;
+  border-radius: 4px;
+  -o-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
 }
 
-div .redbar div{  background: url('../img/bg_red.gif') 0px 0px repeat; }
+div .redbar div {
+  background: url('../img/bg_red.gif') 0px 0px repeat;
+}
 
 div .bluebar { 
-border: 1px solid #326193; 
-background-color: #efefef;
-width: 124px;
-float: right; 
-margin-right: 6px;
-border-radius: 3px;
--o-border-radius: 3px;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
+  border: 1px solid #326193; 
+  background-color: #efefef;
+  width: 124px;
+  float: right; 
+  margin-right: 6px;
+  border-radius: 3px;
+  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
-div .bluebar div{  background: url('../img/bg_blue.gif') 0px 0px repeat; }
 
-/* Настройка прогресс бара - Синий */
+div .bluebar div {
+  background: url('../img/bg_blue.gif') 0px 0px repeat;
+}
+
+/* РќР°СЃС‚СЂРѕР№РєР° РїСЂРѕРіСЂРµСЃСЃ Р±Р°СЂР° - РЎРёРЅРёР№ */
 
 div .greenbar { 
-border: 1px solid #326193; 
-background-color: #e0e0e0;
-width: 124px;
-float: right; 
-margin-right: 6px;
-border-radius: 3px;
--o-border-radius: 3px;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
-}
-div .greenbar div{  background: url('../img/bg_green.gif') 0px 0px repeat; }
-
-/* Настройка прогресс бара - Основная настройка - родитель */
-
-div .progressbar_meter
-{
-    height: 16px;
-    text-align: center;
-    font-size: 11px;
-	font-weight: bold; 
-	color: #fff; 
-	line-height: 16px; 
-    text-shadow: 0px 0px 3px #000;
-	text-indent: 2px;
-	white-space: nowrap;
-    -o-text-shadow: 0px 0px 3px #000;
-    -moz-text-shadow: 0px 0px 3px #000;
-    -webkit-text-shadow: 0px 0px 3px #000;
-	
-    border-radius: 2px;
-    -o-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
+  border: 1px solid #326193; 
+  background-color: #e0e0e0;
+  width: 124px;
+  float: right; 
+  margin-right: 6px;
+  border-radius: 3px;
+  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
 }
 
-/* Статичная подпись - центр прогресс бара */
+div .greenbar div {
+  background: url('../img/bg_green.gif') 0px 0px repeat;
+}
 
-div .progressbar_overlay
-{
-    text-align: center;
-    font-size: 11px;
-	font-weight: bold; 
-	color: #fff; 
-	line-height: 20px; 
-    text-shadow: 0px 0px 3px #000;
-	margin-top: 1px;
-	float:left; 
-	display: block; 
-	text-align:center; 
-	width: 100%;
+/* РќР°СЃС‚СЂРѕР№РєР° РїСЂРѕРіСЂРµСЃСЃ Р±Р°СЂР° - РћСЃРЅРѕРІРЅР°СЏ РЅР°СЃС‚СЂРѕР№РєР° - СЂРѕРґРёС‚РµР»СЊ */
+
+div .progressbar_meter {
+  height: 16px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold; 
+  color: #fff; 
+  line-height: 16px; 
+  text-shadow: 0px 0px 3px #000;
+  text-indent: 2px;
+  white-space: nowrap;
+  -o-text-shadow: 0px 0px 3px #000;
+  -moz-text-shadow: 0px 0px 3px #000;
+  -webkit-text-shadow: 0px 0px 3px #000;
+
+  border-radius: 2px;
+  -o-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+
+/* РЎС‚Р°С‚РёС‡РЅР°СЏ РїРѕРґРїРёСЃСЊ - С†РµРЅС‚СЂ РїСЂРѕРіСЂРµСЃСЃ Р±Р°СЂР° */
+
+div .progressbar_overlay {
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold; 
+  color: #fff; 
+  line-height: 20px; 
+  text-shadow: 0px 0px 3px #000;
+  margin-top: 1px;
+  float:left; 
+  display: block; 
+  text-align:center; 
+  width: 100%;
 }

@@ -23,6 +23,7 @@ div .bluebar {
   float: right; 
   margin-right: 6px;
 }
+
 div .bluebar div {
   background: #42aaff;
 }
@@ -35,6 +36,7 @@ div .greenbar {
   float: right; 
   margin-right: 6px;
 }
+
 div .greenbar div {  
   background: #0bda51;
 }
