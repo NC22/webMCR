@@ -118,18 +118,35 @@ if (typeof value != "string") {
 
 	try {
 	
-	var value_real = ''
-	var json_start = false
+	/* If JSON string is not clean enough, try find and restore it */	
 	
-	/* If is Iframe mode, browser can generate some trash */	
-		for(var i=0; i <= value.length; i++) { 
+	if (value[0] != '{' || value[value.length - 1] != '}') {
+	
+	var value_real = ''
+	var json_start = 0
+	var json_end = 0
+	
+		for(var i=0; i <= value.length-1; i++) 	
 		
-			if (value[i] == "{") json_start = true	
-			if (json_start) value_real += value[i]				
-			if (value[i] == "}") break	
-		}
+			if (value[i] == "{") {
+			
+				json_start = i
+				break
+			}
+			
+		for(var i=value.length-1; i >= 0; i--)
 		
+			if (value[i] == "}") {			
+				json_end = i
+				break
+			}
+			
+		for(var i=json_start; i <= json_end; i++)	
+		
+			value_real += value[i]			
+	
 	if (value_real) value = value_real
+	}
 	
 	result = window.JSON && window.JSON.parse ? JSON.parse(value) : eval('(' + value + ')')
 	

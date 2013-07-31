@@ -425,6 +425,10 @@ private $rcon;
    public function address() {
    return $this->address;	
    } 
+
+   public function online () {
+   return ($this->online)? true : false ; 
+   }
    
    public function refresh() {
    return $this->refresh;	
