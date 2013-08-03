@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: text/html; charset=UTF-8');
+
 error_reporting(E_ALL); 
 
 define('MCR_ROOT', dirname(dirname(__FILE__)).'/');
@@ -66,6 +68,75 @@ $menu->AddItem($page, BASE_URL.'install/install.php', true);
 
 $create_ways = array("skins", "cloaks", "distrib");
 $content_menu = $menu->Show();
+
+function checkBaseRequire() {
+global $cErr, $site_ways, $create_ways;	
+	
+$p = '<p>'; $pe = '</p>';
+	
+if ( !extension_loaded('gd') ) 
+	
+	$cErr  .= $p.'Библиотека GD не подключена ( отображение скина \ плаща в профиле )'.$pe;
+
+if ( ini_get('register_globals')  ) 
+	
+	$cErr .= $p.'Файл php.ini настроек PHP [Опция] <b>register_globals = On</b>. Привести в значение <b>Off</b>'.$pe;
+
+if ( !function_exists('fsockopen')) 
+	
+	$cErr .= $p.'Функция fsockopen недоступна ( проверка состояния сервера )'.$pe;
+
+if ( !function_exists('json_encode')) 
+	
+	$cErr .= $p.'Функция json_encode недоступна ( авторизация на сайте )'.$pe;
+
+	checkRWOut(MCR_ROOT.'instruments/menu_items.php');
+	// checkRWOut(MCR_ROOT.'config.php');
+	
+	$mcraft_dir = MCR_ROOT.$site_ways['mcraft'];
+	
+	checkRWOut(MCR_ROOT.$site_ways['mcraft']);
+	checkRWOut($mcraft_dir.'tmp/skin_buffer/');
+	checkRWOut($mcraft_dir.'userdata/');
+	
+    foreach ($site_ways as $key => $value)
+	
+		if ($value and in_array($key, $create_ways)) 
+		
+				checkRWOut($mcraft_dir.$value);	
+}
+
+function checkRWOut($fname, $create = false) {
+global $cErr;
+
+	$is_dir = substr_count($fname, '.');
+
+	if (!checkRW($fname, $create)) 
+	
+		$cErr .= '<p>'.($is_dir ? 'Файл' : 'Папка').' '.$fname.' . Нет доступа для чтения \ записи </p>';
+}
+
+function checkRW($filename, $create = false) {
+
+	if (!substr_count($filename, '.')) // is dir
+		
+		if (@file_exists($filename)) return true;
+		else return false;
+		
+	if ($create) {
+	
+			$file = fopen($filename, 'w');
+			
+		if ($file) fclose($filename);
+		else return false;
+		
+		if (is_readable($filename)) return true;	
+	}
+	
+	if (is_readable($filename) and is_writable($filename)) return true;
+
+	return false;
+}
 
 function createWays(){
 global $site_ways, $create_ways;	
@@ -309,17 +380,7 @@ switch ($step) {
 	break;
 }
 
-if ( !extension_loaded('gd')      ) 
-$cErr  = 'Библиотека GD не подключена, пользователь не сможет увидеть загруженый скин \ плащ в профиле.<br/>';
-
-if ( ini_get('register_globals')  ) 
-$cErr .= 'Нарушение безопасности. Файл php.ini настроек PHP [Опция] <b>register_globals = On</b>. Привести в значение <b>Off</b><br/>';
-
-if ( !function_exists('fsockopen')) 
-$cErr .= 'Функция fsockopen недоступна. Подключиться и проверить состояние игрового сервера будет невозможно.<br/>';
-
-if ( !function_exists('json_encode')) 
-$cErr .= 'Функция json_encode недоступна. Авторизация на сайте будет недоступна.<br/>'; 
+checkBaseRequire();
 
 ob_start(); 
 

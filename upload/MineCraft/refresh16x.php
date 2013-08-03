@@ -39,7 +39,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST' ) && (stripos($_SERVER["CONTENT_TYPE"]
 if (empty($json->accessToken) or empty($json->clientToken))
     logExit("[refresh16x.php] refresh process [Empty input] [ " . ((empty($json->accessToken)) ? 'Session ' : '') . ((empty($json->clientToken)) ? 'clientToken ' : '') . "]");
 
-require(MCR_ROOT . 'instruments/user.class.php');
+loadTool('user.class.php');
 BDConnect('auth');
 
 $sessionid = $json->accessToken;

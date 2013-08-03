@@ -15,7 +15,7 @@ if (empty($_POST['user']) or empty($_POST['password']) or empty($_POST['version'
 
 	logExit("[auth.php] login process [Empty input] [ ".((empty($_POST['user']))? 'LOGIN ':'').((empty($_POST['password']))? 'PASSWORD ':'').((empty($_POST['version']))? 'VER ':'')."]");
 
-	require(MCR_ROOT.'instruments/user.class.php'); 
+	loadTool('user.class.php'); 
 	BDConnect('auth');
 
 	$login = $_POST['user']; $password = $_POST['password']; $ver = $_POST['version'];

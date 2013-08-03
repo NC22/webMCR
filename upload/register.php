@@ -22,7 +22,7 @@ if (!$method) exit;
 
 require('./system.php');
 
-require(MCR_ROOT.'instruments/ajax.php');
+loadTool('ajax.php');
 
 if (	$config['p_logic'] != 'usual' 
 	and $config['p_logic'] != 'xauth'
@@ -30,7 +30,7 @@ if (	$config['p_logic'] != 'usual'
 
 BDConnect('register');
 
-require(MCR_ROOT.'instruments/user.class.php');
+loadTool('user.class.php');
 $rcodes  = array();  
 
 function tryExit() {

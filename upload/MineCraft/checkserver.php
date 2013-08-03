@@ -5,7 +5,7 @@ if (empty($_GET['user']) or empty($_GET['serverId'])) {
   vtxtlog("[checkserver.php] checkserver process [GET parameter empty] [ ".((empty($_GET['user']))? 'LOGIN ':'').((empty($_GET['serverId']))? 'SERVERID ':'')."]");
   exit('NO');
 }
-	require(MCR_ROOT.'instruments/user.class.php'); 
+	loadTool('user.class.php'); 
 	BDConnect('checkserver');
 	
 	$user 		= $_GET['user']; 

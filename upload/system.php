@@ -18,13 +18,13 @@ define('MCR_STYLE', MCR_ROOT.$site_ways['style']);
 
 define('STYLE_URL', $site_ways['style']); // deprecated
 define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
-// define('CUR_STYLE_URL', ( empty($config['s_theme']) ? DEF_STYLE_URL : STYLE_URL . $config['s_theme'] . '/' ) );
+// CUR_STYLE_URL - deleted; logic moved in base.class.php->View::GetURL 
 
 define('BASE_URL', $config['s_root']);
 
 date_default_timezone_set($config['timezone']);
 
-$user = false; $link = false;
+$user = false; $link = false; $mcr_tools = array();
 
 function BD( $query ) {
 global $link;
@@ -54,6 +54,16 @@ $link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_log
 }
 
 /* Системные функции */
+
+function loadTool( $name, $sub_dir = '') {
+global $mcr_tools; 
+
+	if (in_array($name, $mcr_tools)) return;
+	
+	$mcr_tools[] = $name;
+	
+	require( MCR_ROOT . 'instruments/' . $sub_dir . $name);	
+}
 
 function lng($key, $lang = false) {
 global $MCR_LANG;

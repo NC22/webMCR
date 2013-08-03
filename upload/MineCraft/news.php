@@ -3,9 +3,9 @@ header('Content-Type: text/html;charset=UTF-8');
 
 require('../system.php');
 
-require(MCR_ROOT.'instruments/user.class.php'); 
-require(MCR_ROOT.'instruments/monitoring.class.php');
-require(MCR_ROOT.'instruments/catalog.class.php');
+loadTool('user.class.php'); 
+loadTool('monitoring.class.php');
+loadTool('catalog.class.php');
 
 BDConnect('news');
 

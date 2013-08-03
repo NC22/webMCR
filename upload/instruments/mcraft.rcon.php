@@ -2,12 +2,13 @@
 if (empty($_POST['command']) and empty($_POST['userlist'])) 
       exit('<script>parent.showResult("command is empty");</script>');
 	  
-require_once('../system.php');
-require_once(MCR_ROOT.'instruments/rcon.class.php');
+require('../system.php');
 
 BDConnect('mcraft.rcon');
 
-require(MCR_ROOT.'instruments/user.class.php');
+loadTool('rcon.class.php');
+loadTool('user.class.php');
+
 MCRAuth::userLoad();	  
 
 if (empty($user) or $user->lvl() < 15) exit;

@@ -7,7 +7,7 @@ vtxtlog("[joinserver.php] join process [GET parameter empty] [ ".((empty($_GET['
 exit('Bad login');
 }	
 
-require(MCR_ROOT.'instruments/user.class.php');  
+loadTool('user.class.php');  
 BDConnect('joinserver');
 
 $login 		= $_GET['user']; 

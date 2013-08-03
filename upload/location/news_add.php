@@ -2,8 +2,8 @@
 if (!defined('MCR')) exit;
 if (empty($user) or !$user->getPermission('add_news')) { header("Location: ".BASE_URL); exit; }
 
-require(MCR_ROOT.'instruments/upload.class.php');
-require(MCR_ROOT.'instruments/catalog.class.php');
+loadTool('upload.class.php');
+loadTool('catalog.class.php');
 
 $page = 'Добавить новость';    
 

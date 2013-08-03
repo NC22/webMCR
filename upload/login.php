@@ -2,8 +2,9 @@
 if (empty($_GET['out']) and empty($_POST['login'])) exit;
 
 require('./system.php');
-require(MCR_ROOT.'instruments/ajax.php');
-require(MCR_ROOT.'instruments/user.class.php');
+
+loadTool('ajax.php');
+loadTool('user.class.php');
 
 BDConnect('login');
 

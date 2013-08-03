@@ -1,7 +1,8 @@
 <?php
 require('../system.php');
-require(MCR_ROOT.'instruments/ajax.php');
-require(MCR_ROOT.'instruments/monitoring.class.php');
+
+loadTool('ajax.php');
+loadTool('monitoring.class.php');
 
 if (empty($_POST['id'])) exit;
 $id = (int)$_POST['id'];

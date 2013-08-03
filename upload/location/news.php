@@ -1,7 +1,7 @@
 <?php
 if (!defined('MCR')) exit;
  
-require_once(MCR_ROOT.'instruments/catalog.class.php');
+loadTool('catalog.class.php');
 
 if (isset($_GET['cid'])) {
 

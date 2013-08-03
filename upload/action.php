@@ -15,11 +15,11 @@ switch ($method) {
 	case 'delete_file':	
 	
 	require('./system.php');
-	require(MCR_ROOT.'instruments/ajax.php');	
-	require(MCR_ROOT.'instruments/user.class.php');
+	loadTool('ajax.php');	
+	loadTool('user.class.php');
 	
-		if ($method == 'upload' or $method == 'delete_file') require(MCR_ROOT.'instruments/upload.class.php');
-	elseif ($method == 'profile') require(MCR_ROOT.'instruments/skin.class.php');
+		if ($method == 'upload' or $method == 'delete_file')	loadTool('upload.class.php');
+	elseif ($method == 'profile')								loadTool('skin.class.php');
 	elseif ($method == 'restore' and 
 			$config['p_logic'] != 'usual' and 
 			$config['p_logic'] != 'xauth' and
@@ -33,7 +33,7 @@ switch ($method) {
 	case 'download':
 	
 	require('./system.php');
-	require(MCR_ROOT.'instruments/upload.class.php');
+	loadTool('upload.class.php');
 	
 	BDConnect('action_download');
 	
@@ -91,13 +91,13 @@ switch ($method) {
 		
 		if ($type == ItemType::News) {
 		
-			require_once(MCR_ROOT.'instruments/catalog.class.php');
+			loadTool('catalog.class.php');
 			
 			$item = new News_Item($id);
 			
 		} elseif ($type == ItemType::Skin and file_exists(MCR_ROOT.'instruments/skinposer.class.php')) {
 
-			require_once(MCR_ROOT.'instruments/skinposer.class.php');
+			loadTool('skinposer.class.php');
 			
 			$item = new SPItem($id);
 		}
@@ -154,7 +154,7 @@ switch ($method) {
 
 	    CaptchaCheck(3); 
 			
-	    require_once(MCR_ROOT.'instruments/catalog.class.php');
+	    loadTool('catalog.class.php');
 				
 		$comments_item = new Comments_Item(false, 'news/');				
 		$rcode = $comments_item->Create($_POST['comment'],(int)$_POST['item_id']);
@@ -173,7 +173,7 @@ switch ($method) {
 
 		if (empty($user) or empty($_POST['item_id'])) aExit(1);		
 		
-		require_once(MCR_ROOT.'instruments/catalog.class.php');
+		loadTool('catalog.class.php');
 			
 		$comments_item = new Comments_Item((int)$_POST['item_id']);
 		

@@ -41,7 +41,7 @@ if ( empty($json->username) or empty($json->password) or empty($json->clientToke
 
 	logExit("[auth16x.php] login process [Empty input] [ ".((empty($json->username))? 'LOGIN ':'').((empty($json->password))? 'PASSWORD ':'').((empty($json->clientToken))? 'clientToken ':'')."]");
 
-	require(MCR_ROOT.'instruments/user.class.php'); 
+	loadTool('user.class.php'); 
 	BDConnect('auth');
 
 $login = $json->username; $password = $json->password; $clientToken = $json->clientToken;

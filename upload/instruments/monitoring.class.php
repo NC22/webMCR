@@ -157,7 +157,7 @@ private $rcon;
            
         case 2:
             
-		require_once(MCR_ROOT.'instruments/rcon.class.php');
+		loadTool('rcon.class.php');
 		
 		try	{
 		
@@ -182,7 +182,7 @@ private $rcon;
         break;
         case 3:        
 
-		require_once (MCR_ROOT.'instruments/bukkit/json_api.php');
+		loadTool('json_api.php', 'bukkit/');
 		
 		// ToDo add json auth options in to server properties
 		
@@ -211,7 +211,7 @@ private $rcon;
 	
         default :
 	
-		require_once(MCR_ROOT.'instruments/query.function.php');
+		loadTool('query.function.php');
 		 
 		$full_state = ($this->method == 1)? mcraftQuery($this->address, $this->port ) : mcraftQuery_SE($this->address, $this->port );		 
 		if (empty($full_state) or isset($full_state['too_many'])) {
@@ -445,7 +445,11 @@ private $rcon;
    public function info() {
    return $this->info;	
    }   
-   
+
+   public function id() {
+   return $this->id;	
+   }     
+ 
    public function name() {
    return $this->name;	
    }   

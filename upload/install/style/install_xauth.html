@@ -9,6 +9,12 @@
 	
     <legend>2 / 3 Настройка совместимости с <?php echo $main_cms ?></legend>
 	
+	<?php if ($mode == 'authme') { ?>
+	
+		<div class="alert">В файле настроек <?php echo $main_cms ?> следует указать режим шифрования пароля по алгоритму xAuth</div>
+		
+	<?php } ?>
+	
 	<label>Таблица пользователей:</label>	
     <input type="text" name="bd_accounts_mcms" value="<?php echo $bd_names['users'] ?>">
 	<span class="help-block">Указано название таблицы используемое <?php echo $main_cms ?> по умолчанию, изменять только в случае если вы знаете, что делаете.</span>

@@ -539,7 +539,7 @@ private $deadtry;
 			return 1601; 
 		}		
 		
-		if (!class_exists('skinGenerator2D')) require_once(MCR_ROOT.'instruments/skin.class.php');
+		loadTool('skin.class.php');
 		
 		$new_file_ratio = ($type == 'skin') ? skinGenerator2D::isValidSkin($way) : skinGenerator2D::isValidCloak($way); 
 		if (!$new_file_ratio or $new_file_ratio > (int) $this->getPermission('max_ratio')) {
@@ -578,7 +578,7 @@ private $deadtry;
 	
 	    if (!$this->id) return false;
 		
-		if (!class_exists('Comments_Item')) require_once(MCR_ROOT.'instruments/catalog.class.php');
+		loadTool('catalog.class.php');
 		
 	    $this->deleteCloak();
 		$this->deleteSkin();

@@ -1,8 +1,6 @@
 <?php
 if (!defined('MCR')) exit;
 
-require_once(MCR_ROOT.'instruments/monitoring.class.php');
-
 ob_start();
 
 if (!empty($user)) {
@@ -19,4 +17,11 @@ if (!empty($user)) {
 }
 
 $content_side .= ob_get_clean();
+
+loadTool('monitoring.class.php');
+
+$servManager = new ServerManager();
+$content_servers = $servManager->Show('side');
+
+unset($servManager);
 ?>

@@ -3,9 +3,9 @@ if (!defined('MCR')) exit;
  
 if (empty($user) or $user->lvl() < 15) { header("Location: ".BASE_URL); exit; }
 
-require(MCR_ROOT.'instruments/catalog.class.php');
-require(MCR_ROOT.'instruments/alist.class.php');
-require(MCR_ROOT.'instruments/monitoring.class.php');
+loadTool('catalog.class.php');
+loadTool('alist.class.php');
+loadTool('monitoring.class.php');
  
 $st_subdir = 'admin/';
  
@@ -76,7 +76,7 @@ if ($do) {
  switch ($do) {
 	case 'filelist':
 
-	require(MCR_ROOT.'instruments/upload.class.php');	
+	loadTool('upload.class.php');	
 	
 	$url = 'index.php?mode=control&do=filelist';
 	if ($user_id) $url .= '&user_id='.$user_id;
@@ -161,7 +161,8 @@ if ($do) {
 		
 		$new_file_info = POSTSafeMove(($female)? 'def_skin_female' : 'def_skin_male', $tmp_dir);
 		
-		require_once(MCR_ROOT.'instruments/skin.class.php');
+		loadTool('skin.class.php');
+		
 		if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir.$new_file_info['tmp_name']) and rename( $tmp_dir.$new_file_info['tmp_name'], $default_skin)) {
 		
 			chmod($default_skin, 0777);
@@ -491,7 +492,7 @@ if ($do) {
 	if ( ThemeManager::GetThemeInfo($theme_id) === false ) $theme_id = false;
 	else {
 	
-		require(MCR_ROOT.'instruments/ajax.php');
+		loadTool('ajax.php');
 		$config['s_theme']	= $theme_id		;
 	}
 	
