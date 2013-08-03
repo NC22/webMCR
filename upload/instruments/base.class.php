@@ -81,10 +81,12 @@ Class View {
 		return self::Get($way, $this->st_subdir);		
 	}
 	
-	public static function GetURL($way) {
+	public static function GetURL($way = false) {
 	global $config;
 		
 		$current_st_url = empty($config['s_theme'])? DEF_STYLE_URL : STYLE_URL . $config['s_theme'] . '/' ;
+		
+		if (!$way) return $current_st_url;
 		
 		if ( DEF_STYLE_URL === $current_st_url ) return DEF_STYLE_URL . $way;
 		else return (file_exists( MCR_STYLE . $config['s_theme'] . '/'  . $way )? $current_st_url : DEF_STYLE_URL) . $way;	
