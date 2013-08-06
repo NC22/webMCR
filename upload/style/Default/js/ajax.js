@@ -308,7 +308,9 @@ function UpdateProfile(admTrg) {
 
         clearFileInputField('profile-skin-file')
 		clearFileInputField('profile-cloak-file')
-
+		
+		GetById('profile-update').reset()
+		
         GetById('main-error-text').className = 'alert alert-error'		
 		
 		if (response != null) {	

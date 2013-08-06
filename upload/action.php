@@ -23,8 +23,9 @@ switch ($method) {
 	elseif ($method == 'restore' and 
 			$config['p_logic'] != 'usual' and 
 			$config['p_logic'] != 'xauth' and
-			$config['p_logic'] != 'authme') 
-		aExit(1,'Change password is not available');
+			$config['p_logic'] != 'authme')
+			
+				aExit(1,'Change password is not available');
 	
 	BDConnect('action_'.$method);
 	MCRAuth::userLoad();
@@ -44,7 +45,9 @@ switch ($method) {
 switch ($method) {
 	case 'upload': // TODO Список последних добавленых файлов
 		
-		if (empty($user) or $user->lvl() < 15) break; // добавить разрешение
+		if (empty($user) or $user->lvl() < 15) break; 
+		
+		$ajax_message['iframe'] = true;
 		
 		$file 	= new File(false, 'other/');
 		$id_rewrite = (isset($_POST['nf_delete']))? true : false;
@@ -230,7 +233,9 @@ switch ($method) {
 	case 'profile': 
 
         $ajax_message = array('code' => 0, 'message' => 'profile', 'name' => '', 'group' => '', 'id' => '', 'skin' => 0, 'cloak' => 0);
-
+		
+		$ajax_message['iframe'] = true;
+		
         $rcodes = null;        
 
         if (empty($user) or $user->lvl() <= 0) aExit(1); 

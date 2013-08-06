@@ -90,12 +90,17 @@ function sendFormByIFrame(formname, onload){
 	
 	var event = function() {
 	
-		var iframeDoc = getIframeDocument(iframe)		
-		if (iframeDoc.location.href == 'about:blank') return
+		if (getIframeDocument(iframe).location.href == 'about:blank') return
 		
-		GetBody().removeChild(iframe)
-
-		var response = getJSvalue(decodeURIComponent(iframeDoc.body.innerHTML))
+		if (!iframe.contentWindow.json_response) {
+		
+		alert ('json_response is not set [' + formname + ']')
+		return
+		}
+		
+		var response = getJSvalue(iframe.contentWindow.json_response)
+		
+		GetBody().removeChild(iframe)	
 		
 		onload(response)
 	}
@@ -117,36 +122,6 @@ if (typeof value != "string") {
 }
 
 	try {
-	
-	/* If JSON string is not clean enough, try find and restore it */	
-	
-	if (value[0] != '{' || value[value.length - 1] != '}') {
-	
-	var value_real = ''
-	var json_start = 0
-	var json_end = 0
-	
-		for(var i=0; i <= value.length-1; i++) 	
-		
-			if (value[i] == "{") {
-			
-				json_start = i
-				break
-			}
-			
-		for(var i=value.length-1; i >= 0; i--)
-		
-			if (value[i] == "}") {			
-				json_end = i
-				break
-			}
-			
-		for(var i=json_start; i <= json_end; i++)	
-		
-			value_real += value[i]			
-	
-	if (value_real) value = value_real
-	}
 	
 	result = window.JSON && window.JSON.parse ? JSON.parse(value) : eval('(' + value + ')')
 	
