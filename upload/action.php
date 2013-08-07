@@ -46,9 +46,7 @@ switch ($method) {
 	case 'upload': // TODO Список последних добавленых файлов
 		
 		if (empty($user) or $user->lvl() < 15) break; 
-		
-		$ajax_message['iframe'] = true;
-		
+
 		$file 	= new File(false, 'other/');
 		$id_rewrite = (isset($_POST['nf_delete']))? true : false;
 		$id_word 	= (!empty($_POST['nf_id_word']))? $_POST['nf_id_word'] : false;
@@ -233,9 +231,7 @@ switch ($method) {
 	case 'profile': 
 
         $ajax_message = array('code' => 0, 'message' => 'profile', 'name' => '', 'group' => '', 'id' => '', 'skin' => 0, 'cloak' => 0);
-		
-		$ajax_message['iframe'] = true;
-		
+
         $rcodes = null;        
 
         if (empty($user) or $user->lvl() <= 0) aExit(1); 

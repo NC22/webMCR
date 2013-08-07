@@ -36,18 +36,20 @@ function CaptchaCheck($exit_mess = 2) {
 function aExit($code, $mess = 'error') {
 global $ajax_message;
 
-  $ajax_message['code']    = $code;
-  $ajax_message['message'] = ($mess == 'error')? $mess.' code: '.$code : $mess;
+	$iframe = isset($_POST['json_iframe']) ? true : false;
+	
+	$ajax_message['code']    = $code;
+	$ajax_message['message'] = ($mess == 'error')? $mess.' code: '.$code : $mess;
 
-	 if (defined('JSON_HEX_QUOT')) 
+	if (defined('JSON_HEX_QUOT')) 
   
 		$result = json_encode($ajax_message, JSON_HEX_QUOT | JSON_HEX_APOS | JSON_HEX_TAG);
 	
-	 else
+	else
   
 		$result =  json_encode($ajax_message);  
 
-   if (isset($ajax_message['iframe'])) {
+   if ($iframe) {
 
    $result =  escapeJsonString($result);  
    $result = '<html><head><title>jnone</title> <script type="text/javascript"> var json_response = "'. $result .'"</script></head><body></body></html>';

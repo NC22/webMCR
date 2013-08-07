@@ -75,11 +75,18 @@ function sendFormByIFrame(formname, onload){
     iframe = document.createElement('iframe')
     iframe.name = 'ajax-frame-' + Math.random(1000000)
     iframe.style.display = 'none'
-
+	
+	var iframe_trg = document.createElement('input')
+	
+    iframe_trg.type = 'hidden'
+    iframe_trg.name = 'json_iframe'
+    iframe_trg.value = '1'   
+	
     GetBody().appendChild(iframe)
 
-    var form = GetById(formname)
-	
+    var form = GetById(formname)	
+		form.appendChild(iframe_trg)
+	 
 	if (form == null) {
 	
 		alert('Form ' + formname + 'not found')
