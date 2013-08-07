@@ -49,6 +49,8 @@ $menu = new Menu();
 
 if ($config['offline'] and (empty($user) or $user->group() != 3)) exit(View::ShowStaticPage('site_closed.html', ''));
 
+$content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $content_js = '';
+
 if (!empty($user)) {
 
 $player       = $user->name();
@@ -57,9 +59,9 @@ $player_lvl   = $user->lvl();
 $player_email = $user->email(); if (empty($player_email)) $player_email = lng('NOT_SET'); 
 $player_group = $user->getGroupName();
 $player_money = $user->getMoney();
-}
 
-$content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $content_js = '';
+	if ($user->group() == 4) $content_main .= View::ShowStaticPage('profile_verification.html', '', $player_email);
+}
 
 $mode = $config['s_dpage'];
 

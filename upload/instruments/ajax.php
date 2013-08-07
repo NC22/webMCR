@@ -18,7 +18,7 @@ function escapeJsonString($value) { // экранирование строки J
     return $result;
   }
   
-function CaptchaCheck($exit_mess = 2) { 
+function CaptchaCheck($exit_mess = 2, $ajaxExit = true) { 
 
 	if (!isset($_SESSION)) session_start();
 	
@@ -27,10 +27,15 @@ function CaptchaCheck($exit_mess = 2) {
          $_SESSION['code'] != (int)$_POST['antibot'] ) {
        
             if (isset($_SESSION['code'])) unset($_SESSION['code']);
-            aExit($exit_mess, lng('CAPTCHA_FAIL'));
-
+            if ($ajaxExit) 
+				
+				aExit($exit_mess, lng('CAPTCHA_FAIL'));
+				
+		
+		return false;
     }
 	unset($_SESSION['code']);
+	return true;
 }
 
 function aExit($code, $mess = 'error') {

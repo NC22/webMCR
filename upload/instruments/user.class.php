@@ -504,18 +504,39 @@ private $deadtry;
 		return true;
 	}
 	
-	public function changeEmail($email) {
-	global $bd_users;	
+	public function changeEmail($email, $verification = false) {
+	global $bd_users;
 	
 		     $email = filter_var($email, FILTER_VALIDATE_EMAIL); 	
 		if (!$email) return 1901;
 		
-		$result = BD("SELECT `id` FROM {$this->db} WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($email)."'");		
-		if ( mysql_num_rows( $result ) ) return 1902;
-				
-		BD("UPDATE {$this->db} SET `{$bd_users['email']}`='".TextBase::SQLSafe($email)."' WHERE `{$bd_users['id']}`='".$this->id."'"); 
+		if ($email === $this->email) {
+			
+			if (!$verification) return 1;
+			
+		} else { 	 
+	
+			$result = BD("SELECT `id` FROM {$this->db} WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($email)."' AND `{$bd_users['id']}` != '".$this->id."' ");		
+			if ( mysql_num_rows( $result ) ) return 1902;	
+		}
 		
-		$this->email = $email;
+		if ($verification) {
+		
+			$subject = lng('REG_CONFIRM').' '.$_SERVER['SERVER_NAME'];
+			$http_link = 'http://'.$_SERVER['SERVER_NAME'].BASE_URL.'register.php?id='.$this->id().'&verificate='.$this->getVerificationStr(); 
+			$message = '<html><body><p>'.lng('REG_CONFIRM_MES').'. <a href="'.$http_link.'">'.lng('OPEN').'</a></p></body></html>';
+		
+			$send_result = EMail::Send($email, $subject, $message);
+			
+			if ($verification and !$send_result) return 1903;
+		}
+
+		if ($email != $this->email) 
+			
+			BD("UPDATE {$this->db} SET `{$bd_users['email']}`='".TextBase::SQLSafe($email)."' WHERE `{$bd_users['id']}`='".$this->id."'"); 
+		
+		$this->email = $email;		
+		
 		return 1;
 	}
 	

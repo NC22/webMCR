@@ -22,7 +22,7 @@ if (isset($_GET['l'])) $curlist = (int) $_GET['l'];
  
 $menu->SetItemActive('main');
 
-$content_main = $news_manager->ShowNewsListing($curlist);
+$content_main .= $news_manager->ShowNewsListing($curlist);
 
 $content_main .=  $news_manager->ShowCategorySelect();
 

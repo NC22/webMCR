@@ -455,15 +455,18 @@ private $db;
 
 Class Menu extends View {
 private $menu_items;
+private $menu_fname;
 
-    public function Menu($style_sd = false, $auto_load = true) {
+    public function Menu($style_sd = false, $auto_load = true, $mfile = 'instruments/menu_items.php') {
 	global $config;
 	
 		parent::View($style_sd);
 		
+		$this->menu_fname = $mfile;
+		
 		if ($auto_load) {
 
-		require(MCR_ROOT.'instruments/menu_items.php');
+		require(MCR_ROOT.$this->menu_fname);
 		
 		$this->menu_items = $menu_items; 				
 		} else $this->menu_items = array( 0 => array(), 1 => array() );
@@ -484,7 +487,7 @@ private $menu_items;
 		$txt  = "<?php if (!defined('MCR')) exit;".PHP_EOL;
 		$txt .= '$menu_items = '.var_export($this->menu_items, true).';'.PHP_EOL;
 
-		$result = file_put_contents(MCR_ROOT.'instruments/menu_items.php', $txt);
+		$result = file_put_contents(MCR_ROOT.$this->menu_fname, $txt);
 
 		return (is_bool($result) and $result == false)? false : true;	
 	}
@@ -646,14 +649,24 @@ private $menu_items;
 
 	return $new_key;
 	}
+	
+	public function IsItemExists ($item_key) {
+
+	if ( array_key_exists($item_key, $this->menu_items[0])) $menu_id = 0;
+	elseif ( array_key_exists($item_key, $this->menu_items[1])) $menu_id = 1;
+	else return false;
+
+	return $menu_id;
+	}
 
     public function SetItemActive($item_key) {
 	global $menu_items;
+
+		$menu_id = $this->IsItemExists($item_key);
+	if ($menu_id === false) return false;
 	
-	$menu_id = 1;
-	if ( array_key_exists($item_key, $this->menu_items[0])) $menu_id = 0;
-	
-	$this->menu_items[$menu_id][$item_key]['active'] = true;
+	$this->menu_items[$menu_id][$item_key]['active'] = true;	
+	return true;
     }	
 }
 

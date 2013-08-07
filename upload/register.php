@@ -115,7 +115,7 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 	if ($verification) $group = 4;
 	else $group = 1;
 	
-	if (!BD("INSERT INTO `{$bd_names['users']}` (`{$bd_users['login']}`,`{$bd_users['password']}`,`{$bd_users['ip']}`,`{$bd_users['female']}`,`{$bd_users['email']}`,`{$bd_users['ctime']}`,`{$bd_users['group']}`) VALUES('".TextBase::SQLSafe($login)."','".MCRAuth::createPass($pass)."','".TextBase::SQLSafe(GetRealIp())."',$female,'".TextBase::SQLSafe($email)."',NOW(),'$group')"))
+	if (!BD("INSERT INTO `{$bd_names['users']}` (`{$bd_users['login']}`,`{$bd_users['password']}`,`{$bd_users['ip']}`,`{$bd_users['female']}`,`{$bd_users['ctime']}`,`{$bd_users['group']}`) VALUES('".TextBase::SQLSafe($login)."','".MCRAuth::createPass($pass)."','".TextBase::SQLSafe(GetRealIp())."',$female,NOW(),'$group')"))
 	  aExit(14);
 
 	$tmp_user = new User(mysql_insert_id(), $bd_users['id']);
@@ -129,14 +129,10 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 	if (!$verification)
 		aExit(0, lng('REG_COMPLETE') . '. <a href="#" class="btn" onclick="Login();">'.lng('ENTER').'</a>');						   			    
 	else {	
-		
-		$subject = lng('REG_CONFIRM').' '.$_SERVER['SERVER_NAME'];
-		$http_link = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'].'?id='.$tmp_user->id().'&verificate='.$tmp_user->getVerificationStr(); 
-		$message = '<html><body><p>'.lng('REG_CONFIRM_MES').'. <a href="'.$http_link.'">'.lng('OPEN').'</a></p></body></html>';
-		
-		if ( !EMail::Send($email, $subject, $message) ) aExit(14, lng('MAIL_FAIL'));
+				
+		if ( $tmp_user->changeEmail($email, true) > 1 ) aExit(14, lng('MAIL_FAIL'));
 	
-	    aExit(0, lng('REG_COMPLETE') . lng('REG_CONFIRM_INFO'));
+	    aExit(0, lng('REG_COMPLETE') .'. '. lng('REG_CONFIRM_INFO'));
 	}
 	unset($tmp_user);
 ?>

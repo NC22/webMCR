@@ -641,7 +641,6 @@ private $category_id;
 	
 	$postTitle  = 'Добавить комментарий';
 	$postButton = 'Добавить';
-	$postCaptchaRefresh = '?refresh='.rand(1337,31337);
 	
 	$editMode     = 0;
 	$editTitle    = '';

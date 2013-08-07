@@ -10,12 +10,43 @@ $menu->SetItemActive('options');
 
 ob_start();	
 
-if ($user->group() == 4) {
+if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not verificated EMail / Compatibility with older versions
 
-	include View::Get('profile_verification.html');
-	$content_main = ob_get_clean(); 
+	loadTool('ajax.php'); $html_info = '';	
 	
-} else {
+	if (CaptchaCheck(0, false)) {
+	
+		if (isset($_POST['female']) and $user->gender() > 1) 
+		
+			$user->changeGender((!(int)$_POST['female'])? 0 : 1);
+
+		if (!empty($_POST['email'])) { 
+		
+			$send_result = $user->changeEmail($_POST['email'], true);
+			
+				if ( $send_result == 1) $html_info = lng('REG_CONFIRM_INFO');
+			elseif ( $send_result == 1902) $html_info = lng('AUTH_EXIST_EMAIL');
+			else $html_info = lng('MAIL_FAIL');				
+		}
+	} elseif ( isset($_POST['antibot']) ) $html_info = lng('CAPTCHA_FAIL');
+	
+	if ($user->group() == 4 or !$user->email() or $user->gender() > 1) {
+	
+	include View::Get('cp_form.html');	
+	
+		if ( !$user->email() ) include View::Get('profile_email.html');	
+	
+		if ($user->gender() > 1 ) 
+		
+			include View::Get('profile_gender.html');
+			
+	include View::Get('cp_form_footer.html');
+	}
+	
+	$content_main .= ob_get_clean();	
+}
+
+if ($user->group() != 4 ) {
 
 	if ($user->getPermission('change_skin'))  include View::Get('profile_skin.html');
 	if ($user->getPermission('change_skin') and !$user->defaultSkinTrigger()) 
@@ -28,31 +59,8 @@ if ($user->group() == 4) {
 
 	$profile_inputs = ob_get_clean();
 
-	ob_start(); 
+	ob_start(); include View::Get('profile.html');
 
-	/* Compatibility add-on */
-
-	if ($user->gender() > 1 or !$user->email()) {
-
-	if (isset($_POST['female']) and $user->gender() > 1) {
-	  $female = (!(int)$_POST['female'])? 0 : 1;
-	  $user->changeGender($female);
-	}
-
-	if (!empty($_POST['email']) and !$user->email()) $user->changeEmail($_POST['email']); 
-
-		if ($user->gender() > 1 or !$user->email()) {
-			include View::Get('cp_form.html');
-
-			if(!$user->email())       include View::Get('profile_email.html');
-			if ($user->gender() > 1 ) include View::Get('profile_gender.html');
-
-			include View::Get('cp_form_footer.html');
-		}
-	}
-
-	include View::Get('profile.html');
-
-	$content_main = ob_get_clean();
+	$content_main .= ob_get_clean();
 } 	
 ?>
