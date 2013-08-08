@@ -8,10 +8,8 @@ $page = lng('PAGE_OPTIONS');
 $user_img_get = '?user_id='.$player_id.'&refresh='.rand(1000,9999);
 $menu->SetItemActive('options');
 
-ob_start();	
-
-if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not verificated EMail / Compatibility with older versions
-
+if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not verificated EMail / Compatibility with older versions	
+	
 	loadTool('ajax.php'); $html_info = '';	
 	
 	if (CaptchaCheck(0, false)) {
@@ -32,6 +30,8 @@ if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not veri
 	
 	if ($user->group() == 4 or !$user->email() or $user->gender() > 1) {
 	
+	ob_start();	
+	
 	include View::Get('cp_form.html');	
 	
 		if ( !$user->email() ) include View::Get('profile_email.html');	
@@ -41,13 +41,15 @@ if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not veri
 			include View::Get('profile_gender.html');
 			
 	include View::Get('cp_form_footer.html');
-	}
 	
-	$content_main .= ob_get_clean();	
+	$content_main .= ob_get_clean();
+	}	
 }
 
 if ($user->group() != 4 ) {
-
+	
+	ob_start();	
+	
 	if ($user->getPermission('change_skin'))  include View::Get('profile_skin.html');
 	if ($user->getPermission('change_skin') and !$user->defaultSkinTrigger()) 
 											  include View::Get('profile_del_skin.html'); 

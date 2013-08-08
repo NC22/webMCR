@@ -19,7 +19,9 @@
                 <option value="2" <?php echo ($serv_method==2)?'selected':'' ?>>RCON</option>
                 <option value="3" <?php echo ($serv_method==3)?'selected':'' ?>>JSONAPI</option>
 	</select>
-	<div style="display: none;" id="rcon_pass_holder">
+	<div style="<?php echo ($serv_method==3 or $serv_method==2)? '' : 'display: none;' ?>" id="rcon_pass_holder">
+	<label>JSONAPI пользователь</label>
+	<input type="text" name="json_user" value="<?php echo $serv_s_user ?>">
 	<label>RCON/JSONAPI пароль</label>
 	<input type="password" name="rcon_pass" value="">
 	</div>

@@ -384,8 +384,10 @@ if ($do) {
 		 $serv_info     = (isset($_POST['info']))? $_POST['info'] : '';	
 		 
 		 $serv_rcon     = (isset($_POST['rcon_pass']) and ( $serv_method == 2 or $serv_method == 3)) ? $_POST['rcon_pass'] : false;
+		 $serv_s_user	= (isset($_POST['json_user']) and $serv_method == 3) ? $_POST['json_user'] : false;
 		 
 		 if (($serv_method == 2 or $serv_method == 3) and !$serv_rcon) $serv_method = false;
+		 if ( $serv_method == 3 and !$serv_s_user) $serv_method = false;
 		 
 		 $serv_ref      = (isset($_POST['timeout']))? (int)$_POST['timeout'] : 5;	
 		 $serv_priority = (isset($_POST['priority']))? (int)$_POST['priority'] : 0;
@@ -403,7 +405,7 @@ if ($do) {
 			if ($serv_name)     $server->SetText($serv_name, 'name');
 			if ($serv_info)     $server->SetText($serv_info, 'info');
 			
-			if (!is_bool($serv_method))   $server->SetConnectMethod($serv_method, $serv_rcon);
+			if (!is_bool($serv_method))   $server->SetConnectMethod($serv_method, $serv_rcon, $serv_s_user);
 			
 			if ($serv_address and $serv_port) $server->SetConnectWay($serv_address, $serv_port);
 			
@@ -411,11 +413,11 @@ if ($do) {
 
 		} else {
 		
-		  if (is_bool($serv_method)) { $info .= lng('SERVER_PASS_EMPTY'); break; }
+		  if (is_bool($serv_method)) { $info .= lng('SERVER_PROTO_EMPTY'); break; }
 		  
 		  $server = new Server();
 		  
-		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info) == 1) $info .= lng('SERVER_COMPLITE');
+		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info, $serv_s_user) == 1) $info .= lng('SERVER_COMPLITE');
 		  else { $info .= 'Настройки подключения не выбраны.'; break; }
 		  
 		  $server->UpdateState(true);
@@ -446,12 +448,15 @@ if ($do) {
 		
 		if (!$server->Exist()) { $info .= lng('SERVER_NOT_EXIST'); break; }
 		
-		$serv_name     = TextBase::HTMLDestruct($server->name());		
-        $serv_method   = $server->method();	
-		$serv_ref      = $server->refresh();	
-		$serv_address  = $server->address();
-		$serv_port     = $server->port();	
-		$serv_info     = TextBase::HTMLDestruct($server->info());
+		$serv_sysinfo = $server->getInfo();
+		
+		$serv_name     = TextBase::HTMLDestruct($serv_sysinfo['name']);		
+        $serv_method   = $serv_sysinfo['method'];	
+		$serv_ref      = $serv_sysinfo['refresh'];	
+		$serv_address  = $serv_sysinfo['address'];
+		$serv_port     = $serv_sysinfo['port'];	
+		$serv_s_user   = ($serv_sysinfo['s_user'])? $serv_sysinfo['s_user'] : '';	
+		$serv_info     = TextBase::HTMLDestruct($serv_sysinfo['info']);
 		
 		$serv_priority = $server->GetPriority();
 		

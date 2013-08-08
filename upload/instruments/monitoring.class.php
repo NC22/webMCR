@@ -17,7 +17,8 @@ private $numpl;
 private $online;
 
 private $refresh;	
-private $rcon;  
+private $rcon; 
+private $s_user; 
 
 	public function Server($id = false, $style_sd = false) {
 	global $bd_names;
@@ -28,7 +29,7 @@ private $rcon;
 		
 	    $this->id = (int)$id; if (!$this->id) return false;
 		
-		$result = BD("SELECT online, address, port, name, numpl, slots, info, refresh_time, method, rcon FROM `".$this->db."` WHERE id='".TextBase::SQLSafe($this->id)."'");
+		$result = BD("SELECT online, address, port, name, numpl, service_user, slots, info, refresh_time, method, rcon FROM `".$this->db."` WHERE id='".TextBase::SQLSafe($this->id)."'");
 		if ( mysql_num_rows( $result ) != 1 ) { $this->id = false; return false; }
 			
 		$line = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -45,11 +46,13 @@ private $rcon;
 
 		$this->refresh = (int)$line['refresh_time'];
 		$this->rcon    = (!strlen($line['rcon']))? false : $line['rcon'];  
-			
+		
+		$this->s_user = (!strlen($line['service_user']))? false : $line['service_user'];  
+		
 	return true;			
 	}
 	
-	public function Create($address, $port, $method = 0, $rcon = false, $name = '', $info = '') {
+	public function Create($address, $port, $method = 0, $rcon = false, $name = '', $info = '', $s_user = false) {
                 
 		if ($this->Exist()) return 0; 
 		
@@ -61,11 +64,12 @@ private $rcon;
 		if ($rcon and !($method == 2 or $method == 3)) $rcon = '';
 		
 		if (!$rcon and ( $method == 2 or $method == 3)) return 2;
-
+		if (!$s_user and $method == 3) return 3;
+		
 		$port = (int) $port;
 		if (!$port) $port = 25565;
 
-		if ( BD("insert into `".$this->db."` ( address, port, info, name, method, rcon ) values ('".TextBase::SQLSafe($address)."', '".TextBase::SQLSafe($port)."', '".TextBase::SQLSafe($info)."' , '".TextBase::SQLSafe($name)."', '".TextBase::SQLSafe($method)."', '".TextBase::SQLSafe($rcon)."' )") ) 
+		if ( BD("insert into `".$this->db."` ( address, port, info, name, method, service_user, rcon ) values ('".TextBase::SQLSafe($address)."', '".TextBase::SQLSafe($port)."', '".TextBase::SQLSafe($info)."' , '".TextBase::SQLSafe($name)."', '".TextBase::SQLSafe($method)."', '".TextBase::SQLSafe($s_user)."', '".TextBase::SQLSafe($rcon)."' )") ) 
           
 		  $this->id = mysql_insert_id();
 		  
@@ -81,7 +85,7 @@ private $rcon;
 		return 1; 
 	}
 	
-   public function SetConnectMethod($method = 0, $rcon = false) {
+   public function SetConnectMethod($method = 0, $rcon = '', $s_user = '') {
 	
 	if (!$this->Exist()) return false;
 		    
@@ -90,8 +94,9 @@ private $rcon;
 	
 	if ($rcon and !( $method == 2 or $method == 3)) $rcon = '';
 	if (!$rcon and ( $method == 2 or $method == 3)) return false;
+	if (!$s_user and $method == 3 ) return false;
 		
-	BD("UPDATE `".$this->db."` SET `method`='".TextBase::SQLSafe($method)."',`rcon`='".TextBase::SQLSafe($rcon)."' WHERE `id`='".$this->id."'"); 	
+	BD("UPDATE `".$this->db."` SET `method`='".TextBase::SQLSafe($method)."',`rcon`='".TextBase::SQLSafe($rcon)."',`service_user`='".TextBase::SQLSafe($s_user)."' WHERE `id`='".$this->id."'"); 	
 	
 	$this->method = $method;
 	$this->rcon   = $rcon;
@@ -183,9 +188,7 @@ private $rcon;
         case 3:        
 
 		loadTool('json_api.php', 'bukkit/');
-		
-		// ToDo add json auth options in to server properties
-		
+
 		$salt = sqlConfigGet('json-verification-salt');
 	
 		if (!$salt) { 
@@ -194,7 +197,9 @@ private $rcon;
 			sqlConfigSet('json-verification-salt', $salt); 	
 		}
 		
-            $api = new JSONAPI($this->address, $this->port, $config['JSONAPI_user'], $this->rcon, $salt);
+			if (!extension_loaded("cURL")) { vtxtlog('[monitoring.class.php] cURL module is required'); return; }
+		
+            $api = new JSONAPI($this->address, $this->port, $this->s_user, $this->rcon, $salt); // ToDo rewrite / delete . curl is custom module
                 
             $apiresult = $api->call(array("getPlayerLimit","getPlayerCount"), array(NULL,NULL));
                 
@@ -420,32 +425,30 @@ private $rcon;
    public function Exist() {
    if ($this->id) return true;
    return false;
-   }  
+   } 
    
-   public function address() {
-   return $this->address;	
+	public function getInfo() { 
+		if (!$this->Exist()) return false; 
+		
+		return array (	'id' 		=> $this->id,
+						'address' 	=> $this->address,
+						'online' 	=> $this->online,
+						'refresh' 	=> $this->refresh,
+						'port'		=> $this->port,
+						's_user'	=> $this->s_user,
+						'name'		=> $this->name,
+						'method'	=> $this->method,
+						'info'		=> $this->info );		
+	}
+	
+   public function info() {
+   return $this->info;	
    } 
 
    public function online () {
    return ($this->online)? true : false ; 
    }
    
-   public function refresh() {
-   return $this->refresh;	
-   }  
-   
-   public function port() {
-   return $this->port;	
-   }  
-   
-   public function method() {
-   return $this->method;	
-   }  
-   
-   public function info() {
-   return $this->info;	
-   }   
-
    public function id() {
    return $this->id;	
    }     
