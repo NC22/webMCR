@@ -679,16 +679,17 @@ Class Rewrite {
 		return ($config['rewrite'])? true : false;
 	}
 
-	public function GetURL($page, $sub_page = false) {
-	
+	public function GetURL($page, $sub_page = false, $base = 'go') {
+
 		if (self::IsOn()) {
-		
-			return (!$sub_page)? 'go/'.$page : 'go/'.$sub_page.'/'.$page;
+			$page .= '/';
+			$base .= '/';
+			return ($base == $page)? $base.$sub_page : $base.$page.$sub_page;
 		}
 		
 		else {
 		
-			return (!$sub_page)? '?mode='.$page : '?mode='.$sub_page.'&do='.$page;
+			return (!$sub_page)? '?mode='.$page : '?mode='.$page.'&do='.$sub_page;
 		}
 	
 	}

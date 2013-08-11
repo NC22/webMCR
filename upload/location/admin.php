@@ -111,7 +111,7 @@ if ($do) {
 	$html .= $arrGen->arrowsGenerator('index.php?mode=control&do=log&', $curlist, $count, $max);
 	
 	break;
-    case 'all':
+    case 'user':
 	$html .= View::ShowStaticPage('user_find.html', $st_subdir);
 	
     $controlManager = new ControlManager(false, 'index.php?mode=control&');
