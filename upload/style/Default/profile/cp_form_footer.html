@@ -1,0 +1,16 @@
+<label>Код подтверждения:</label>
+				
+	<img src="<?php echo BASE_URL ?>instruments/captcha/captcha.php?refresh=<?php echo rand(1337,31337) ?>" alt="Код подтверждения" class="img-polaroid" width="70" height="30"/> 
+	<input type="text" name="antibot" placeholder="Код:" maxlength="4" class="antibot" style="top: 4px;" />
+		
+    <p style="margin-top: 12px;"><button type="submit" class="btn">Указать</button></p>
+  </fieldset>
+</form>
+
+<?php if ($html_info) { ?>
+
+	<div class="alert"><?php echo $html_info ?></div>
+
+<?php } ?>
+
+</div>
