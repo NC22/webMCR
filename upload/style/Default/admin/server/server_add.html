@@ -1,0 +1,52 @@
+<form action="index.php?mode=control&amp;do=server_edit" method="post">
+
+  <fieldset>
+    <legend>Создать новый мониторинг сервера</legend>
+	<label>Название:</label>
+    <input type="text" name="name" value="">	
+	<label>Информация для подключения</label>
+	<span class="help-block">Информация доступная пользователю. Рекомендуется указать адрес сервера и порт. Например 127.0.0.1:25565 </span>
+    <input type="text" name="info" value="">	
+	<label>Протокол подключения</label>
+    <span class="help-block">
+	RCON - состояние сервера, количество игроков, список игроков<br/>
+	Query - состояние сервера, количество игроков, список игроков, колличество слотов<br/>
+	Simple Query - состояние сервера, количество игроков, колличество слотов, минимальная нагрузка на игровой сервер</span>	
+	<select name="method" id="serv_conn_method" onchange="ServerConnectMethod()">
+
+		<option value="0" selected>Simple Query</option>
+		<option value="1">Query</option>
+        <option value="2">RCON</option>
+        <option value="3">JSONAPI</option>
+	</select>
+	<div style="display: none;" id="rcon_pass_holder">
+	<label>JSONAPI пользователь</label>
+	<input type="text" name="json_user" value="">
+	<label>RCON/JSONAPI пароль</label>
+	<input type="password" name="rcon_pass" value="">
+	</div>
+	<label>Адрес сервера</label>
+	<span class="help-block">IP адрес или имя сервера используемое для соединения по заданному протоколу</span>
+    <input type="text" name="address" value="localhost">
+	<label>Порт сервера</label>
+	<span class="help-block">Порт для органицации соединения по заданному протоколу</span>
+    <input type="text" name="port" value="25565">	
+	<label>Периодичность обновления информации ( Мин. )</label>
+	<span class="help-block">Максимально короткое время до нового обращения к игровому серверу.</span>
+    <input type="text" name="timeout" value="5">	
+	<label>Значимость:</label>
+	<span class="help-block">Чем больше значимость, тем выше по списку размещен сервер.</span>
+    <input type="text" name="priority" value="1">	
+    <span class="help-block">Страницы размещения:</span>
+	<label class="checkbox">
+	  <input type="checkbox" name="main_page" value="1" checked="checked"> <a href="">Главная страница</a>
+	</label>
+	<label class="checkbox">
+	  <input type="checkbox" name="game_page" value="1"> <a href="<?php echo $site_ways['mcraft'] ?>news.php">Страница игровых новостей</a>
+	</label>
+	<!--<label class="checkbox">
+	  <input type="checkbox" name="stat_page" value="1"> Страница списка серверов
+	</label>-->
+    <button type="submit" class="btn">Создать</button>
+  </fieldset>
+</form>

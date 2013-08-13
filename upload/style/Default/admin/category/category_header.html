@@ -1,0 +1,53 @@
+<script language="JavaScript" type="text/javascript">
+function CheckLen() {
+
+  var s = GetById('description-text').value
+      s = s.replace(/\r\n/g, "22222")
+      s = s.replace(/\n/g, "22222")
+	  s = s.replace(/\'/g, "222222")
+	  s = s.replace(/\"/g, "222222")
+	  
+     return 255-s.length
+}
+
+function DrawLenInfo(e) {
+
+  e = e || window.event;
+  
+  var code   = e.keyCode?e.keyCode:(e.which?e.which:e.charCode)
+  
+  var used = CheckLen()
+
+  if ( used <= 0 ) GetById('description-length').style.color = '#aa2f17' 
+  else             GetById('description-length').style.color = '#17aa4e' 
+
+  GetById('description-length').innerHTML = used
+
+	switch (code){
+        case 13:
+        case 8:
+        case 9:
+        case 46:
+        case 37:
+        case 38:
+		case 116:
+        case 40:
+        return true;
+    }
+  if ( used <= 0 ) return false
+  else             return true
+  
+}
+</script>
+
+<form class="form-inline" action="index.php" method="get" >
+
+<input type="hidden" name="mode" value="control" />
+<input type="hidden" name="do" value="category" />
+
+  <fieldset>
+    <legend>Редактировать категорию:</legend>
+	<select name="sid"><?php echo $cat_list ?></select> <button type="submit" class="btn">Перейти</button>
+  </fieldset>
+  
+</form>

@@ -1,0 +1,9 @@
+<tr>
+
+   <td><b><a href="index.php?mode=control&do=search&sby=ip&input=<?php echo $ban_ip ?>"><?php echo $ban_ip ?></a></b></td>
+   <td><?php echo $ban_start ?></td>
+   <td><?php echo $ban_end ?></td>
+   <td><?php echo ($ban_type == 2)? 'Закрыт сайт' : 'Закрыта регистрация' ?></td>
+   <td><a href="index.php?mode=control&do=delete_banip&ip=<?php echo $ban_ip ?>">Удалить</a></td>
+
+</tr>

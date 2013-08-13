@@ -1,0 +1,11 @@
+<form action="index.php?mode=control&do=ban" method="post" >
+									
+<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
+<input type="hidden" name="confirm" value="1" />									
+<p> Пользователь <b><?php echo $user_name; ?></b> будет заблокирован. При этом он не сможет войти в игру или зайти под своим аккаунтом на сайте.</p>
+									
+<p>Подтвердите действие</p>
+<p><a class="btn" href="?mode=control" >К поиску</a></p>
+<p><input type="submit" class="btn" value="ОК" /></p>
+									
+</form>

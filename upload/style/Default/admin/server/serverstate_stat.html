@@ -1,0 +1,28 @@
+<div class="form-block">
+	
+	<div class="block-header"><?php echo $server_name; ?></div>
+	<div class="block-line"></div>
+
+	<div class="server-state" id="server-<?php echo $server_id; ?>">
+
+	<input type="hidden" id="prefix-sbyid-<?php echo $server_id ?>"value="adm">
+	
+		<table align="center" style="width: 100%;">
+		  <tr>
+			<td><b>Адрес:</b> <?php echo $server_ad; ?></td>
+			<td style="text-align: center;">
+			   <span id="load-sbyid-<?php echo $server_id ?>" class="label label-info">Загрузка...</span>
+			   <span style="display: none;" id="off-sbyid-<?php echo $server_id ?>" class="label label-important">Оффлайн</span>
+			   <span style="display: none;" id="on-sbyid-<?php echo $server_id ?>" class="label label-success">Онлайн</span>
+			</td>
+		  </tr>
+		</table>
+
+		<div id="uholder-sbyid-<?php echo $server_id ?>" style="display: none;">
+			<button type="button" style="width: 100%; margin: 10px 0 0 0;" class="btn" data-toggle="collapse" data-target=".sbyid-<?php echo $server_id ?>">Список игроков</button>
+			<div id="users-sbyid-<?php echo $server_id ?>" class="collapse listuserb sbyid-<?php echo $server_id ?>"></div>
+		</div>
+		
+    </div>
+
+</div>

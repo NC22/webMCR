@@ -13,7 +13,7 @@ div .redbar {
 }
 
 div .redbar div {
-  background: url('../img/bg_red.gif') 0px 0px repeat;
+  background: url('../img/serverstate/bg_red.gif') 0px 0px repeat;
 }
 
 div .bluebar { 
@@ -29,7 +29,7 @@ div .bluebar {
 }
 
 div .bluebar div {
-  background: url('../img/bg_blue.gif') 0px 0px repeat;
+  background: url('../img/serverstate/bg_blue.gif') 0px 0px repeat;
 }
 
 /* Настройка прогресс бара - Синий */
@@ -47,7 +47,7 @@ div .greenbar {
 }
 
 div .greenbar div {
-  background: url('../img/bg_green.gif') 0px 0px repeat;
+  background: url('../img/serverstate/bg_green.gif') 0px 0px repeat;
 }
 
 /* Настройка прогресс бара - Основная настройка - родитель */

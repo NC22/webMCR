@@ -1,0 +1,67 @@
+<form action="index.php?mode=control&do=group" method="post"> 
+  <fieldset>
+    <legend>Создать новую группу</legend>
+	
+	<label>Название:</label>
+    <input type="text" name="name">
+	
+	<label>Размер файла: (Кб)</label>
+	<span class="help-block">Максимально допустимый размер файла изображения для загрузки, будь то образ персонажа или его плащ</span>
+    <input type="text" name="max_fsize" value="20">	
+	
+	<label>Размер изображения:</label>
+	<span class="help-block">Максимально допустимое разрешение для графического файла<br/>Разрешение изображения образа | Разрешение изображения плаща</span>
+		<select name="max_ratio" size="1">
+			<?php echo $html_ratio ?>
+		</select>
+		
+	<label>Уровень доступа:</label>
+	
+	<span class="help-block">0 - Запрет авторизации. 1 - Авторизация на сайте. 2 - Авторизация в игре и на сайте. 15 - Доступ к панели управления. </span>
+    <input type="text" name="lvl" value="1">
+    <span class="help-block">Дополнительные права для группы:</span>
+	
+	<?php if (isset($bd_names['sp_skins'])) { ?>
+	
+		<label class="checkbox">
+		  <input type="checkbox" name="sp_upload" value="1"> Добавление изображений в галерею
+		</label>
+		
+		<label class="checkbox">
+		  <input type="checkbox" name="sp_change" value="1"> Смена образа через галерею
+		</label>
+	
+	<?php } ?>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_skin" value="1"> Смена образа через меню настроек
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_pass" value="1"> Смена пароля
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_cloak" value="1"> Смена плаща
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_login" value="1"> Смена имени
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="add_news" value="1"> Добавление новостей
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="add_comm" value="1"> Добавление комментариев
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="adm_comm" value="1"> Удаление чужих комментариев
+	</label>
+	
+    <button type="submit" class="btn">Создать</button>
+	
+  </fieldset>
+</form>

@@ -1,0 +1,70 @@
+<form action="index.php?mode=control&do=group&sid=<?php echo $id ?>" method="post">
+
+<input type="hidden" name="edit" value="1" />
+
+  <fieldset>
+  
+    <legend>Настройки группы [<?php echo $group_name ?>]</legend>
+	<label>Название:</label>
+    <input type="text" name="name" value="<?php echo $group_name ?>">	
+	
+	<label>Размер файла: (Кб)</label>
+	<span class="help-block">Максимально допустимый размер файла изображения для загрузки, будь то образ персонажа или его плащ</span>
+    <input type="text" name="max_fsize" value="<?php echo $group['max_fsize'] ?>">
+	
+	<label>Размер изображения:</label>
+	<span class="help-block">Максимально допустимое разрешение для графического файла<br/>Разрешение изображения образа | Разрешение изображения плаща</span>
+		<select name="max_ratio" size="1">
+			<?php echo $html_ratio ?>
+		</select>
+		
+	<label>Уровень доступа:</label>
+	<span class="help-block">0 - Запрет авторизации. 2 - Авторизация в игре. (1 - 14) - Доступ к любым страницам сайта.  15 - Доступ к панели управления. </span>
+    <input type="text" name="lvl" value="<?php echo $group['lvl'] ?>">
+	
+    <span class="help-block">Дополнительные права для группы:</span>
+	
+	<?php if (isset($bd_names['sp_skins'])) { ?>
+	
+		<label class="checkbox">
+		  <input type="checkbox" name="sp_upload" value="1" <?php echo ($group['sp_upload'])?'checked="checked"':'' ?>> Добавление изображений в галерею
+		</label>
+		
+		<label class="checkbox">
+		  <input type="checkbox" name="sp_change" value="1" <?php echo ($group['sp_change'])?'checked="checked"':'' ?>> Смена образа через галерею
+		</label>
+	
+	<?php } ?>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_skin" value="1" <?php echo ($group['change_skin'])?'checked="checked"':'' ?>> Смена образа через меню настроек
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_pass" value="1" <?php echo ($group['change_pass'])?'checked="checked"':'' ?>> Смена пароля
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_cloak" value="1" <?php echo ($group['change_cloak'])?'checked="checked"':'' ?>> Смена плаща
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="change_login" value="1" <?php echo ($group['change_login'])?'checked="checked"':'' ?>> Смена имени
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="add_news" value="1" <?php echo ($group['add_news'])?'checked="checked"':'' ?>> Добавление новостей
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="add_comm" value="1" <?php echo ($group['add_comm'])?'checked="checked"':'' ?>> Добавление комментариев
+	</label>
+	
+	<label class="checkbox">
+	  <input type="checkbox" name="adm_comm" value="1" <?php echo ($group['adm_comm'])?'checked="checked"':'' ?>> Удаление чужих комментариев
+	</label>
+	
+    <button type="submit" class="btn">Изменить</button>
+	
+  </fieldset>
+</form>

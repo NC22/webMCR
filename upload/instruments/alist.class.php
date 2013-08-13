@@ -32,7 +32,7 @@ class ThemeManager extends View {
 	
 		if ($this->theme_info_cache === 'depricated') return false;
 		
-		if (!isset($config['s_theme']) or file_exists(MCR_STYLE . 'index.html') ) {
+		if (!isset($config['s_theme']) or file_exists(MCR_STYLE.'index.html') ) {
 		
 		$this->theme_info_cache = 'depricated';
 		return false;
@@ -72,13 +72,13 @@ class ThemeManager extends View {
 	
 		foreach ($theme_list as $key => $theme_info)
 			
-			include $this->GetView('admin/theme_item.html'); 
+			include $this->GetView('admin/theme/theme_item.html'); 
 
     $theme_items_info = ob_get_clean();	
 	
 	ob_start(); 
 	
-		include $this->GetView('admin/theme_select.html');
+		include $this->GetView('admin/theme/theme_select.html');
 	
 	return ob_get_clean();	
 	}	
@@ -182,9 +182,9 @@ private $work_skript;
 		ob_start(); 		
 
 	          $resnum =  mysql_num_rows( $result );	
-	    if ( !$resnum ) { include $this->GetView('admin/user_not_found.html'); return ob_get_clean(); }  
+	    if ( !$resnum ) { include $this->GetView('admin/user/user_not_found.html'); return ob_get_clean(); }  
 		
-        include $this->GetView('admin/user_find_header.html'); 
+        include $this->GetView('admin/user/user_find_header.html'); 
   
 		while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 		
@@ -198,10 +198,10 @@ private $work_skript;
 			
             unset($inf_user);
 			
-            include $this->GetView('admin/user_find_string.html'); 
+            include $this->GetView('admin/user/user_find_string.html'); 
         } 
 		
-		include $this->GetView('admin/user_find_footer.html'); 
+		include $this->GetView('admin/user/user_find_footer.html'); 
 
         $html = ob_get_clean();
 
@@ -221,16 +221,16 @@ private $work_skript;
 
     ob_start(); 	
 	
-    include $this->GetView('admin/servers_caption.html');
+    include $this->GetView('admin/server/servers_caption.html');
 	
 	// TODO increase priority by votes
 	
     $result = BD("SELECT * FROM `{$bd_names['servers']}` ORDER BY priority DESC LIMIT ".(10*($list-1)).",10");  
     $resnum = mysql_num_rows( $result );
 	
-	if ( !$resnum ) { include $this->GetView('admin/servers_not_found.html'); return ob_get_clean(); }  
+	if ( !$resnum ) { include $this->GetView('admin/server/servers_not_found.html'); return ob_get_clean(); }  
 		
-	include $this->GetView('admin/servers_header.html'); 
+	include $this->GetView('admin/server/servers_header.html'); 
 		
 		while ( $line = mysql_fetch_array( $result ) ) {
 		
@@ -248,10 +248,10 @@ private $work_skript;
 			}			
 			$server_id       = $line['id'];
 		
-		include $this->GetView('admin/servers_string.html');         
+		include $this->GetView('admin/server/servers_string.html');         
         }
         
-	include $this->GetView('admin/servers_footer.html'); 
+	include $this->GetView('admin/server/servers_footer.html'); 
 	$html = ob_get_clean();
 	
 		$result = BD("SELECT COUNT(*) FROM `{$bd_names['servers']}`");
@@ -270,14 +270,14 @@ private $work_skript;
 
     ob_start(); 	
 	
-    include $this->GetView('admin/ban_ip_caption.html');
+    include $this->GetView('admin/ban/ban_ip_caption.html');
 	
     $result = BD("SELECT * FROM `{$bd_names['ip_banning']}` ORDER BY ban_until DESC LIMIT ".(10*($list-1)).",10");  
     $resnum = mysql_num_rows( $result );
 	
-	if ( !$resnum ) { include $this->GetView('admin/ban_ip_not_found.html'); return ob_get_clean(); }  
+	if ( !$resnum ) { include $this->GetView('admin/ban/ban_ip_not_found.html'); return ob_get_clean(); }  
 		
-	include $this->GetView('admin/ban_ip_header.html'); 
+	include $this->GetView('admin/ban/ban_ip_header.html'); 
 		
 		while ( $line = mysql_fetch_array( $result ) ) {
 		
@@ -287,11 +287,11 @@ private $work_skript;
 			 $ban_type  = $line['ban_type'];
 			 $ban_reason  = $line['reason'];			 
 			 
-		     include $this->GetView('admin/ban_ip_string.html'); 
+		     include $this->GetView('admin/ban/ban_ip_string.html'); 
         
         }
         
-	include $this->GetView('admin/ban_ip_footer.html'); 
+	include $this->GetView('admin/ban/ban_ip_footer.html'); 
 	$html = ob_get_clean();
 	
 		$result = BD("SELECT COUNT(*) FROM `{$bd_names['ip_banning']}`");

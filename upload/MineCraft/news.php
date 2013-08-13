@@ -12,7 +12,7 @@ BDConnect('news');
 $news = '';
 $page_title = 'Новостная лента';
 
-$news_manager = new NewsManager($config['game_news'], 'launcher/', $config['s_root'].'index.php?');
+$news_manager = new NewsManager($config['game_news'], 'launcher/news/', $config['s_root'].'index.php?');
 
 if (isset($_GET['l'])) $curlist = (int) $_GET['l']; 
 else                   $curlist = 1; 
