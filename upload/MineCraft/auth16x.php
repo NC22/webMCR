@@ -19,7 +19,7 @@
 
 require('../system.php');
 
-function generateSessionId(){
+function generateSessionId() {
     srand(time());
     $randNum = rand(1000000000, 2147483647).rand(1000000000, 2147483647).rand(0,9);
     return $randNum;
