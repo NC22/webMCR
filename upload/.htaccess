@@ -14,10 +14,12 @@ RewriteEngine on
 RewriteRule ^news/([^/]+)/?$ index.php?id=$1 [L,NE]
 RewriteRule ^category/([^/]+)/?$ index.php?cid=$1 [L,NE]
 RewriteRule ^list/([^/]+)/?$ index.php?l=$1 [L,NE]
+RewriteRule ^control/([^/]+)/?$ index.php?mode=control&do=$1 [L,NE]
 
 RewriteRule ^get/([^/]+)/?$ action.php?method=download&file=$1 [L,NE]
 
 RewriteRule ^go/([^/]+)/?$ index.php?mode=$1 [L,NE]
+
 
 RewriteRule  ^authenticate$ MineCraft/auth16x.php [L]
 RewriteRule  ^invalidate$ MineCraft/invalidate16x.php [L]

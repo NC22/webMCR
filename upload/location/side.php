@@ -7,7 +7,7 @@ if (!empty($user)) {
   
    if ($mode == 'control') 
    include View::Get('side.html', 'admin/');  
-   include View::Get('mineprofil.html');    
+   include View::Get('mini_profile.html', 'menu/');    
 	
 } else {
 	

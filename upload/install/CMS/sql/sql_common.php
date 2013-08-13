@@ -151,6 +151,7 @@ BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('smtp-port', '25'),
 ('smtp-hello', 'HELO'),
 ('game-link-win', ''),
+('game-link-osx', ''),
 ('game-link-lin', '');");
 
 /* 2.05 UPDATE */

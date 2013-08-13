@@ -60,7 +60,7 @@ $player_email = $user->email(); if (empty($player_email)) $player_email = lng('N
 $player_group = $user->getGroupName();
 $player_money = $user->getMoney();
 
-	if ($user->group() == 4) $content_main .= View::ShowStaticPage('profile_verification.html', '', $player_email);
+	if ($user->group() == 4) $content_main .= View::ShowStaticPage('profile_verification.html', 'profile/', $player_email);
 }
 
 $mode = $config['s_dpage'];
@@ -72,8 +72,8 @@ elseif (isset($_POST['mode'])) $mode = $_POST['mode'];
 if ($mode == 'side') $mode = $config['s_dpage'];
 
 switch ($mode) {
-    case 'start': $page = 'Начать игру'; $content_main = View::ShowStaticPage('start-game.html', '');  break;
-	case '404':   $page = 'Страница не найдена'; $content_main = View::ShowStaticPage('404.html', ''); break;
+    case 'start': $page = 'Начать игру'; $content_main = View::ShowStaticPage('start_game.html', '');  break;
+	case '404':   $page = 'Страница не найдена'; $content_main = View::ShowStaticPage('404.html', 'other/'); break;
 	case 'register': 
 	case 'news':	  include('./location/news.php');		break;
 	case 'news_full': include('./location/news_full.php');	break;

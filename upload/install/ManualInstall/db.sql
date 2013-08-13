@@ -1,5 +1,5 @@
 --
--- [ВНИМАНИЕ] При импорте полностью ПЕРЕСОЗДАЕТЯ вся необходимая структура таблиц
+-- [ВНИМАНИЕ] При импорте полностью ПЕРЕСОЗДАЁТСЯ вся необходимая структура таблиц
 --
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -189,4 +189,5 @@ INSERT INTO `property` (`property`, `value`) VALUES
 ('smtp-port', '25'),
 ('smtp-hello', 'HELO'),
 ('game-link-win', ''),
+('game-link-osx', ''),
 ('game-link-lin', '');

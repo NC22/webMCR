@@ -5,6 +5,8 @@ if (empty($user) or $user->lvl() <= 0) { header("Location: ".BASE_URL); exit; }
 /* Default vars */
 $page = lng('PAGE_OPTIONS');
 
+$prefix = 'profile/';
+
 $user_img_get = '?user_id='.$player_id.'&refresh='.rand(1000,9999);
 $menu->SetItemActive('options');
 
@@ -32,15 +34,15 @@ if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not veri
 	
 	ob_start();	
 	
-	include View::Get('cp_form.html');	
+	include View::Get('cp_form.html', $prefix);	
 	
-		if ( !$user->email() ) include View::Get('profile_email.html');	
+		if ( !$user->email() ) include View::Get('profile_email.html', $prefix);	
 	
 		if ($user->gender() > 1 ) 
 		
-			include View::Get('profile_gender.html');
+			include View::Get('profile_gender.html', $prefix);
 			
-	include View::Get('cp_form_footer.html');
+	include View::Get('cp_form_footer.html', $prefix);
 	
 	$content_main .= ob_get_clean();
 	}	
@@ -50,18 +52,18 @@ if ($user->group() != 4 ) {
 	
 	ob_start();	
 	
-	if ($user->getPermission('change_skin'))  include View::Get('profile_skin.html');
-	if ($user->getPermission('change_skin') and !$user->defaultSkinTrigger()) 
-											  include View::Get('profile_del_skin.html'); 
-	if ($user->getPermission('change_cloak')) include View::Get('profile_cloak.html');
-	if ($user->getPermission('change_cloak') and file_exists($user->getCloakFName())) 
-											  include View::Get('profile_del_cloak.html');  
-	if ($user->getPermission('change_login')) include View::Get('profile_nik.html');
-	if ($user->getPermission('change_pass'))  include View::Get('profile_pass.html');
+	if ($user->getPermission('change_skin'))  include View::Get('profile_skin.html', $prefix);
+	if ($user->getPermission('change_skin')   and !$user->defaultSkinTrigger()) 
+											  include View::Get('profile_del_skin.html', $prefix); 
+	if ($user->getPermission('change_cloak')) include View::Get('profile_cloak.html', $prefix);
+	if ($user->getPermission('change_cloak')  and file_exists($user->getCloakFName())) 
+											  include View::Get('profile_del_cloak.html', $prefix);  
+	if ($user->getPermission('change_login')) include View::Get('profile_nik.html', $prefix);
+	if ($user->getPermission('change_pass'))  include View::Get('profile_pass.html', $prefix);
 
 	$profile_inputs = ob_get_clean();
 
-	ob_start(); include View::Get('profile.html');
+	ob_start(); include View::Get('profile.html', $prefix);
 
 	$content_main .= ob_get_clean();
 } 	

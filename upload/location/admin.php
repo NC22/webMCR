@@ -111,7 +111,7 @@ if ($do) {
 	$html .= $arrGen->arrowsGenerator('index.php?mode=control&do=log&', $curlist, $count, $max);
 	
 	break;
-    case 'all':
+    case 'user':
 	$html .= View::ShowStaticPage('user_find.html', $st_subdir);
 	
     $controlManager = new ControlManager(false, 'index.php?mode=control&');
@@ -259,10 +259,12 @@ if ($do) {
 		$new_version_l = (!empty($_POST['launcher_set']))? (int)$_POST['launcher_set'] : false;
 		
 		$link_win  = InputGet('link_win', 'POST', 'str');
+		$link_osx  = InputGet('link_osx', 'POST', 'str');
 		$link_lin  = InputGet('link_lin', 'POST', 'str');
 		$game_news = (!empty($_POST['game_news']))? (int)$_POST['game_news'] : false;
 		
-		if ($link_win)  sqlConfigSet('game-link-win', $link_win); 
+		if ($link_win)  sqlConfigSet('game-link-win', $link_win);
+		if ($link_osx)  sqlConfigSet('game-link-osx', $link_osx);  
 		if ($link_lin)  sqlConfigSet('game-link-lin', $link_lin);
 		if (!is_bool($game_news)) {
 		
@@ -274,7 +276,7 @@ if ($do) {
 			
 		if ($new_version_l) sqlConfigSet('launcher-version', $new_version_l);
 			
-		if ($link_win or $link_lin or $game_news or $new_build or $new_version_l) 
+		if ($link_win or $link_osx or $link_lin or $game_news or $new_build or $new_version_l) 
 			
 			if (SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
 					

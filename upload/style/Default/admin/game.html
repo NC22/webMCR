@@ -7,11 +7,15 @@
 	<select name="game_news"><?php echo $cat_list ?></select>
 	
 	<label>Cсылка на лаунчер (Windows):</label>
-	<span class="help-block">Ссылка, выводимая в шаблоне (<?php echo MCR_STYLE; ?>start-game.html) (<a href="index.php?mode=start">Страница</a>)</span>
+	<span class="help-block">Ссылка, выводимая в шаблоне (<?php echo MCR_STYLE; ?>start_game.html) (<a href="index.php?mode=start">Страница</a>)</span>
     <input type="text" name="link_win" value="<?php echo sqlConfigGet('game-link-win') ?>">
+
+	<label>Cсылка на лаунчер (OS X):</label>
+	<span class="help-block">Ссылка, выводимая в шаблоне (<?php echo MCR_STYLE; ?>start_game.html) (<a href="index.php?mode=start">Страница</a>)</span>
+    <input type="text" name="link_osx" value="<?php echo sqlConfigGet('game-link-osx') ?>">
 	
 	<label>Cсылка на лаунчер (Linux):</label>
-	<span class="help-block">Ссылка, выводимая в шаблоне (<?php echo MCR_STYLE; ?>start-game.html) (<a href="index.php?mode=start">Страница</a>)</span>
+	<span class="help-block">Ссылка, выводимая в шаблоне (<?php echo MCR_STYLE; ?>start_game.html) (<a href="index.php?mode=start">Страница</a>)</span>
     <input type="text" name="link_lin" value="<?php echo sqlConfigGet('game-link-lin') ?>">	
 	
 	<label>Build клиента:</label>

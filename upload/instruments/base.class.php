@@ -29,6 +29,7 @@ class ItemType {
 		'launcher-version',
 	
 		'game-link-win',
+		'game-link-osx',
 		'game-link-lin',
 	
 		'smtp-user',
@@ -503,7 +504,7 @@ private $menu_fname;
 		
 		$type = ($button_links)? 'menu_dropdown_item' : 'menu_item'; 
 
-		ob_start(); include $this->GetView($type.'.html');
+		ob_start(); include $this->GetView('menu/'.$type.'.html');
 		
 		return ob_get_clean();		
 	}
@@ -564,12 +565,12 @@ private $menu_fname;
 		  
 			if ( $value['parent_id'] > -1 or ( $value['parent_id'] == -2 and !$value['inner_html'] ) or !$value['access'] ) continue;
 
-		    $menu_content .= $this->ShowItem($value, 'menu_item');
+		    $menu_content .= $this->ShowItem($value, 'menu/menu_item');
 		}
 		
 		$menu_align = ($i == 1) ? 'pull-right' : 'pull-left';
 		
-		ob_start(); include $this->GetView('menu.html');
+		ob_start(); include $this->GetView('menu/menu.html');
 		
 		$html_menu .= ob_get_clean();
 		
@@ -679,16 +680,17 @@ Class Rewrite {
 		return ($config['rewrite'])? true : false;
 	}
 
-	public function GetURL($page, $sub_page = false) {
-	
+	public function GetURL($page, $sub_page = false, $base = 'go') {
+
 		if (self::IsOn()) {
-		
-			return (!$sub_page)? 'go/'.$page : 'go/'.$sub_page.'/'.$page;
+			$page .= '/';
+			$base .= '/';
+			return ($base == $page)? $base.$sub_page : $base.$page.$sub_page;
 		}
 		
 		else {
 		
-			return (!$sub_page)? '?mode='.$page : '?mode='.$sub_page.'&do='.$page;
+			return (!$sub_page)? '?mode='.$page : '?mode='.$page.'&do='.$sub_page;
 		}
 	
 	}
