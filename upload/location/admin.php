@@ -112,7 +112,8 @@ if ($do) {
 	
 	break;
     case 'user':
-	$html .= View::ShowStaticPage('user_find.html', $st_subdir);
+
+	$html .= View::ShowStaticPage('user_find.html', $st_subdir.'user/');
 	
     $controlManager = new ControlManager(false, 'index.php?mode=control&');
     $html .= $controlManager->ShowUserListing($curlist, 'none');
@@ -121,7 +122,7 @@ if ($do) {
 	break;
     case 'search': 
 
-	$html .= View::ShowStaticPage('user_find.html', $st_subdir);
+	$html .= View::ShowStaticPage('user_find.html', $st_subdir.'user/');
 	
 	if ( !empty($_GET["sby"]) and 
 	     !empty($_GET['input'])     and 
@@ -210,7 +211,7 @@ if ($do) {
 		$info .= lng('USER_BANNED');
 	}
 
-	if ($ban_user) include View::Get('user_ban.html', $st_subdir); 
+	if ($ban_user) include View::Get('user_ban.html', $st_subdir.'user/'); 
 	
 	break;
 	case 'banip':  
@@ -231,7 +232,7 @@ if ($do) {
 			$info .= lng('USER_BANNED');
 		} 
 	}			
-	if ($ban_user) include View::Get('user_ban_ip.html', $st_subdir);    
+	if ($ban_user) include View::Get('user_ban_ip.html', $st_subdir.'user/');    
 	break;
 	case 'delete':	
 	if (isset($_POST['confirm']) and $ban_user) {     
@@ -240,7 +241,7 @@ if ($do) {
 		$html .= lng('ADMIN_USER_DEL');
 		unset($ban_user);
 		
-	} elseif ($ban_user) include View::Get('user_del.html', $st_subdir);  
+	} elseif ($ban_user) include View::Get('user_del.html', $st_subdir.'user/');  
 	
 	break;
     case 'rcon': 
@@ -311,7 +312,7 @@ if ($do) {
 	}
 	
 	$cat_list = CategoryManager::GetList($id);	
-	include View::Get('category_header.html', $st_subdir);
+	include View::Get('category_header.html', $st_subdir.'category/');
 	
 	if ($id) {
 		$cat_item = new Category($id);
@@ -322,11 +323,11 @@ if ($do) {
 		$cat_desc      = $cat_item->GetDescription(); 
 		$cat_priority  = $cat_item->GetPriority();
 		
-		include View::Get('category_edit.html', $st_subdir); 
-		if (!$cat_item->IsSystem()) include View::Get('category_delete.html', $st_subdir);
+		include View::Get('category_edit.html', $st_subdir.'category/'); 
+		if (!$cat_item->IsSystem()) include View::Get('category_delete.html', $st_subdir.'category/');
 		} 
 	unset($cat_item);					
-	} else include View::Get('category_add.html', $st_subdir);
+	} else include View::Get('category_add.html', $st_subdir.'category/');
 	break; 				 
 	case 'group':	
 	
@@ -354,7 +355,7 @@ if ($do) {
 	}
 	
 	$group_list = GroupManager::GetList($id);	
-	include View::Get('group_header.html', $st_subdir);
+	include View::Get('group_header.html', $st_subdir.'group/');
 	
 	if ($id) {	 
 	
@@ -363,18 +364,18 @@ if ($do) {
 		$html_ratio = RatioList($group['max_ratio']);
 		$group_name = $group_i->GetName();
 		
-		include View::Get('group_edit.html', $st_subdir); 
-        if (!$group_i->IsSystem()) include View::Get('group_delete.html', $st_subdir);
+		include View::Get('group_edit.html', $st_subdir.'group/'); 
+        if (!$group_i->IsSystem()) include View::Get('group_delete.html', $st_subdir.'group/');
 		unset($group_i);		
 	} else {
 
 		$html_ratio = RatioList();
-	    include View::Get('group_add.html', $st_subdir);  
+	    include View::Get('group_add.html', $st_subdir.'group/');  
 	}
 	break;	
     case 'server_edit': 
 	
-    include View::Get('server_edit_header.html', $st_subdir);  
+    include View::Get('server_edit_header.html', $st_subdir.'server/');  
 	
 	if (isset($_POST['address']) and isset($_POST['port']) and isset($_POST['method'])) {  
 		 $serv_address  = $_POST['address'];
@@ -466,9 +467,9 @@ if ($do) {
 		$serv_game     = $server->GetVisible('game');
 		$serv_mon      = $server->GetVisible('mon');
 		
-		include View::Get('server_edit.html', $st_subdir);  
+		include View::Get('server_edit.html', $st_subdir.'server/');  
 
-	} else include View::Get('server_add.html', $st_subdir);  
+	} else include View::Get('server_add.html', $st_subdir.'server/');  
     break;	
     case 'constants':  	
 
@@ -544,17 +545,17 @@ if ($do) {
 	if ($ban_user) {
         $group_list = GroupManager::GetList($ban_user->group());
 		
-		include View::Get('profile_main.html', $st_subdir); 
+		include View::Get('profile_main.html', $st_subdir.'profile/'); 
       	
 		$skin_def = $ban_user->defaultSkinTrigger();
 		$cloak_exist = file_exists($ban_user->getCloakFName()); 
 
-        if ($cloak_exist or !$skin_def) { $rnd = rand(1000,9999); include View::Get('profile_skin.html', $st_subdir);  }
-        if (!$skin_def )                 include View::Get('profile_del_skin.html', $st_subdir);  
-        if ($cloak_exist )               include View::Get('profile_del_cloak.html', $st_subdir);  
-		if ($bd_names['iconomy'] )       include View::Get('profile_money.html', $st_subdir);  
+        if ($cloak_exist or !$skin_def) { $rnd = rand(1000,9999); include View::Get('profile_skin.html', $st_subdir.'profile/');  }
+        if (!$skin_def )                 include View::Get('profile_del_skin.html', $st_subdir.'profile/');  
+        if ($cloak_exist )               include View::Get('profile_del_cloak.html', $st_subdir.'profile/');  
+		if ($bd_names['iconomy'] )       include View::Get('profile_money.html', $st_subdir.'profile/');  
 		
-        include View::Get('profile_footer.html', $st_subdir); 
+        include View::Get('profile_footer.html', $st_subdir.'profile/'); 
     }
     break;
     case 'delete_banip': 

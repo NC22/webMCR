@@ -1,0 +1,61 @@
+<form action="index.php?mode=control&amp;do=server_edit&amp;sid=<?php echo $id ?>" method="post">
+
+  <fieldset>
+    <legend>Изменить настройки отслеживаемого сервера</legend>
+	<label>Название:</label>
+    <input type="text" name="name" value="<?php echo $serv_name ?>">	
+	<label>Информация для подключения</label>
+	<span class="help-block">Информация доступная пользователю. Рекомендуется указать адрес сервера и порт. Например 127.0.0.1:25565 </span>
+    <input type="text" name="info" value="<?php echo $serv_info ?>">	
+	<label>Протокол подключения</label>
+    <span class="help-block">
+	RCON - состояние сервера, количество игроков, список игроков<br/>
+	Query - состояние сервера, количество игроков, список игроков, колличество слотов<br/>
+	Simple Query - состояние сервера, количество игроков, колличество слотов, минимальная нагрузка на игровой сервер</span>	
+	<select name="method" id="serv_conn_method" onchange="ServerConnectMethod()">
+
+		<option value="0" <?php echo (!$serv_method)?'selected':'' ?>>Simple Query</option>
+		<option value="1" <?php echo ($serv_method==1)?'selected':'' ?>>Query</option>
+                <option value="2" <?php echo ($serv_method==2)?'selected':'' ?>>RCON</option>
+                <option value="3" <?php echo ($serv_method==3)?'selected':'' ?>>JSONAPI</option>
+	</select>
+	<div style="<?php echo ($serv_method==3 or $serv_method==2)? '' : 'display: none;' ?>" id="rcon_pass_holder">
+	<label>JSONAPI пользователь</label>
+	<input type="text" name="json_user" value="<?php echo $serv_s_user ?>">
+	<label>RCON/JSONAPI пароль</label>
+	<input type="password" name="rcon_pass" value="">
+	</div>
+	<label>Адрес сервера</label>
+	<span class="help-block">IP адрес или имя сервера используемое для соединения по заданному протоколу</span>
+    <input type="text" name="address" value="<?php echo $serv_address ?>">
+	<label>Порт сервера</label>
+	<span class="help-block">Порт для органицации соединения по заданному протоколу</span>
+    <input type="text" name="port" value="<?php echo $serv_port ?>">	
+	<label>Периодичность обновления информации ( Мин. )</label>
+	<span class="help-block">Максимально короткое время до нового обращения к игровому серверу.</span>
+    <input type="text" name="timeout" value="<?php echo $serv_ref ?>">	
+	<label>Значимость:</label>
+	<span class="help-block">Чем больше значимость, тем выше по списку размещен сервер.</span>
+    <input type="text" name="priority" value="<?php echo $serv_priority ?>">	
+    <span class="help-block">Страницы размещения:</span>
+	<label class="checkbox">
+	  <input type="checkbox" name="main_page" value="1"  <?php echo ($serv_side)?'checked="checked"':'' ?>> <a href="index.php">Главная страница</a>
+	</label>
+	<label class="checkbox">
+	  <input type="checkbox" name="game_page" value="1" <?php echo ($serv_game)?'checked="checked"':'' ?>> <a href="<?php echo $site_ways['mcraft'] ?>/news.php">Страница игровых новостей</a>
+	</label>
+	<!--<label class="checkbox">
+	  <input type="checkbox" name="stat_page" value="1" <?php echo ($serv_mon)?'checked="checked"':'' ?>> Страница списка серверов
+	</label>-->
+    <button type="submit" class="btn">Изменить</button>
+  </fieldset>
+</form>
+
+<form action="index.php?mode=control&amp;do=server_edit&amp;sid=<?php echo $id ?>" method="post"> 
+
+<input type="hidden" name="delete" value="1" />
+
+  <fieldset>
+    <button type="submit" class="btn">Удалить</button>
+  </fieldset>
+</form>

@@ -6,7 +6,9 @@ if (!defined('MCR')) exit;
  - Менеджер каталогизатора новостей
  - Новость
  - Комментарий
- - Категории новостей */
+ - Категории новостей 
+
+*/
 
 Class Category {
 private $db;
@@ -208,7 +210,7 @@ private $user_id;
 	public function Show() {
 	global $user, $bd_users;
 	
-		if (!$this->Exist()) return $this->ShowPage('comment_not_found.html');
+		if (!$this->Exist()) return $this->ShowPage('comments/comment_not_found.html');
 			
 		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y %H:%i:%S') AS time,message,item_id FROM `{$this->db}` WHERE id='".$this->id."'"); 
 		if (!mysql_num_rows( $result )) return ''; 
@@ -239,15 +241,15 @@ private $user_id;
 			
 		if ( !empty($user) and ( $user->getPermission('adm_comm') or $user->id() == $user_id ) ) { 
 
-			ob_start(); include $this->GetView('comments_admin.html');			  
+			ob_start(); include $this->GetView('comments/comments_admin.html');			  
 			$admin_buttons = ob_get_clean();
 		}
 
-		if ( $user_female ) $female_mark = $this->ShowPage('comments_girl.html');
+		if ( $user_female ) $female_mark = $this->ShowPage('comments/comments_girl.html');
 		
 		ob_start();	
-		if ( !empty($user) ) include $this->GetView('comments.html');
-		else 	             include $this->GetView('comments_unauth.html');
+		if ( !empty($user) ) include $this->GetView('comments/comments.html');
+		else 	             include $this->GetView('comments/comments_unauth.html');
 	 
 	return ob_get_clean();		
 	}
@@ -649,7 +651,7 @@ private $category_id;
 
 	ob_start();
 		
-	include $this->GetView('comments_add.html');
+	include $this->GetView('comments/comments_add.html');
 				  
 	return ob_get_clean();
 	}
@@ -706,7 +708,7 @@ private $category_id;
 			}
 		}
 		
-	ob_start(); include $this->GetView('comments_container.html');					  
+	ob_start(); include $this->GetView('comments/comments_container.html');					  
 	$html_news .= ob_get_clean();
 	
 	return $html_news;	

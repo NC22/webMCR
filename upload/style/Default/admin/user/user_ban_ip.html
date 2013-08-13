@@ -1,0 +1,15 @@
+<form action="index.php?mode=control&do=banip" method="post">
+
+<input type="hidden" name="confirm" value="1" />	 
+<input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />			 
+
+<p>Пользователь <b><?php echo $user_name; ?></b> IP <b><?php echo $user_ip; ?></b> </p>										 
+<p>Регистрация на сайте будет заблокирована, вы также можете забанить самого пользователя</p>											 
+<p>Срок блокировки регистрации (в днях) <input type="text" name="banip_days" maxlength="3"/></p>		
+<p>Полностью закрыть доступ к сайту <input type="checkbox" name="banip_all" value="1" /> </p>										 
+<p>Заблокировать аккаунт пользователя <input type="checkbox" name="banip_anduser" value="1" /> </p>		
+							 
+<p><a class="btn" href="?mode=control" >К поиску</a></p>
+<p><input type="submit" class="btn" value="ОК" /></p>
+										 
+</form>

@@ -1,0 +1,33 @@
+<div class="server-info" id="server-<?php echo $server_pid; ?>">
+
+	<div class="server-info-header">Актуальное состояние сервера [<?php echo $server_name; ?>]</div>
+
+	<table>
+	  <tr>
+		<td><b>Адрес:</b> <?php echo $server_info; ?></td>
+		<td style="text-align: center;">
+			<div class="bluebar" id="load-sbyid-<?php echo $server_pid ?>">
+				<div class="progressbar_meter pbar" style="width: 100%;">
+					Загрузка...
+				</div>	
+			</div>
+		    <div class="redbar" id="off-sbyid-<?php echo $server_pid ?>" style="display: none;">
+				<div class="progressbar_meter" style="width: 100%;">
+					Оффлайн
+				</div>	
+			</div>
+			<div class="greenbar" id="on-sbyid-<?php echo $server_pid ?>" style="display: none;">
+				<div class="progressbar_meter" id="on-in-sbyid-<?php echo $server_pid ?>">
+					<?php echo $server_numpl ?> / <?php echo $server_slots ?>
+				</div>	
+			</div>	
+		</td>
+	  </tr>
+	</table>	
+	
+</div>
+
+<div id="uholder-sbyid-<?php echo $server_pid ?>" style="display: none;">
+	<button type="button" style="width: 100%; margin: 10px 0 0 0;" class="btn btn-small" data-toggle="collapse" data-target=".sbyid-<?php echo $server_pid ?>">Список игроков</button>
+	<div id="users-sbyid-<?php echo $server_pid ?>" class="collapse listuserb sbyid-<?php echo $server_pid ?>"></div>
+</div>
