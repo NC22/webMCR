@@ -1,22 +1,23 @@
 <div class="form-block">
-<div class="block-header">Начать играть:</div>
+<div class="block-header">Начать играть</div>
 <div class="block-line"></div>
 <div class="tab-pane" id="launcher">
 	<table style="text-align: center; width:95%;">
-		<tr><td style="text-align: center;"><b>Системные требования Minecraft</b></td></tr>
+		<tr><td style="text-align: center;"><h4>Системные требования Minecraft</h4></td></tr>
 		<tr>
 			<td>
 			<b>Рекомендуемые параметры:</b><br />
-			<b>Операционная система:</b> Windows® XP / Windows Vista / Windows 7<br />
+			<b>Операционная система:</b> Windows 98 / XP / Vista / 7 / 8 / Linux / OS X<br />
 			<b>Процессор:</b> Pentium 800MHz<br />
-			<b>Оперативная память:</b> 512 Мб<br />
-			<b>Место на жестком диске:</b> 20-41 мб <br />
-			<b>Видеокарта:</b> Любая совсместимая с Direct-X 9</td>
+			<b>Оперативная память:</b> 1гб и более<br />
+			<b>Место на жестком диске:</b> 120мб и более<br />
+			<b>Видеокарта:</b> Любая совсместимая с OpenGL 1.4 и выше</td>
 		</tr>
 		<tr>
-			<td class="well well-small " style="text-align: center;">
+			<td class="well well-small" style="text-align: center; border: none;">
 			<div class="input-append input-prepend">
 			<a class="btn btn-success btn-large" href="<?php echo sqlConfigGet('game-link-win') ?>">Скачать для Windows</a>
+			<a class="btn btn-primary btn-large" href="<?php echo sqlConfigGet('game-link-osx') ?>">Скачать для OS X</a>
 			<a class="btn btn-warning btn-large" href="<?php echo sqlConfigGet('game-link-lin') ?>">Скачать для Linux</a>
 			</div>
 			</td>

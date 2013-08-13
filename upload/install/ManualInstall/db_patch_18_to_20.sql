@@ -46,6 +46,7 @@ INSERT INTO `property` (`property`, `value`) VALUES
 ('smtp-port', '25'),
 ('smtp-hello', 'HELO'),
 ('game-link-win', ''),
+('game-link-osx', ''),
 ('game-link-lin', '');
 
 CREATE TABLE IF NOT EXISTS `likes` (

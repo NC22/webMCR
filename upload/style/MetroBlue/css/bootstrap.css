@@ -1105,7 +1105,7 @@ input[type="file"] {
 select {
   width: 220px;
   background-color: #ffffff;
-  border: 1px solid #cccccc;
+  border: 2px solid #cccccc;
 }
 
 select[multiple],
@@ -1609,6 +1609,7 @@ select:focus:invalid:focus {
 .input-prepend .add-on,
 .input-prepend .btn {
   margin-right: -1px;
+  height: 18px;
 }
 
 .input-append .add-on,
@@ -2934,18 +2935,17 @@ input[type="button"].btn-block {
 }
 
 .btn-primary {
-  color: #ffffff;
-  background-color: #006dcc;
+  color: #333333;
+  background-color: #ffffff;
 }
 
-.btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
 .btn-primary.disabled,
 .btn-primary[disabled] {
   color: #ffffff;
-  background-color: #0044cc;
+  background-color: #08457e;
 }
 
 .btn-danger {

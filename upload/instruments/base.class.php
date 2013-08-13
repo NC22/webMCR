@@ -29,6 +29,7 @@ class ItemType {
 		'launcher-version',
 	
 		'game-link-win',
+		'game-link-osx',
 		'game-link-lin',
 	
 		'smtp-user',
