@@ -6,8 +6,40 @@ if (empty($user) or $user->lvl() < 15) { header("Location: ".BASE_URL); exit; }
 loadTool('catalog.class.php');
 loadTool('alist.class.php');
 loadTool('monitoring.class.php');
- 
+
+$menu->SetItemActive('admin');
+
+/* Default vars */
+
 $st_subdir = 'admin/';
+$default_do = 'user';
+
+$page    = lng('PAGE_ADMIN');
+
+$curlist = (isset($_GET['l']))? (int) $_GET['l'] : 1;
+$do      = (isset($_GET['do']))? $_GET['do'] : $default_do ; 
+
+$html = ''; $info = ''; $server_info = '';
+
+$user_id = (!empty($_POST['user_id']))? (int)$_POST['user_id'] : false;
+$user_id = (!empty($_GET['user_id']))? (int)$_GET['user_id'] : $user_id;
+$ban_user = new User($user_id, $bd_users['id']);
+
+if ($ban_user->id()) { 
+
+	$user_name = $ban_user->name();
+	$user_gen  = $ban_user->isFemale();
+	$user_mail = $ban_user->email();
+	$user_id   = $ban_user->id();
+	$user_ip   = $ban_user->ip();
+	$user_lvl  = $ban_user->lvl();
+	
+} else $ban_user = false;
+
+if ($do == 'gettheme') $id = InputGet('sid', 'GET', 'str');
+else $id = InputGet('sid', 'GET', 'int');
+
+if (empty($id)) $id = false; 
  
 function RatioList($selectid = 1) {
 
@@ -43,37 +75,15 @@ $result = file_put_contents(MCR_ROOT.'config.php', $txt);
 return true;
 }
 
-$menu->SetItemActive('admin');
-
-/* Default vars */
-$page    = lng('PAGE_ADMIN');
-
-$curlist = (isset($_GET['l']))? (int) $_GET['l'] : 1;
-$do      = (isset($_GET['do']))? $_GET['do'] : 'all'; 
-
-$html = ''; $info = ''; $server_info = '';
-
-$user_id = (!empty($_POST['user_id']))? (int)$_POST['user_id'] : false;
-$user_id = (!empty($_GET['user_id']))? (int)$_GET['user_id'] : $user_id;
-$ban_user = new User($user_id, $bd_users['id']);
-
-if ($ban_user->id()) { 
-
-	$user_name = $ban_user->name();
-	$user_gen  = $ban_user->isFemale();
-	$user_mail = $ban_user->email();
-	$user_id   = $ban_user->id();
-	$user_ip   = $ban_user->ip();
-	$user_lvl  = $ban_user->lvl();
-	
-} else $ban_user = false;
-
-if (!empty($_GET['sid'])) $id = (int)$_GET['sid']; 
-else $id = false; 
-
 if ($do) {
 // Buffer OFF 
  switch ($do) {
+	case 'gettheme':
+		
+		ThemeManager::DownloadTInstaller($id);	
+		
+	exit;
+	break;
 	case 'filelist':
 
 	loadTool('upload.class.php');	
@@ -500,8 +510,30 @@ if ($do) {
 	if ( ThemeManager::GetThemeInfo($theme_id) === false ) $theme_id = false;
 	else {
 	
-		loadTool('ajax.php');
+		loadTool('ajax.php'); // headers for prompt refresh cookies
 		$config['s_theme']	= $theme_id		;
+	}
+	
+	if (POSTGood('new_theme')) {
+		
+		$errCode = ThemeManager::TInstall('new_theme');		
+		
+		switch($errCode) {
+		
+			case 1: $t_error = lng('UPLOAD_FAIL').'. ( '.lng('UPLOAD_FORMATS').' - zip )'; break;
+			case 3: $t_error = lng('TZIP_CREATE_FAIL').'.'; break;
+			case 4: $t_error = lng('TZIP_GETINFFILE_FAIL'); break;
+			case 5: $t_error = lng('TZIP_GETINFO_FAIL'); break;
+			case 6: $t_error = lng('T_WRONG_NAME'); break;
+			case 7: $t_error = lng('T_MKDIRFAIL'); break;
+			case 8: $t_error = lng('TZIP_UNZIP_FAIL'); break;
+		}
+		
+		if ($errCode > 0 ) {
+
+			$info .= lng('UPLOAD_FAIL'); 
+			vtxtlog($t_error);
+		} 
 	}
 	
 	$config['s_name']		= $site_name	;

@@ -9,6 +9,12 @@ function TSelectTo(id) {
 	
 	return false
 }
+
+function TDownloadTheme() {
+
+	window.location = 'index.php?mode=control&do=gettheme&sid=' + T_current_select
+
+}
 </script>
 
 <label>Стиль страниц:</label>
@@ -20,6 +26,16 @@ function TSelectTo(id) {
 	</select> 
 	
 	<button type="button" class="btn" onclick="BlockVisible('theme-extended-info')" style="position: relative; bottom : 6px;">Описание</button>
+	<button type="button" class="btn" onclick="TDownloadTheme()" style="position: relative; bottom : 6px;">Скачать</button>
+	<button type="button" class="btn" onclick="BlockVisible('theme-install-info')" style="position: relative; bottom : 6px;">Добавить</button>
+
+<div id="theme-install-info" style="display : none; margin-bottom: 12px;">
+
+	<div class="block-line"></div>
+	
+		<input type="file" name="new_theme" size="30" data-bfi-disabled />
+
+</div>
 	
 <div id="theme-extended-info" style="display : none;">
 

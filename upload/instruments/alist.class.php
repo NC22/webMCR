@@ -6,6 +6,7 @@ class ThemeManager extends View {
 	private $work_skript;
 	private $theme_info_cache;
 	
+	const tmp_dir = 'tmp/'; // from const dir MCRAFT
 	const sign_file = 'sign.txt';
 
 	/** @const */
@@ -14,9 +15,10 @@ class ThemeManager extends View {
 		'name',
 		'version',
 		'author',	
-		'about',	 
+		'about',
+		'editable',
 	);	
-
+	
     public function ThemeManager($style_sd = false, $work_skript = '?mode=control') { 
 		
 		/*	Show subdirs used: /admin */
@@ -25,6 +27,130 @@ class ThemeManager extends View {
 		
 		$this->theme_info_cache = null;
 		$this->work_skript = $work_skript;	
+	}
+
+	public static function deleteDir($dirPath) {
+	
+    if (! is_dir($dirPath)) return;
+		
+    $files = glob($dirPath . '*', GLOB_MARK); 
+	
+    foreach ($files as $file) {
+	
+        if (is_dir($file)) 
+		
+            self::deleteDir($file);
+			
+         else 	
+		 
+			unlink($file);
+    }
+	
+    rmdir($dirPath);
+	}
+	
+	private static function GetThemeDir($theme_id) {
+		
+		return MCR_STYLE . $theme_id . '/';
+	}
+	
+	private static function AddFolderToZip($dir, $local_cut, $zipArchive){
+	
+	if (!is_dir($dir)) return false;
+	
+	$count = 1;
+	$lcut_name = str_replace($local_cut, '', $dir, $count);
+	
+	$fdir = opendir($dir); 
+
+	$zipArchive->addEmptyDir($lcut_name);
+	
+	//echo 'Create dir ' . $lcut_name . '<br>';
+
+		while (($file = readdir($fdir)) !== false) {
+		
+			if ($file == ".." || $file == ".") continue;
+			
+			if (!is_file($dir . $file)) 
+			
+				self::AddFolderToZip($dir . $file . '/', $local_cut, $zipArchive);
+			
+			else {
+				//echo 'Create file ' . $lcut_name  . $file. '<br>' ;
+				$zipArchive->addFile($dir . $file, $lcut_name . $file);
+			}
+		}		 
+	}
+	
+	public static function TInstall($post_name) {
+	
+		if (!POSTGood($post_name, array('zip'))) return 1;
+		
+		$new_file_info = POSTSafeMove($post_name, $this->base_dir); 
+		if (!$new_file_info) return 2;
+		
+		$way  = $this->base_dir.$new_file_info['tmp_name'];		
+		if ($zip->open($way) === false)  return 3;
+		
+		$theme_info = $zip->getFromName(self::sign_file);
+		if ($theme_info === false) return 4;
+		
+		$theme_info = self::GetThemeInfo(false, $theme_info);
+		if (empty($theme_info['name'])) return 5;
+		
+		if (!preg_match("/^[a-zA-Z0-9_-]+$/", $theme_info['name'])) return 6;
+		
+		$theme_info['id'] = str_replace(' ', '', $theme_info['name']);
+		$theme_dir = self::GetThemeDir($theme_info['id']);
+		
+		if (!is_dir($theme_dir)) {
+			
+			if (mkdir($theme_dir, 0766, true) === false) return 7;
+			
+		} else {
+		
+			self::deleteDir($theme_dir);
+		}
+		
+		if ($zip->extractTo($theme_dir) === false ) return 8;	
+
+		return 0;
+	}
+	
+	public static function DownloadTInstaller($theme_id) {
+	
+		$theme_info = self::GetThemeInfo($theme_id);
+		if ($theme_info === false ) return false;
+		
+		self::SaveThemeInfo($theme_id, $theme_info);
+		
+		$tmp_base_dir = MCRAFT.self::tmp_dir;
+		$tmp_fname = tmp_name($tmp_base_dir);
+		$tmp_file = $tmp_base_dir.$tmp_fname;
+		
+		$zip = new ZipArchive;
+		if ($zip->open($tmp_file, ZipArchive::CREATE) === false) return false;
+		
+		self::addFolderToZip(self::GetThemeDir($theme_id), self::GetThemeDir($theme_id), $zip);
+		
+		$zip->close();
+		
+		$fsize = filesize($tmp_file);
+		
+		if (round($fsize / 1048576) > 50) { unlink($tmp_file);	return false; }
+		
+		$out_name = urlencode('mcr_'.$theme_id.'.zip');		
+		
+		header('Content-Type:application/zip;name='.$out_name); 
+		header('Content-Transfer-Encoding:binary'); 
+		header('Content-Length:'.$fsize); 
+		header('Content-Disposition:attachment;filename='.$out_name); 
+		header('Expires:0'); 
+		header('Cache-Control:no-cache, must-revalidate'); 
+		header('Pragma:no-cache'); 	
+		
+		readfile($tmp_file);
+		unlink($tmp_file);
 	}
 	
 	public function isThemesEnabled() {
@@ -99,9 +225,13 @@ class ThemeManager extends View {
 			
 				continue;
 				
-            else 
+            else {
 			
-				$this->theme_info_cache[] = self::GetThemeInfo($theme);
+				$theme_info = self::GetThemeInfo($theme); 
+				if ($theme_info === false) continue;
+				
+				$this->theme_info_cache[] = $theme_info;
+			}
 				
 		}
 
@@ -109,23 +239,53 @@ class ThemeManager extends View {
 	}
 	
 	return $this->theme_info_cache;
-	}	
+	}
 	
-	public static function GetThemeInfo($theme_id) {
+	public static function SaveThemeInfo($theme_id, $theme_info, $editable = false) {
+		
+		if (empty($theme_info['name'])) return false;
+		
+		$fp = fopen(self::GetThemeDir($theme_id) . self::sign_file, "w");
+		if ($fp === false) return false;
+		
+		flock($fp,LOCK_EX);
+		
+		foreach ($theme_info as $key => $value ) {
+		
+			if ($key == 'id' or $key == 'editable') continue;
+			fwrite($fp, $key .'='. $value . "; \r\n");
+		}
+			
+		fwrite($fp, 'editable='. (($editable)? 'yes' : 'no' ) . "; \r\n");
+		
+		flock($fp,LOCK_UN);
+		fclose($fp);
+		
+		return true;
+	}
+	
+	public static function GetThemeInfo($theme_id, $theme_info_txt = false) {
 		
 		$theme_info = array();
+		$theme_info['id'] = false;
 		
-		$theme_info['id'] = $theme_id;		
-		$sign_file = MCR_STYLE . $theme_id . '/' . self::sign_file;
+		if (!$theme_id and !$theme_info_txt) return false;		
 		
-			if (!file_exists($sign_file)) return false;
+		if ($theme_id) {
 		
-			if (filesize($sign_file) > 128 * 1024) return $theme_info;
+			$theme_info['id'] = $theme_id;		
+			$sign_file = self::GetThemeDir($theme_id). self::sign_file;
+			
+				if (!file_exists($sign_file)) return false;
+			
+				if (filesize($sign_file) > 128 * 1024) return false;
+			
+			$theme_info_txt =  file_get_contents($sign_file);
+		}
 		
-		$theme_info_txt =  file_get_contents($sign_file);
 		$theme_info_txt =  explode (';', $theme_info_txt);
 			
-			if (!sizeof($theme_info_txt)) return $theme_info;
+			if (!sizeof($theme_info_txt)) return false;
 			
 			for($i=0; $i < sizeof($theme_info_txt); $i++) {
 			
