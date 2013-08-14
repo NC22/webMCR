@@ -22,7 +22,7 @@ header('Content-Type: text/html; charset=UTF-8');
 require_once('./system.php');
 BDConnect('index');
 
-require(MCR_ROOT.'instruments/user.class.php');
+loadTool('user.class.php');
 MCRAuth::userLoad();
 
 function GetRandomAdvice() { return ($quotes = @file(View::Get('sovet.txt')))? $quotes[rand(0, sizeof($quotes)-1)] : "Советов нет"; }
@@ -30,7 +30,7 @@ function GetRandomAdvice() { return ($quotes = @file(View::Get('sovet.txt')))? $
 function LoadTinyMCE() {
 global $addition_events, $content_js;
  
-	if (!file_exists(MCR_ROOT.'instruments/tinymce/tinymce.min.js') ) return false;
+	if (!file_exists(MCR_ROOT.'instruments/tiny_mce/tinymce.min.js') ) return false;
 
 	$tmce = 'tinymce.init({';
 	$tmce .= 'selector: "textarea.tinymce",';
@@ -40,7 +40,7 @@ global $addition_events, $content_js;
 	$tmce .= '});';
 
 	$addition_events .= $tmce;
-	$content_js .= '<script type="text/javascript" src="instruments/tinymce/tinymce.min.js"></script>';
+	$content_js .= '<script type="text/javascript" src="instruments/tiny_mce/tinymce.min.js"></script>';
 	
 	return true;
 }

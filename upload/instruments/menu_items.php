@@ -75,7 +75,7 @@ $menu_items = array (
     'control' => array (
 	
       'name' => 'Пользователи',
-      'url' => Rewrite::GetURL('control', 'user', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'user')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -86,7 +86,7 @@ $menu_items = array (
     'category_news' => array (
 	
       'name' => 'Категории новостей',
-      'url' => Rewrite::GetURL('control', 'category', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'category')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -97,7 +97,7 @@ $menu_items = array (
     'reg_edit' => array (
 	
       'name' => 'Регистрация',
-      'url' => Rewrite::GetURL('control', 'ipbans', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'ipbans')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -108,7 +108,7 @@ $menu_items = array (
     'group_edit' => array (
 	
       'name' => 'Группы',
-      'url' => Rewrite::GetURL('control', 'group', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'group')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -118,7 +118,7 @@ $menu_items = array (
     'file_edit' => array (
 	
       'name' => 'Файлы',
-      'url' => Rewrite::GetURL('control', 'filelist', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'filelist')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -128,7 +128,7 @@ $menu_items = array (
     'site_edit' => array (
 	
       'name' => 'Сайт',
-      'url' => Rewrite::GetURL('control', 'constants', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'constants')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -138,7 +138,7 @@ $menu_items = array (
     'rcon' => array (
 	
       'name' => 'RCON',
-      'url' => Rewrite::GetURL('control', 'rcon', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'rcon')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -149,7 +149,7 @@ $menu_items = array (
     'game_edit' => array (
 	
       'name' => 'Настройки игры',
-      'url' => Rewrite::GetURL('control', 'update', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'update')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
@@ -160,7 +160,7 @@ $menu_items = array (
     'serv_edit' => array (
 	
       'name' => 'Мониторинг серверов',
-      'url' => Rewrite::GetURL('control', 'servers', 'control'),
+      'url' => Rewrite::GetURL(array('control', 'servers')),
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,

@@ -4,16 +4,16 @@
 
   <li class="nav-header">Администрирование</li>
   <!--class="active"-->
-  <li><a href="<?php echo Rewrite::GetURL('control', 'user', 'control') ?>">Пользователи</a></li>  
-  <li><a href="<?php echo Rewrite::GetURL('control', 'category', 'control') ?>">Категории новостей</a></li>
-  <li><a href="<?php echo Rewrite::GetURL('control', 'ipbans', 'control') ?>">Регистрация</a></li>
-  <li><a href="<?php echo Rewrite::GetURL('control', 'group', 'control') ?>">Группы</a></li> 
-  <li><a href="<?php echo Rewrite::GetURL('control', 'filelist', 'control') ?>">Файлы</a></li> 
-  <li><a href="<?php echo Rewrite::GetURL('control', 'constants', 'control') ?>">Сайт</a></li> 
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'user')) ?>">Пользователи</a></li>  
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'category')) ?>">Категории новостей</a></li>
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'ipbans')) ?>">Регистрация</a></li>
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'group')) ?>">Группы</a></li> 
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'filelist')) ?>">Файлы</a></li> 
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'constants')) ?>">Сайт</a></li> 
   <li class="divider"></li>
-  <li><a href="<?php echo Rewrite::GetURL('control', 'rcon', 'control') ?>">RCON</a></li>
-  <li><a href="<?php echo Rewrite::GetURL('control', 'update', 'control') ?>">Настройки игры</a></li>  
-  <li><a href="<?php echo Rewrite::GetURL('control', 'servers', 'control') ?>">Мониторинг серверов</a></li>  
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'rcon')) ?>">RCON</a></li>
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'update')) ?>">Настройки игры</a></li>  
+  <li><a href="<?php echo Rewrite::GetURL(array('control', 'servers')) ?>">Мониторинг серверов</a></li>  
 </ul>
 
 </div>

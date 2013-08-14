@@ -372,14 +372,13 @@ switch ($step) {
 	$config['timezone']		= $timezone		;
 
 	$config['install']    = false; 
-	
-	createWays();
-	
+
 	if (SaveOptions()) $step = 4; 		
 	}
 	break;
 }
-
+	
+createWays();	
 checkBaseRequire();
 
 ob_start(); 

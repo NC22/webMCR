@@ -383,14 +383,13 @@ private $title;
 		$likes = $line['likes'];
 		$hits  = $line['hits'];
 		$dlikes = $line['dislikes']; 
-		
-		// можно добавить work_script по аналогии
-		$link  = ($config['rewrite'])? 'news/'.$id : 'index.php?id='.$id;
+
+		$link  = Rewrite::GetURL(array('news', $id), array('', 'id'));
 		
 		$category_id = $this->category_id;		
         $category    = CategoryManager::GetNameByID($category_id);
 		
-		$category_link = ($config['rewrite'])? 'category/'.$category_id : 'index.php?cid='.$category_id;
+		$category_link = Rewrite::GetURL(array('category', $category_id), array('', 'cid'));
 		
 		$admin_buttons = '';
 		
@@ -600,7 +599,7 @@ private $category_id;
 	   $category = 'Последние новости';
      
 	$category_id = $this->category_id;
-	$category_link = ($config['rewrite'])? 'category/'.$category_id : 'index.php?cid='.$category_id;
+	$category_link = Rewrite::GetURL(array('category', $category_id), array('', 'cid'));
 	
 	ob_start(); include $this->GetView('news_header.html');					  
 	$html_news = ob_get_clean();
@@ -660,7 +659,7 @@ private $category_id;
 	global $config,$bd_names;
 
 	$id   = (int) $id;
-	$link  = ($config['rewrite'])? 'news/'.$id : 'index.php?id='.$id;
+	$link  = Rewrite::GetURL(array('news', $id), array('', 'id'));
     
 		$news_item  = new News_Item($id, $this->st_subdir); // можно определять некоторые переменные на этапе инициализации н. заглавие
 		$item_exist = $news_item->Exist();
@@ -668,7 +667,7 @@ private $category_id;
 		$title      	= ($item_exist)? $news_item->GetTitle() : 'Новость не найдена'; 			
 		$category_id 	= ($item_exist)? $news_item->GetCategoryID() : 0;
 		$category 		= ($item_exist)? CategoryManager::GetNameByID($category_id) : 'Без категории';
-		$category_link 	= ($config['rewrite'])? 'category/'.$category_id : 'index.php?cid='.$category_id;
+		$category_link 	= Rewrite::GetURL(array('category', $category_id), array('', 'cid'));
 		
 	    ob_start(); include $this->GetView('news_full_header.html');					  
 	    $html_news = ob_get_clean();

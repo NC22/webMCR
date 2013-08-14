@@ -673,26 +673,42 @@ private $menu_fname;
 
 Class Rewrite {
 
-	private function IsOn() {
-	
+	private static function IsOn() {	
 	global $config;
 	
 		return ($config['rewrite'])? true : false;
 	}
 
-	public function GetURL($page, $sub_page = false, $base = 'go') {
+	public static function GetURL($url_data, $get_params = array('mode', 'do'), $check_rewrite = true, $amp = '&amp;') {
 
-		if (self::IsOn()) {
-			$page .= '/';
-			$base .= '/';
-			return ($base == $page)? $base.$sub_page : $base.$page.$sub_page;
+		$str = ''; $is_arr = (is_array($url_data))? true : false;
+		
+		if ($check_rewrite and self::IsOn()) {
+		
+			if ($is_arr) {
+			
+				foreach($url_data as $key => $value) 
+			
+					$str .= $value.'/';
+					
+			} else $str .= 'go/'.$url_data.'/';
+		
+		} else {
+		
+			if ($is_arr) {
+			
+				$first = true;
+				
+				foreach($get_params as $key => $value) {
+				
+					if (!$value) continue;
+					if ($first) { $str .= '?'; $fisrt = false; } else $str .= $amp;
+					$str .= $value.'='.$url_data[$key];	
+				}
+			} else $str .= '?'.$get_params[0].'='.$url_data;
 		}
 		
-		else {
-		
-			return (!$sub_page)? '?mode='.$page : '?mode='.$page.'&do='.$sub_page;
-		}
-	
+		return $str;
 	}
 
 }

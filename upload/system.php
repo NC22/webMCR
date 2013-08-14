@@ -1,10 +1,12 @@
 <?php
 error_reporting(E_ALL);
 
+$user = false; $link = false; $mcr_tools = array();
+
 define('MCR_ROOT', dirname(__FILE__).'/');
 define('MCR_LANG', 'ru_RU');
 
-require(MCR_ROOT.'instruments/base.class.php');
+loadTool('base.class.php');
 
 if (!file_exists(MCR_ROOT.'config.php')) { header("Location: install/install.php"); exit; }
 
@@ -23,8 +25,6 @@ define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
 define('BASE_URL', $config['s_root']);
 
 date_default_timezone_set($config['timezone']);
-
-$user = false; $link = false; $mcr_tools = array();
 
 function BD( $query ) {
 global $link;
