@@ -5,6 +5,14 @@ require(MCR_ROOT.'instruments/auth/usual.php');
 
 Class MCMSAuth {
 
+private static function getXFHashCheckLogic() {
+	
+		if (class_exists('XenForo_Authentication_Core12')) return 2 ; // ver 1.2.0
+	elseif (class_exists('XenForo_Authentication_Core')) return 1 ; // ver 1.1.4 or lower
+	
+	return 0;	
+}
+
 /* Загрузка API главной CMS */
 
 public static function start() {
@@ -142,8 +150,22 @@ global $bd_names, $bd_users;
 	self::start();
 	
 	$db  = XenForo_Application::get('db');
-
-	$auth    = new XenForo_Authentication_Core;
+	
+	$XFauthLogic = self::getXFHashCheckLogic(); 
+	if ($XFauthLogic == 2) 
+	
+		$auth = new XenForo_Authentication_Core12;
+	
+	elseif ($XFauthLogic == 1)
+	
+		$auth = new XenForo_Authentication_Core;
+	
+	else {
+	
+		vtxtlog ('[xenforo.php] xenForo auth class not founded');
+		return false;		
+	}
+	
 	$res     = $db->fetchCol("SELECT `data` FROM `{$bd_names['user_auth']}` WHERE `{$bd_users['id']}`=" . $data['user_id']);
 			
 	if (!count($res)) return false;
