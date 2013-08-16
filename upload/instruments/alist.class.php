@@ -129,7 +129,7 @@ class ThemeManager extends View {
 		if ($zip->extractTo($theme_dir) === false ) { self::EndZipWorkAndDel($zip, $way); return 8; }	
 		
 		self::EndZipWorkAndDel($zip, $way);
-		return 0;
+		return $theme_info;
 	}
 	
 	public static function DownloadTInstaller($theme_id) {

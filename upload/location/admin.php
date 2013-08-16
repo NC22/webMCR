@@ -511,28 +511,33 @@ if ($do) {
 	else {
 	
 		loadTool('ajax.php'); // headers for prompt refresh cookies
-		$config['s_theme']	= $theme_id		;
+		$config['s_theme']	= $theme_id	;
 	}
 	
 	if (POSTGood('new_theme', array('zip'))) {
 
-		$errCode = ThemeManager::TInstall('new_theme');		
+		$result = ThemeManager::TInstall('new_theme');		
 		
-		switch($errCode) {
+		if (is_int($result)) {
 		
-			case 1: $t_error = lng('UPLOAD_FAIL').'. ( '.lng('UPLOAD_FORMATS').' - zip )'; break;
-			case 3: $t_error = lng('TZIP_CREATE_FAIL').'.'; break;
-			case 4: $t_error = lng('TZIP_GETINFFILE_FAIL'); break;
-			case 5: $t_error = lng('TZIP_GETINFO_FAIL'); break;
-			case 6: $t_error = lng('T_WRONG_TINFO'); break;
-			case 7: $t_error = lng('T_MKDIRFAIL'); break;
-			case 8: $t_error = lng('TZIP_UNZIP_FAIL'); break;
-		}
-		
-		if ($errCode > 0 ) {
+			switch($result) {
+			
+				case 1: $t_error = lng('UPLOAD_FAIL').'. ( '.lng('UPLOAD_FORMATS').' - zip )'; break;
+				case 3: $t_error = lng('TZIP_CREATE_FAIL').'.'; break;
+				case 4: $t_error = lng('TZIP_GETINFFILE_FAIL'); break;
+				case 5: $t_error = lng('TZIP_GETINFO_FAIL'); break;
+				case 6: $t_error = lng('T_WRONG_TINFO'); break;
+				case 7: $t_error = lng('T_MKDIRFAIL'); break;
+				case 8: $t_error = lng('TZIP_UNZIP_FAIL'); break;
+			}
 
-			$info .= lng('UPLOAD_FAIL').'<br>'; 
-			vtxtlog($t_error);
+		$info .= lng('UPLOAD_FAIL').'<br>'; 
+		vtxtlog($t_error);
+			
+		} else {
+		
+			loadTool('ajax.php'); 
+			$config['s_theme']	= $result['id']	;		
 		}
 	}
 	

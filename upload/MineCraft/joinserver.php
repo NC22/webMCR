@@ -28,6 +28,13 @@ if (!preg_match("/^[a-zA-Z0-9_-]+$/", $login) or
 	exit('Bad login'); 		
 }	
 
+$tmp_user = new User($login, $bd_users['login']);
+if ($tmp_user->id() === false or $tmp_user->name() !== $login)  {
+
+vtxtlog("[joinserver.php] Bad login register");
+exit ('Bad login');
+}
+	
 $result = BD("SELECT `{$bd_users['login']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['session']}`='".TextBase::SQLSafe($sessionid)."' AND `{$bd_users['login']}`='".TextBase::SQLSafe($login)."' AND `{$bd_users['server']}`='".TextBase::SQLSafe($serverid)."'");
 
 if( mysql_num_rows($result) == 1 ){
