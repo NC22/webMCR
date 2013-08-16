@@ -514,8 +514,8 @@ if ($do) {
 		$config['s_theme']	= $theme_id		;
 	}
 	
-	if (POSTGood('new_theme')) {
-		
+	if (POSTGood('new_theme', array('zip'))) {
+
 		$errCode = ThemeManager::TInstall('new_theme');		
 		
 		switch($errCode) {
@@ -524,16 +524,16 @@ if ($do) {
 			case 3: $t_error = lng('TZIP_CREATE_FAIL').'.'; break;
 			case 4: $t_error = lng('TZIP_GETINFFILE_FAIL'); break;
 			case 5: $t_error = lng('TZIP_GETINFO_FAIL'); break;
-			case 6: $t_error = lng('T_WRONG_NAME'); break;
+			case 6: $t_error = lng('T_WRONG_TINFO'); break;
 			case 7: $t_error = lng('T_MKDIRFAIL'); break;
 			case 8: $t_error = lng('TZIP_UNZIP_FAIL'); break;
 		}
 		
 		if ($errCode > 0 ) {
 
-			$info .= lng('UPLOAD_FAIL'); 
+			$info .= lng('UPLOAD_FAIL').'<br>'; 
 			vtxtlog($t_error);
-		} 
+		}
 	}
 	
 	$config['s_name']		= $site_name	;

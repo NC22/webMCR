@@ -11,7 +11,7 @@ class ThemeManager extends View {
 
 	/** @const */
 	public static $true_info = array (
-		
+		'id',
 		'name',
 		'version',
 		'author',	
@@ -82,38 +82,53 @@ class ThemeManager extends View {
 		}		 
 	}
 	
+	private static function EndZipWorkAndDel($zipArchive, $fname) {
+	
+	$zipArchive->close();
+	unlink($fname); 
+	}
+	
+	private static function GenerateTIDbyName($name) {
+	
+		if (!preg_match("/^[a-zA-Z0-9_-\s]+$/Usi", $name)) return false;
+		return str_replace(' ', '', $name);	
+	}
+	
 	public static function TInstall($post_name) {
 	
 		if (!POSTGood($post_name, array('zip'))) return 1;
 		
-		$new_file_info = POSTSafeMove($post_name, $this->base_dir); 
+		$tmp_base_dir = MCRAFT.self::tmp_dir;
+		
+		$new_file_info = POSTSafeMove($post_name, $tmp_base_dir); 
 		if (!$new_file_info) return 2;
 		
-		$way  = $this->base_dir.$new_file_info['tmp_name'];		
-		if ($zip->open($way) === false)  return 3;
+		$way  = $tmp_base_dir.$new_file_info['tmp_name'];
+
+		$zip = new ZipArchive;
+		
+		if ($zip->open($way, ZipArchive::CREATE) === false) { unlink($way); return 3; }
 		
 		$theme_info = $zip->getFromName(self::sign_file);
-		if ($theme_info === false) return 4;
+		if ($theme_info === false) { self::EndZipWorkAndDel($zip, $way); return 4; }
 		
 		$theme_info = self::GetThemeInfo(false, $theme_info);
-		if (empty($theme_info['name'])) return 5;
-		
-		if (!preg_match("/^[a-zA-Z0-9_-]+$/", $theme_info['name'])) return 6;
-		
-		$theme_info['id'] = str_replace(' ', '', $theme_info['name']);
+		if ($theme_info === false or empty($theme_info['name'])) { unlink($way); return 5; }
+
 		$theme_dir = self::GetThemeDir($theme_info['id']);
 		
 		if (!is_dir($theme_dir)) {
 			
-			if (mkdir($theme_dir, 0766, true) === false) return 7;
+			if (mkdir($theme_dir, 0766, true) === false) { self::EndZipWorkAndDel($zip, $way); return 7; }
 			
 		} else {
 		
 			self::deleteDir($theme_dir);
 		}
 		
-		if ($zip->extractTo($theme_dir) === false ) return 8;	
-
+		if ($zip->extractTo($theme_dir) === false ) { self::EndZipWorkAndDel($zip, $way); return 8; }	
+		
+		self::EndZipWorkAndDel($zip, $way);
 		return 0;
 	}
 	
@@ -167,7 +182,7 @@ class ThemeManager extends View {
 		return true;		
 	}
 	
-	public function GetThemeSelectorOpt() {
+	public function ShowThemeSelectorOpt() {
 	global $config;
 	
 		if (!$this->isThemesEnabled()) return '<option value="-1">'.lng('NOT_SET').'</option>';
@@ -178,7 +193,7 @@ class ThemeManager extends View {
 
 		for($i=0; $i < sizeof($theme_list); $i++) 
 			
-			$html_list .= '<option value="'.$theme_list[$i]['id'].'" '.(($theme_list[$i]['id'] === $config['s_theme'])? 'selected' : '' ).'>'.$theme_list[$i]['id'].'</option>';
+			$html_list .= '<option value="'.$theme_list[$i]['id'].'" '.(($theme_list[$i]['id'] === $config['s_theme'])? 'selected' : '' ).'>'.$theme_list[$i]['name'].'</option>';
 				
 		return $html_list;
 	}
@@ -192,7 +207,7 @@ class ThemeManager extends View {
 	
 	$theme_list = $this->GetThemeList();
 	
-	$html_theme_list = $this->GetThemeSelectorOpt();		
+	$html_theme_list = $this->ShowThemeSelectorOpt();		
 		
 	ob_start(); 
 	
@@ -302,6 +317,12 @@ class ThemeManager extends View {
 							$theme_info[self::$true_info[$b]] = trim( preg_replace('/\s{2,}/', ' ', nl2br($info_value[1]) ) );					
 				}
 			}
+			
+		if (empty($theme_info['id'])) {
+			
+			if (!empty($theme_info['name'])) $theme_info['id'] = self::GenerateTIDbyName($theme_info['name']);
+			else return false;
+		}
 		
 		return $theme_info;	
 	}
