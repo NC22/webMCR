@@ -1,22 +1,4 @@
 <?php
-/*
-    This file is part of webMCR.
-
-    webMCR is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    webMCR is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with webMCR.  If not, see <http://www.gnu.org/licenses/>.
-
- */
-
 require('../system.php');
 
 function generateSessionId() {
@@ -46,21 +28,21 @@ if ( empty($json->username) or empty($json->password) or empty($json->clientToke
 
 $login = $json->username; $password = $json->password; $clientToken = $json->clientToken;
 
-if (!preg_match("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}$/", $login)    or
-	!preg_match("/^[a-zA-Z0-9_-]+$/", $password)  or
+if (!preg_match("/^[a-zA-Z0-9_-]+$/", $password)  or
 	!preg_match("/^[a-f0-9-]+$/", $clientToken)) 
 		
 	logExit("[auth16x.php] login process [Bad symbols] User [$login] Password [$password] clientToken [$clientToken]");		
 
-	$auth_user = new User($login, $bd_users['email']);
+	$BD_Field = (strpos($login, '@') === false)? $bd_users['login'] : $bd_users['email'] ; 	
+	$auth_user = new User($login, $BD_Field); 
 	
 	if ( !$auth_user->id() ) logExit("[auth16.php] login process [Unknown user] User [$login] Password [$password]");
 	if ( $auth_user->lvl() <= 1 ) exit("Bad login");
 	if ( !$auth_user->authenticate($password) ) logExit("[auth16.php] login process [Wrong password] User [$login] Password [$password]");
 
     $sessid = generateSessionId();
-    BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['session']}`='".TextBase::SQLSafe($sessid)."' WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($login)."'");
-    BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['clientToken']}`='".TextBase::SQLSafe($clientToken)."' WHERE `{$bd_users['email']}`='".TextBase::SQLSafe($login)."'");
+    BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['session']}`='".TextBase::SQLSafe($sessid)."' WHERE `{$BD_Field}`='".TextBase::SQLSafe($login)."'");
+    BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['clientToken']}`='".TextBase::SQLSafe($clientToken)."' WHERE `{$BD_Field}`='".TextBase::SQLSafe($login)."'");
 
 	vtxtlog("[auth16.php] login process [Success] User [$login] Session [$sessid] clientToken[$clientToken]");			
 	
