@@ -188,6 +188,8 @@ INSERT INTO `property` (`property`, `value`) VALUES
 ('smtp-host', 'localhost'),
 ('smtp-port', '25'),
 ('smtp-hello', 'HELO'),
+('email-name', 'Info'),
+('email-mail', 'noreplay@noreplay.ru'),
 ('game-link-win', ''),
 ('game-link-osx', ''),
 ('game-link-lin', '');

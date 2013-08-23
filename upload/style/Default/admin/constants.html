@@ -6,6 +6,7 @@
 	
 		<li class="active"><a href="#tab1" data-toggle="tab">Основные настройки</a></li>
 		<li><a href="#tab2" data-toggle="tab">Почтовый сервер</a></li>
+		<li><a href="#tab4" data-toggle="tab">Темы оформления</a></li>
 		<li><a href="#tab3" data-toggle="tab">Дополнительно</a></li>		
     </ul>
 	
@@ -20,9 +21,7 @@
 			<label>Описание сайта:</label>
 			<span class="help-block">По умолчанию используется для индексации сайта поисковыми машинами. Так же отображается под названием сайта.</span>
 			<input type="text" name="site_about" value="<?php echo $config['s_about']; ?>">	
-			
-			<?php echo $theme_selector ?>
-			
+
 			<label>Ключевые слова:</label>
 			<span class="help-block">Используются для индексации сайта поисковыми машинами. Вводить через пробел, общая длинна не > 200 символов </span>
 			<input type="text" name="site_keyword" value="<?php echo $config['s_keywords']; ?>">
@@ -45,7 +44,17 @@
 		</div>
 		
 		<div class="tab-pane" id="tab2">
-	
+		
+			<label>Имя отправителя:</label>
+			<input type="text" name="email_name" value="<?php echo sqlConfigGet('email-name') ?>">
+			
+			<label>Обратный адрес:</label>
+			<input type="text" name="email_mail" value="<?php echo sqlConfigGet('email-mail') ?>">
+			<span class="help-block">Обычно должен соответствовать адресу, прописаному в настройках php.ini или пользователю smtp. </span>
+			
+			<label>Отправить тестовое сообщение на:</label>
+			<input type="text" name="email_test">
+			
 			<label class="checkbox">
 			  <input type="checkbox" name="smtp" value="1" <?php echo ($config['smtp'])?'checked="checked"':'' ?>> Использовать заданые настройки smtp
 			</label>	
@@ -56,10 +65,6 @@
 			
 			<label>Пароль пользователя:</label>
 			<input type="password" name="smtp_pass" value="<?php echo (sqlConfigGet('smtp-pass'))? '**defined**' : '' ?>">
-			
-			<label class="checkbox">
-			  <input type="checkbox" name="smtp_no_pass" value="1" <?php echo (!sqlConfigGet('smtp-pass'))?'checked="checked"':'' ?>> Без пароля
-			</label>
 			
 			<label>Адрес сервера:</label>
 			<input type="text" name="smtp_host" value="<?php echo sqlConfigGet('smtp-host');  ?>">
@@ -89,7 +94,12 @@
 			</label>
 			<span class="help-block">Запись сообщений об ошибках веб приложения в файл <?php echo MCR_ROOT.'log.txt' ?> . Обнуление файла при размере > 50мб</span>	
 								
-		</div>		
+		</div>	
+		<div class="tab-pane" id="tab4">	
+			
+			<?php echo $theme_selector ?>
+							
+		</div>			
     </div>
 	
 	<button type="submit" class="btn">Применить</button>

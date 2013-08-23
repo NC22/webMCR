@@ -507,6 +507,11 @@ if ($do) {
 	$comm_revers = InputGet('comm_revers', 'POST', 'bool');
 	$theme_id	 = InputGet('theme_name', 'POST', 'str');
 	
+	$email_name	 = InputGet('email_name', 'POST', 'str');
+	$email_mail	 = InputGet('email_mail', 'POST', 'str');
+	
+	$email_test     = InputGet('email_test', 'POST', 'str');
+	
 	if ( ThemeManager::GetThemeInfo($theme_id) === false ) $theme_id = false;
 	else {
 	
@@ -553,10 +558,13 @@ if ($do) {
 	
 	if (SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
 
+	sqlConfigSet('email-name', $email_name);
+	sqlConfigSet('email-mail', $email_mail);
+	
 		if ($config['smtp']) {
 		
 		$smtp_user		= InputGet('smtp_user', 'POST', 'str');
-		$smtp_pass		= (isset($_POST['smtp_no_pass']))? '' : InputGet('smtp_pass', 'POST', 'str');
+		$smtp_pass		= InputGet('smtp_pass', 'POST', 'str');
 		$smtp_host		= InputGet('smtp_host', 'POST', 'str');
 		$smtp_port		= InputGet('smtp_port', 'POST', 'int');
 		$smtp_hello		= InputGet('smtp_hello', 'POST', 'str');
@@ -571,6 +579,8 @@ if ($do) {
 			sqlConfigSet('smtp-port', $smtp_port);
 			sqlConfigSet('smtp-hello', $smtp_hello);
 		}	
+		
+		if ($email_test && !EMail::Send($email_test, 'Mail test', 'Content')) $info .= '<br>'.lng('OPTIONS_MAIL_TEST_FAIL');
 	}
 		
 	$theme_manager = new ThemeManager(false, 'index.php?mode=control&'); 

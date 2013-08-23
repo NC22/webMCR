@@ -154,6 +154,10 @@ BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('game-link-osx', ''),
 ('game-link-lin', '');");
 
+BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+('email-name', 'Info'),
+('email-mail', 'noreplay@noreplay.ru');");
+
 /* 2.05 UPDATE */
 
 if (!BD_ColumnExist($bd_names['ip_banning'], 'ban_type'))

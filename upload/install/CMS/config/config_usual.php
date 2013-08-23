@@ -50,11 +50,6 @@ $config = array (
   
 	'install' => true,
 	'p_logic' => 'usual',
-
-/* mail */
-
-	'fbackName' => 'Info',
-	'fbackMail' => 'noreplay@noreplay.ru',
 	
 	'smtp'		=> false,
 	

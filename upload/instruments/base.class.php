@@ -22,6 +22,8 @@ class ItemType {
 	 
 		'email-verification',
 		'email-verification-salt',
+		'email-name',
+		'email-mail',
 		
 		'json-verification-salt',
 		
@@ -166,11 +168,11 @@ const ENCODE = 'utf-8';
 	global $config;	
 	
 		$headers = array();
-		$headers[] = "Reply-To: ".$config['fbackMail'];
+		$headers[] = "Reply-To: ".sqlConfigGet('email-mail');
 		$headers[] = "MIME-Version: 1.0";
 		$headers[] = "Content-Type: text/html; charset=\"".self::ENCODE."\"";
 		$headers[] = "Content-Transfer-Encoding: 8bit";
-		$headers[] = "From: \"".$config['fbackName']."\" <".$config['fbackMail'].">";
+		$headers[] = "From: \"".sqlConfigGet('email-name')."\" <".sqlConfigGet('email-mail').">";
 		$headers[] = "To: ".$mail_to." <".$mail_to.">";
 		$headers[] = "X-Priority: 3";	
 		$headers[] = "X-Mailer: PHP/".phpversion();

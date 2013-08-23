@@ -540,6 +540,31 @@ private $deadtry;
 		return 1;
 	}
 	
+	public function getSkinLinkParams($mini = false, $amp = '&amp;') {
+	global $config;
+	
+		$use_def_skin = $this->defaultSkinTrigger();	
+		$name = $this->name();	
+		
+		if ($this->isFemale()) $male = false;
+
+		$get_p = '';
+		if ($mini == true) $get_p .= 'mini=1'.$amp;
+		
+		$way_skin	= $this->getSkinFName()		;
+		$way_cloak	= $this->getCloakFName()	;
+		
+		if (($mini and $use_def_skin) or (!file_exists($way_cloak) and $use_def_skin)) 
+			
+			$get_p .= 'female='.((!$male)? '1':'0');
+		else 			
+			$get_p .= 'user_name='.$name;
+		
+		$get_p .= $amp;
+	
+	return $get_p;
+	}
+	
 	public function changeVisual($post_name, $type = 'skin') { 
 	global $bd_users;
 	
