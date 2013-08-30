@@ -31,9 +31,9 @@ global $site_ways, $uInfo;
 }
 
 $uInfo = array (	'mini'		=> (isset($_GET['mini']) or isset($_GET['m'])) ? true : false,
-					'female' 	=> (isset($_GET['female']) and $_GET['female']) ? 1 : !isset($_GET['female']) ? -1 : 0,
-					'name' 		=> (!empty($_GET['user_name'])) ? $_GET['user_name'] : false,
-					'id'		=> (!empty($_GET['user_id']) or !empty($_GET['mini'])) ? (int) (empty($_GET['user_id'])) ? $_GET['mini'] : $_GET['user_id'] : false );
+					'female' 	=> !empty($_GET['female']) ? 1 : (isset($_GET['female']) ? 0 : -1),
+					'name' 		=> !empty($_GET['user_name']) ? $_GET['user_name'] : false,
+					'id'		=> (!empty($_GET['user_id']) or !empty($_GET['mini'])) ? (int) (empty($_GET['user_id']) ? $_GET['mini'] : $_GET['user_id']) : false );
 
 if ( $uInfo['id'] ) {
 
