@@ -205,7 +205,7 @@ function LoadProfile(form,pid) {
 	}
 	
 	var Ava = new Image()
-	    Ava.src = base_url + 'skin.php?user_id='+pid+'&refresh='+rand(1337,31337)
+	    Ava.src = base_url + 'skin.php?user_id=' + pid + '&refresh=' + rand(1337,31337)
 	    Ava.onload = function () {
 
         var ava_link = Ava.src
@@ -338,7 +338,7 @@ function UpdateProfile(admTrg) {
 		if (group != null) group.innerHTML = response['group']
 
 	    var Ava = new Image()
-	        Ava.src = base_url + 'skin.php?user_id=' + response['id'] + '&refresh='+rand(1337,31337)
+	        Ava.src = base_url + 'skin.php' + response['skin_link'] + '&refresh='+rand(1337,31337)
 	        Ava.onload = function () {
 
                 var ava_link = Ava.src
@@ -353,7 +353,7 @@ function UpdateProfile(admTrg) {
 		if (admTrg == null) {
 		
 			var Mini = new Image()
-				Mini.src =  base_url + 'skin.php?mini=' + response['id'] + '&refresh=' + rand(1337,31337)  
+				Mini.src =  base_url + 'skin.php' + response['mskin_link'] + '&refresh=' + rand(1337,31337)  
 				Mini.onload = function () {
 				   GetById('profile-mini').src = Mini.src 
 				}	

@@ -540,27 +540,29 @@ private $deadtry;
 		return 1;
 	}
 	
-	public function getSkinLinkParams($mini = false, $amp = '&amp;') {
+	public function getSkinLink($mini = false, $amp = '&amp;') {
 	global $config;
 	
 		$use_def_skin = $this->defaultSkinTrigger();	
 		$name = $this->name();	
 		
-		if ($this->isFemale()) $male = false;
+		$female = ($this->isFemale()) ? true : false;
 
-		$get_p = '';
-		if ($mini == true) $get_p .= 'mini=1'.$amp;
+		$get_p = '?';		
 		
+		if ($mini == true) $get_p .= 'm=1';
+		
+		if ( $this->id() === false ) return $get_p;
+		
+		if ($get_p !== '?' ) $get_p .= $amp;
 		$way_skin	= $this->getSkinFName()		;
 		$way_cloak	= $this->getCloakFName()	;
 		
 		if (($mini and $use_def_skin) or (!file_exists($way_cloak) and $use_def_skin)) 
 			
-			$get_p .= 'female='.((!$male)? '1':'0');
+			$get_p .= 'female='.(($female) ? '1':'0');
 		else 			
 			$get_p .= 'user_name='.$name;
-		
-		$get_p .= $amp;
 	
 	return $get_p;
 	}

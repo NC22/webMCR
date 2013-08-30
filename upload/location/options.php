@@ -7,7 +7,7 @@ $page = lng('PAGE_OPTIONS');
 
 $prefix = 'profile/';
 
-$user_img_get = '?user_id='.$player_id.'&refresh='.rand(1000,9999);
+$user_img_get = $user->getSkinLink().'&amp;refresh='.rand(1000, 9999);
 $menu->SetItemActive('options');
 
 if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not verificated EMail / Compatibility with older versions	

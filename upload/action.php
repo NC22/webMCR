@@ -230,7 +230,7 @@ switch ($method) {
     break;
 	case 'profile': 
 
-        $ajax_message = array('code' => 0, 'message' => 'profile', 'name' => '', 'group' => '', 'id' => '', 'skin' => 0, 'cloak' => 0);
+        $ajax_message = array('code' => 0, 'message' => 'profile', 'name' => '', 'group' => '', 'id' => '', 'skin' => 0, 'cloak' => 0, 'skin_link' => '?none');
 
         $rcodes = null;        
 
@@ -336,7 +336,10 @@ switch ($method) {
         $ajax_message['name']  = $mod_user->name();
         $ajax_message['group'] = $mod_user->getGroupName();   
         $ajax_message['id']    = $mod_user->id();
-
+		
+		$ajax_message['skin_link'] = $mod_user->getSkinLink(false, '&');
+		$ajax_message['mskin_link'] = $mod_user->getSkinLink(true, '&');
+		
         if (file_exists($mod_user->getCloakFName())) $ajax_message['cloak'] = 1; 
         if ($mod_user->defaultSkinTrigger())         $ajax_message['skin']  = 1; 
 

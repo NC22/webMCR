@@ -231,11 +231,7 @@ private $user_id;
 		$user_name   = ($user_post->id())? $user_post->name() : 'Удаленный пользователь';
 		$user_female = ($user_post->id())? $user_post->isFemale() : false;	
 		
-		$user_img_get = ($user_post->id())? '?mini='.$user_id : '?mini=-1';
-		
-		if ($user_post->id() and $user_post->defaultSkinTrigger()) 
-		
-		$user_img_get = ($user_female)? '?female=1&mini=-1' : '?female=0&mini=-1';
+		$user_img_get = $user_post->getSkinLink(true);
 		
 		unset($user_post);
 			

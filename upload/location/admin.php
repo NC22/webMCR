@@ -596,8 +596,9 @@ if ($do) {
       	
 		$skin_def = $ban_user->defaultSkinTrigger();
 		$cloak_exist = file_exists($ban_user->getCloakFName()); 
-
-        if ($cloak_exist or !$skin_def) { $rnd = rand(1000,9999); include View::Get('profile_skin.html', $st_subdir.'profile/');  }
+		$ban_user_img_get = $ban_user->getSkinLink().'&amp;refresh='.rand(1000, 9999);
+		
+        if ($cloak_exist or !$skin_def)  include View::Get('profile_skin.html', $st_subdir.'profile/');
         if (!$skin_def )                 include View::Get('profile_del_skin.html', $st_subdir.'profile/');  
         if ($cloak_exist )               include View::Get('profile_del_cloak.html', $st_subdir.'profile/');  
 		if ($bd_names['iconomy'] )       include View::Get('profile_money.html', $st_subdir.'profile/');  
