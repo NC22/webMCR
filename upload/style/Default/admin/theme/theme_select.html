@@ -14,6 +14,19 @@ function TDownloadTheme() {
 
 	window.location = 'index.php?mode=control&do=gettheme&sid=' + T_current_select
 
+	return false
+}
+
+function TDelete() {
+
+	if (!confirm("Уверены, что хотите удалить тему оформления ?")) return false
+	
+	var del_item = GetById('theme-item-delete')
+		del_item.value = T_current_select
+
+	GetParentForm(del_item).submit()
+	
+	return false
 }
 </script>
 
@@ -28,12 +41,15 @@ function TDownloadTheme() {
 	<!--<button type="button" class="btn" onclick="BlockVisible('theme-extended-info')" style="position: relative; bottom : 6px;">Описание</button>-->
 	<button type="button" class="btn" onclick="TDownloadTheme()" style="position: relative; bottom : 6px;">Скачать</button>
 	<button type="button" class="btn" onclick="BlockVisible('theme-install-info')" style="position: relative; bottom : 6px;">Добавить</button>
-
+	<button type="button" class="btn" onclick="TDelete()" style="position: relative; bottom : 6px;">Удалить</button>
+	
+	<input type="hidden" name="theme_delete" id="theme-item-delete" value="">
+	
 <div id="theme-install-info" style="display : none; margin-bottom: 12px;">
 
 	<div class="block-line"></div>
 	
-		<input type="file" name="new_theme" size="30" data-bfi-disabled />
+		<input type="file" name="new_theme" size="30" onchange="GetParentForm(this).submit(); return false" data-bfi-disabled />
 
 </div>
 	

@@ -51,30 +51,6 @@ $html_ratio = '<option value="1" '.((1 == $selectid)?'selected':'').'>64x32 | 22
 return $html_ratio;
 }
 
-function SaveOptions() {
-global $config,$bd_names,$bd_money,$bd_users,$site_ways,$info;
-
-$txt  = '<?php'.PHP_EOL;
-$txt .= '$config = '.var_export($config, true).';'.PHP_EOL;
-$txt .= '$bd_names = '.var_export($bd_names, true).';'.PHP_EOL;
-$txt .= '$bd_users = '.var_export($bd_users, true).';'.PHP_EOL;
-$txt .= '/* iconomy or some other plugin, just check names */'.PHP_EOL;
-$txt .= '$bd_money = '.var_export($bd_money, true).';'.PHP_EOL;
-$txt .= '$site_ways = '.var_export($site_ways, true).';'.PHP_EOL;
-$txt .= '/* Put all new config additions here */'.PHP_EOL;
-$txt .= '?>';
-
-$result = file_put_contents(MCR_ROOT.'config.php', $txt);
-
-	if (is_bool($result) and $result == false) {
-
-	$info .= lng('WRITE_FAIL').' ( '.MCR_ROOT.'config.php )';	
-	return false;
-	}
-
-return true;
-}
-
 if ($do) {
 // Buffer OFF 
  switch ($do) {
@@ -289,7 +265,8 @@ if ($do) {
 			
 		if ($link_win or $link_osx or $link_lin or $game_news or $new_build or $new_version_l) 
 			
-			if (SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
+			if (MainConfig::SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
+			else $info .= lng('WRITE_FAIL').' ( '.MCR_ROOT.'config.php )';
 					
         $game_lver  = sqlConfigGet('launcher-version');
         $game_build = sqlConfigGet('latest-game-build');
@@ -505,7 +482,10 @@ if ($do) {
 	$rewrite     = InputGet('rewrite', 'POST', 'bool');
 	$log  		 = InputGet('log', 'POST', 'bool');
 	$comm_revers = InputGet('comm_revers', 'POST', 'bool');
+	
 	$theme_id	 = InputGet('theme_name', 'POST', 'str');
+	$theme_delete = InputGet('theme_delete', 'POST', 'str');
+	$theme_old = $config['s_theme'];
 	
 	$email_name	 = InputGet('email_name', 'POST', 'str');
 	$email_mail	 = InputGet('email_mail', 'POST', 'str');
@@ -513,11 +493,9 @@ if ($do) {
 	$email_test     = InputGet('email_test', 'POST', 'str');
 	
 	if ( ThemeManager::GetThemeInfo($theme_id) === false ) $theme_id = false;
-	else {
+	else 
 	
-		loadTool('ajax.php'); // headers for prompt refresh cookies
 		$config['s_theme']	= $theme_id	;
-	}
 	
 	if (POSTGood('new_theme', array('zip'))) {
 
@@ -544,7 +522,11 @@ if ($do) {
 			loadTool('ajax.php'); 
 			$config['s_theme']	= $result['id']	;		
 		}
-	}
+	}	
+	
+	if ($theme_id === $theme_delete) ThemeManager::DeleteTheme($theme_delete);
+	
+	if ($theme_old != $config['s_theme']) loadTool('ajax.php'); // headers for prompt refresh cookies  
 	
 	$config['s_name']		= $site_name	;
 	$config['s_about']		= $site_about	; 	
@@ -556,7 +538,8 @@ if ($do) {
 	$config['offline']		= $site_offline	;
 	$config['smtp']			= $smtp			;
 	
-	if (SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
+	if (MainConfig::SaveOptions()) $info .= lng('OPTIONS_COMPLETE');
+	else $info .= lng('WRITE_FAIL').' ( '.MCR_ROOT.'config.php )';	
 
 	sqlConfigSet('email-name', $email_name);
 	sqlConfigSet('email-mail', $email_mail);

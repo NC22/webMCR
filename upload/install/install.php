@@ -22,6 +22,7 @@ switch ($mode) { /* Допустимые идентификаторы CMS */
 define('BASE_URL', Root_url());
 
 require_once(MCR_ROOT.'instruments/base.class.php');
+require_once(MCR_ROOT.'instruments/alist.class.php');
 
 if (file_exists(MCR_ROOT.'config.php')) {
 include MCR_ROOT.'config.php';
@@ -55,6 +56,7 @@ define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
 define('CUR_STYLE_URL', DEF_STYLE_URL);
 
 $page = 'Настройка '.PROGNAME;
+$save_conf_err = 'Ошибка создания \ перезаписи файла '.MCR_ROOT.'config.php (корневая дирректория сайта). Папка защищена от записи \ файл не доступен для записи. Настройки не были сохранены.';
 $content_advice = 'Заполните форму для завершения установки '.PROGNAME;
 $content_servers = ''; $content_js = '';
 $content_side = Manager::ShowStaticPage('./style/install_side.html');
@@ -193,31 +195,6 @@ function Mode_rewrite(){
 	return false;
 }
 
-function SaveOptions() {
-global $config,$bd_names,$bd_money,$bd_users,$site_ways,$info;
-
-$txt  = '<?php'.PHP_EOL;
-$txt .= '$config = '.var_export($config, true).';'.PHP_EOL;
-$txt .= '$bd_names = '.var_export($bd_names, true).';'.PHP_EOL;
-$txt .= '$bd_users = '.var_export($bd_users, true).';'.PHP_EOL;
-$txt .= '/* iconomy or some other plugin, just check names */'.PHP_EOL;
-$txt .= '$bd_money = '.var_export($bd_money, true).';'.PHP_EOL;
-$txt .= '$site_ways = '.var_export($site_ways, true).';'.PHP_EOL;
-$txt .= '/* Put all new config additions here */'.PHP_EOL;
-$txt .= '?>';
-
-$result = file_put_contents("../config.php", $txt);
-
-if (is_bool($result) and $result == false) {
-
-	$info = 'Ошибка создания \ перезаписи файла '.MCR_ROOT.'config.php (корневая дирректория сайта). Папка защищена от записи \ файл не доступен для записи. Настройки не были сохранены.';	
-
-return false;
-}
-
-return true;
-}
-
 function DBConnect() {
 global $link,$config;
 
@@ -294,7 +271,9 @@ switch ($step) {
 			$config['rewrite'] = Mode_rewrite();
 			$config['s_root']  = Root_url();
 			
-			if (SaveOptions()) $step = 2; 	
+			if (MainConfig::SaveOptions()) $step = 2; 
+			else $info = $save_conf_err;	
+
 			
 			include './CMS/sql/sql_common.php';				
 			if (!$main_cms) include './CMS/sql/sql_usual.php';	
@@ -350,7 +329,8 @@ switch ($step) {
 			
 		if ($mode != 'xauth') BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['group']}`='3' WHERE `{$bd_users['login']}`='$site_user'");	
 		$step = 3; 	
-		SaveOptions();			
+		MainConfig::SaveOptions();			
+		
 	} else if (CreateAdmin($site_user)) $step = 3; 		
 	break;
 	case 3:
@@ -373,7 +353,9 @@ switch ($step) {
 
 	$config['install']    = false; 
 
-	if (SaveOptions()) $step = 4; 		
+	if (MainConfig::SaveOptions()) $step = 4; 
+	else $info = $save_conf_err;	
+	
 	}
 	break;
 }
