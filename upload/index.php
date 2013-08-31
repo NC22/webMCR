@@ -73,7 +73,6 @@ if ($mode == 'side') $mode = $config['s_dpage'];
 
 switch ($mode) {
     case 'start': $page = 'Начать игру'; $content_main = View::ShowStaticPage('start_game.html', '');  break;
-	case '404':   $page = 'Страница не найдена'; $content_main = View::ShowStaticPage('404.html', ''); break;
 	case 'register': 
 	case 'news':	  include('./location/news.php');		break;
 	case 'news_full': include('./location/news_full.php');	break;

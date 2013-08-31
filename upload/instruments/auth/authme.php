@@ -31,11 +31,11 @@ MCRAuth::LoadSession();
 
 public static function createPass($password) { 	
 
-	$salt = substr(hash('whirlpool', uniqid(rand(), true)), 0, 12);	
-	$hash = hash('whirlpool', $salt . $password);
-	$saltPos = (strlen($password) >= strlen($hash)) ? strlen($hash) : strlen($password);
-	
-return substr($hash, 0, $saltPos) . $salt . substr($hash, $saltPos);     
+	$salt = substr(hash('sha256', uniqid(rand())), 0, 16);
+	$hash = hash('sha256', hash('sha256', $password . $salt));
+	$rpass = ('$SHA$'.$salt.'$'.hash('sha256',hash('sha256',$password).$salt));
+
+	return $rpass;    
 }
 
 /* 
@@ -47,16 +47,15 @@ return substr($hash, 0, $saltPos) . $salt . substr($hash, $saltPos);
 	'user_name'	 - логин пользователя
 */
 
-public static function checkPass($data) { 
+public static function checkPass($data) {
 
-
-	$saltPos = (strlen($data['pass']) >= strlen($data['pass_db'])) ? strlen($data['pass_db']) : strlen($data['pass']);
-    $salt = substr($data['pass_db'], $saltPos, 12);
-    $hash = hash('whirlpool', $salt . $data['pass']);
- 
-    $result = ($data['pass_db'] == substr($hash, 0, $saltPos) . $salt . substr($hash, $saltPos))? true : false;
-
-return $result; 
+	$tmp = explode('$', $data['pass_db']);
+	$result = false;
+	if(hash('sha256', hash('sha256', $data['pass']) . $tmp[2]) == $tmp[3])
+	
+		$result = true;
+	
+	return $result;
 }
 
 }

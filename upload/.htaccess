@@ -28,6 +28,6 @@ RewriteRule  ^game/joinserver.jsp MineCraft/joinserver.php [L,NE]
 
 RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteCond %{SCRIPT_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?mode=404
+RewriteRule ^(.*)$ index.php?mode=404&route=%{REQUEST_URI}
 
 </IfModule>
