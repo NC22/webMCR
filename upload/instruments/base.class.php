@@ -164,7 +164,7 @@ Class TextBase {
 Class EMail {
 const ENCODE = 'utf-8';
 	
-	public function Send($mail_to, $subject, $message) {
+	public static function Send($mail_to, $subject, $message) {
 	global $config;	
 	
 		$headers = array();
@@ -184,7 +184,7 @@ const ENCODE = 'utf-8';
 		return ($config['smtp'])? self::smtpmail($mail_to, $subject, $message, $headers) : mail($mail_to, $subject, $message, $headers);
 	}
 	
-	private function smtpmail($mail_to, $subject, $message, $headers) {
+	private static function smtpmail($mail_to, $subject, $message, $headers) {
 		
 		$smtp_user	= sqlConfigGet('smtp-user');
 		$smtp_pass	= sqlConfigGet('smtp-pass');
@@ -223,7 +223,7 @@ const ENCODE = 'utf-8';
 		return true;
 	}
 
-	private function server_action($socket, $command = false, $correct_response = false, $error_mess = false, $line = __LINE__)	{
+	private static function server_action($socket, $command = false, $correct_response = false, $error_mess = false, $line = __LINE__)	{
 		
 		if ($command) fputs($socket, $command);		
 		if ($correct_response) { 
