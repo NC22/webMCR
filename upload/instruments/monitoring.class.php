@@ -458,7 +458,7 @@ private $s_user;
    }   
 }
 
-Class ServerManager extends Manager {
+Class ServerManager extends View {
 
 	public function ServerManager($style_sd = false) { 
 	global $site_ways;

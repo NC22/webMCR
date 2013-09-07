@@ -110,6 +110,85 @@ Class View {
 		
 		return MCR_STYLE.((file_exists(MCR_STYLE.$theme_dir.$base.$way))? $theme_dir : self::def_theme . '/'). $base . $way;
 	} 
+
+
+    public function arrowsGenerator($link, $curpage, $itemsnum, $per_page, $prefix = false) { 
+		
+		if ( !$prefix ) { // Default arrows style
+			
+			$prefix = 'common';
+			$st_subdir = 'other/'; 
+			
+		} else 
+		
+			$st_subdir = $this->st_subdir;
+	
+	  $numoflists = ceil($itemsnum / $per_page);
+	  $arrows = '';
+	  
+			  if ($numoflists > 10 and $curpage > 4) {
+			  
+				$showliststart = $curpage - 4;
+				$showlistend   = $curpage + 5;
+				
+				if ($showliststart < 1) $showliststart = 1;
+				
+				if ($showlistend > $numoflists) $showlistend = $numoflists;
+				
+			  } else {
+			  
+				$showliststart = 1;
+				
+				if ($numoflists < 10 ) $showlistend = $numoflists;
+				else                   $showlistend = 10;
+			  
+			  }
+			 
+			 ob_start();	
+			 
+			  if ($numoflists>1) {
+	 
+				if ($curpage > 1) { 
+				
+				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include $this->Get($prefix.'_list_item.html', $st_subdir); } 
+				  
+				  $var = $curpage-1; $text = '<'; include $this->Get($prefix.'_list_item.html', $st_subdir); 
+				
+				}
+				
+					for ($i=$showliststart;$i<=$showlistend;$i++) {
+					
+					$var  = $i; 
+					$text = $i;
+					
+						if ($i == $curpage) include $this->Get($prefix.'_list_item_selected.html', $st_subdir); 
+						else			    include $this->Get($prefix.'_list_item.html', $st_subdir); 
+						
+					}
+					
+				if ($curpage < $numoflists) { 
+				
+				  $var = $curpage+1; $text = '>'; include $this->Get($prefix.'_list_item.html', $st_subdir); 
+				  
+				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include $this->Get($prefix.'_list_item.html', $st_subdir); } 
+				
+				}
+				
+			  }
+			  
+		$arrows = ob_get_clean();
+		
+		if ( $arrows ) {
+		
+			ob_start(); 
+			  
+			include $this->Get($prefix.'_list.html', $st_subdir);	
+			  
+			return ob_get_clean();			  
+		}
+		
+	return '';
+	}
 	
 }
 
@@ -296,93 +375,6 @@ Class Message {
 		return $text;
 	}
 	
-}
-
-Class Manager extends View {
-
-	public function Manager($style_sd = false) {
-	global $site_ways;
-		
-		parent::View($style_sd);
-	}
-
-    public function arrowsGenerator($link, $curpage, $itemsnum, $per_page, $prefix = false) { 
-		
-		if ( !$prefix ) { // Default arrows style
-			
-			$prefix = 'common';
-			$st_subdir = 'other/'; 
-			
-		} else 
-		
-			$st_subdir = $this->st_subdir;
-	
-	  $numoflists = ceil($itemsnum / $per_page);
-	  $arrows = '';
-	  
-			  if ($numoflists > 10 and $curpage > 4) {
-			  
-				$showliststart = $curpage - 4;
-				$showlistend   = $curpage + 5;
-				
-				if ($showliststart < 1) $showliststart = 1;
-				
-				if ($showlistend > $numoflists) $showlistend = $numoflists;
-				
-			  } else {
-			  
-				$showliststart = 1;
-				
-				if ($numoflists < 10 ) $showlistend = $numoflists;
-				else                   $showlistend = 10;
-			  
-			  }
-			 
-			 ob_start();	
-			 
-			  if ($numoflists>1) {
-	 
-				if ($curpage > 1) { 
-				
-				  if ($curpage-4 > 1) { $var = 1; $text = '<<'; include $this->Get($prefix.'_list_item.html', $st_subdir); } 
-				  
-				  $var = $curpage-1; $text = '<'; include $this->Get($prefix.'_list_item.html', $st_subdir); 
-				
-				}
-				
-					for ($i=$showliststart;$i<=$showlistend;$i++) {
-					
-					$var  = $i; 
-					$text = $i;
-					
-						if ($i == $curpage) include $this->Get($prefix.'_list_item_selected.html', $st_subdir); 
-						else			    include $this->Get($prefix.'_list_item.html', $st_subdir); 
-						
-					}
-					
-				if ($curpage < $numoflists) { 
-				
-				  $var = $curpage+1; $text = '>'; include $this->Get($prefix.'_list_item.html', $st_subdir); 
-				  
-				  if ($curpage+5 < $numoflists) { $var = $numoflists; $text = '>>'; include $this->Get($prefix.'_list_item.html', $st_subdir); } 
-				
-				}
-				
-			  }
-			  
-		$arrows = ob_get_clean();
-		
-		if ( $arrows ) {
-		
-			ob_start(); 
-			  
-			include $this->Get($prefix.'_list.html', $st_subdir);	
-			  
-			return ob_get_clean();			  
-		}
-		
-	return '';
-	}
 }
 
 class ItemLike {

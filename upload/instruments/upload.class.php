@@ -244,7 +244,7 @@ private $downloads;
 	}
 }
 
-Class FileManager extends Manager {
+Class FileManager extends View {
 private $work_skript;
 private $db;
 
@@ -254,7 +254,7 @@ private $db;
 		$this->db			= $bd_names['files'];	
 		$this->work_skript	= $work_skript;
 		
-		parent::Manager($style_sd);		
+		parent::View($style_sd);		
 	}
 	
 	public function ShowAddForm(){	

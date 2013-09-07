@@ -367,14 +367,14 @@ class ThemeManager extends View {
 	}
 }
 
-class ControlManager extends Manager {
+class ControlManager extends View {
 private $work_skript;
 
     public function ControlManager($style_sd = false, $work_skript = '?mode=control') { 
 		
 		/*	Show subdirs used: /admin */
 		
-		parent::Manager($style_sd);
+		parent::View($style_sd);
 		
 		$this->work_skript = $work_skript;	
 	}

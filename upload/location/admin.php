@@ -93,7 +93,7 @@ if ($do) {
 	for($i = $first;$i<=$last;$i++)
 		if(@$file[$i]) $html .= $file[$i].'<br>';	
 	
-	$arrGen = new Manager();
+	$arrGen = new View();
 	$html .= $arrGen->arrowsGenerator('index.php?mode=control&do=log&', $curlist, $count, $max);
 	
 	break;

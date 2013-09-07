@@ -453,13 +453,13 @@ private $title;
 
 /* Менеджер вывода записей из каталога */
 
-Class NewsManager extends Manager {
+Class NewsManager extends View {
 private $work_skript;
 private $category_id;
 
     public function NewsManager($category = 1, $style_sd = false, $work_skript = 'index.php?') { // category = -1 -- all last news
 	
-		parent::Manager($style_sd);
+		parent::View($style_sd);
 	
 		if ((int) $category <= 0) $category = 0;
 		

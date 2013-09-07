@@ -59,7 +59,7 @@ $page = 'Настройка '.PROGNAME;
 $save_conf_err = 'Ошибка создания \ перезаписи файла '.MCR_ROOT.'config.php (корневая дирректория сайта). Папка защищена от записи \ файл не доступен для записи. Настройки не были сохранены.';
 $content_advice = 'Заполните форму для завершения установки '.PROGNAME;
 $content_servers = ''; $content_js = '';
-$content_side = Manager::ShowStaticPage('./style/install_side.html');
+$content_side = View::ShowStaticPage('./style/install_side.html');
 
 $addition_events = '';
 $info = '';  $cErr = '';
