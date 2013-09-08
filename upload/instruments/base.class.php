@@ -59,22 +59,22 @@ Class View {
 	
 // ToDo transform output
 	
-	public function ShowPage($way, $out = false, $buffer = true) {
+	public function ShowPage($way, $out = false) {
 	global $config;
 	
-		if ($buffer) ob_start(); 
+		ob_start(); 
 		
 		include self::Get($way, $this->st_subdir);
 
-		if ($buffer) return ob_get_clean(); 	
+		return ob_get_clean(); 	
 	}
 
-	public static function ShowStaticPage($way, $st_subdir = false, $out = false ) { /* if st_subdir is FALSE will used depricated method with full patch select */
+	public static function ShowStaticPage($way, $st_subdir = false, $out = false ) {
 	global $config;
 		
 		ob_start(); 
 		
-		include ( $st_subdir === false ) ? $way : self::Get($way, $st_subdir);
+		include self::Get($way, $st_subdir);
 		
 		return ob_get_clean(); 	
 	}	
@@ -95,6 +95,11 @@ Class View {
 		else return (file_exists( MCR_STYLE . $config['s_theme'] . '/'  . $way )? $current_st_url : DEF_STYLE_URL) . $way;	
 	}
 	
+	public static function URL($way = false) {
+		
+		echo self::GetURL($way);
+	}
+	
 	public static function Get($way, $base_ = false) {
 	global $config;
 
@@ -110,7 +115,6 @@ Class View {
 		
 		return MCR_STYLE.((file_exists(MCR_STYLE.$theme_dir.$base.$way))? $theme_dir : self::def_theme . '/'). $base . $way;
 	} 
-
 
     public function arrowsGenerator($link, $curpage, $itemsnum, $per_page, $prefix = false) { 
 		
@@ -696,7 +700,7 @@ Class Rewrite {
 				foreach($get_params as $key => $value) {
 				
 					if (!$value) continue;
-					if ($first) { $str .= '?'; $fisrt = false; } else $str .= $amp;
+					if ($first) { $str .= '?'; $first = false; } else $str .= $amp;
 					$str .= $value.'='.$url_data[$key];	
 				}
 			} else $str .= '?'.$get_params[0].'='.$url_data;

@@ -25,7 +25,7 @@ require_once(MCR_ROOT.'instruments/base.class.php');
 require_once(MCR_ROOT.'instruments/alist.class.php');
 
 if (file_exists(MCR_ROOT.'config.php')) {
-include MCR_ROOT.'config.php';
+include MCR_ROOT . 'config.php';
 
 if (!$config['install']) { header('Location: '.BASE_URL); exit; } 
 elseif ($config['p_logic'] != $mode) /* Установка была не завершена, файл существует и режим установки не совпадает с выбранным - удаляем */
@@ -49,7 +49,7 @@ include './CMS/config/config_usual.php';
 
 define('MCR_STYLE', MCR_ROOT.$site_ways['style']);
 
-include MCR_ROOT.'instruments/timezones.php';
+include MCR_ROOT . 'instruments/timezones.php';
 
 define('STYLE_URL', $site_ways['style']);
 define('DEF_STYLE_URL', STYLE_URL . View::def_theme . '/');
@@ -57,9 +57,12 @@ define('CUR_STYLE_URL', DEF_STYLE_URL);
 
 $page = 'Настройка '.PROGNAME;
 $save_conf_err = 'Ошибка создания \ перезаписи файла '.MCR_ROOT.'config.php (корневая дирректория сайта). Папка защищена от записи \ файл не доступен для записи. Настройки не были сохранены.';
+
+$i_sd = 'other/install/';
+
 $content_advice = 'Заполните форму для завершения установки '.PROGNAME;
 $content_servers = ''; $content_js = '';
-$content_side = View::ShowStaticPage('./style/install_side.html');
+$content_side = View::ShowStaticPage('install_side.html', $i_sd);
 
 $addition_events = '';
 $info = '';  $cErr = '';
@@ -365,35 +368,35 @@ checkBaseRequire();
 
 ob_start(); 
 
-if ($info) include './style/info.html'; 
+if ($info) include View::Get('info.html', $i_sd); 
 if ($cErr) {
 	$info = $cErr;
 	$info_color = 'alert-error';
-	include './style/info.html'; 
+	include View::Get('info.html', $i_sd); 
 }
 
 switch ($step) {
 	case 1: 
-	include './style/install_method.html'; 
-	include './style/install.html';	
+	include View::Get('install_method.html', $i_sd);  
+	include View::Get('install.html', $i_sd); 	
 	break;
 	case 2: 
 	switch ($mode) {
-		case 'usual':  include('./style/install_user.html'); break;
+		case 'usual': include View::Get('install_user.html', $i_sd); break;
 		case 'xenforo': 
-		case 'xauth': include('./style/install_'.$mode.'.html'); break;
-		case 'authme': include('./style/install_xauth.html'); break;
+		case 'xauth': include View::Get('install_'.$mode.'.html', $i_sd); break;
+		case 'authme': include View::Get('install_xauth.html', $i_sd); break;
 		case 'ipb': 
 		case 'joomla':		
 		case 'dle':
-		case 'wp': include('./style/install_mcms.html'); break;
+		case 'wp': include View::Get('install_mcms.html', $i_sd); break;
 	} 	
 	break;
-	case 3: include './style/install_constants.html'; break;
-	default: include './style/other.html'; break;
+	case 3: include View::Get('install_constants.html', $i_sd); break;
+	default: include View::Get('other.html', $i_sd); break;
 }
 
 $content_main = ob_get_clean();
 
-include_once View::Get('index.html');
+include View::Get('index.html');
 ?>

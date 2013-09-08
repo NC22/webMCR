@@ -47,7 +47,7 @@ global $addition_events, $content_js;
 
 $menu = new Menu();
 
-if ($config['offline'] and (empty($user) or $user->group() != 3)) exit(View::ShowStaticPage('site_closed.html', ''));
+if ($config['offline'] and (empty($user) or $user->group() != 3)) exit(View::ShowStaticPage('site_closed.html'));
 
 $content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice(); $content_js = '';
 
@@ -72,7 +72,7 @@ elseif (isset($_POST['mode'])) $mode = $_POST['mode'];
 if ($mode == 'side') $mode = $config['s_dpage'];
 
 switch ($mode) {
-    case 'start': $page = 'Начать игру'; $content_main = View::ShowStaticPage('start_game.html', '');  break;
+    case 'start': $page = 'Начать игру'; $content_main = View::ShowStaticPage('start_game.html');  break;
 	case 'register': 
 	case 'news':	  include('./location/news.php');		break;
 	case 'news_full': include('./location/news_full.php');	break;

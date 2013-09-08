@@ -1,0 +1,42 @@
+<div class="form-block" style="margin-bottom: 12px;" >
+
+<form method="post">
+  <fieldset>
+  
+	<input type="hidden" name="step" value="3" />
+	<input type="hidden" name="mode" value="<?php echo $mode ?>" />
+	
+    <legend>3 / 3 Остальные настройки</legend>
+	
+	<label>Часовой пояс:</label>
+    <select name="site_timezone" class="input-xlarge"><?php echo TimezoneList(date_default_timezone_get()); ?></select>
+	
+	<label>Название сайта:</label>
+	<span class="help-block">Название, отображаемое в заголовке и на страницах сайта. </span>
+    <input type="text" name="site_name" value="<?php echo $config['s_name']; ?>">
+	
+	<label>Описание сайта:</label>
+	<span class="help-block">По умолчанию используется для индексации сайта поисковыми машинами. Так же отображается под названием сайта.</span>
+    <input type="text" name="site_about" value="<?php echo $config['s_about']; ?>">	
+	
+	<label>Ключевые слова:</label>
+	<span class="help-block">Используются для индексации сайта поисковыми машинами. Вводить через пробел, общая длинна не > 200 символов </span>
+    <input type="text" name="site_keyword" value="<?php echo $config['s_keywords']; ?>">
+		
+	<label class="checkbox">
+	  <input type="checkbox" name="sbuffer" value="1" <?php echo ($config['sbuffer'])?'checked="checked"':'' ?>> Буферизация генерируемых изображений
+	</label>
+	<span class="help-block">Рекомендуется включить, если вы намерены разрешить использование HD скинов на вашем сайте.</span>
+	
+	<!--
+	<label class="checkbox">
+	  <input type="checkbox" name="skinposer" value="1" <?php echo ($config['skinposer'])?'checked="checked"':'' ?>> Галерея образов
+	</label>
+	<span class="help-block">Отдельный список образов, составленый пользователями или администратором, из которого можно выбрать образ персонажа.</span>
+	-->
+    <button type="submit" class="btn">Продолжить</button>
+	
+  </fieldset>
+</form>
+
+</div>
