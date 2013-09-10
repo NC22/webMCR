@@ -579,7 +579,7 @@ if ($do) {
       	
 		$skin_def = $ban_user->defaultSkinTrigger();
 		$cloak_exist = file_exists($ban_user->getCloakFName()); 
-		$ban_user_img_get = $ban_user->getSkinLink().'&amp;refresh='.rand(1000, 9999);
+		$user_img_get = $ban_user->getSkinLink().'&amp;refresh='.rand(1000, 9999);
 		
         if ($cloak_exist or !$skin_def)  include View::Get('profile_skin.html', $st_subdir.'profile/');
         if (!$skin_def )                 include View::Get('profile_del_skin.html', $st_subdir.'profile/');  

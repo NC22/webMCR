@@ -156,7 +156,7 @@ private $downloads;
 		case 'jpeg': $mimetype = 'image/jpeg'; $image = true; break;
 		case 'png':	$mimetype = 'image/png'; $image = true; break;
 		case 'gif': $mimetype = 'image/gif'; $image = true; break;
-		case 'zip': $mimetype = 'application/zip'; $image = true; break;
+		case 'zip': $mimetype = 'application/zip'; break;
 		case 'rar': $mimetype = 'application/x-rar-compressed'; break;
 		case 'exe': $mimetype = 'application/octet-stream'; break;
 		case 'jar': $mimetype = 'application/x-jar'; break;
@@ -167,16 +167,16 @@ private $downloads;
 	
 	$name_enc = urlencode($this->name);
 	
-		header('Content-Type:'.$mimetype.';name='.$name_enc); 
+		header('Content-Type: '.$mimetype); 
 	
-	if (!$image) {
+	if (!$image) {	
 	
-		header('Content-Transfer-Encoding:binary'); 
-		header('Content-Length:'.filesize($this->way)); 
-		header('Content-Disposition:attachment;filename='.$name_enc); 
-		header('Expires:0'); 
-		header('Cache-Control:no-cache, must-revalidate'); 
+		header('Cache-Control:no-cache, must-revalidate'); 		
+		header('Expires:0'); 		
 		header('Pragma:no-cache'); 	
+		header('Content-Length:'.filesize($this->way)); 
+		header('Content-Disposition: attachment; filename="'.$name_enc.'"'); 
+		header('Content-Transfer-Encoding:binary');
 		
 		BD("UPDATE `{$this->db}` SET downloads = downloads + 1 WHERE `id`='{$this->id}'");
 	}	
