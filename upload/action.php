@@ -69,7 +69,7 @@ switch ($method) {
 		$file_info = $file->getInfo();
 		
 		$ajax_message['file_id'] = $file_info['id'];	
-		$ajax_message['file_name'] = $file_info['id'];
+		$ajax_message['file_name'] = $file_info['name'];
 		$ajax_message['file_size'] = $file_info['size'];
 		
 		$ajax_message['file_html'] = $file->Show();
