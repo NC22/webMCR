@@ -36,11 +36,9 @@ if ($user->group() == 4 or !$user->email() or $user->gender() > 1) { // Not veri
 	
 	include View::Get('cp_form.html', $prefix);	
 	
-		if ( !$user->email() ) include View::Get('profile_email.html', $prefix);	
+		if ( $user->group() == 4 or !$user->email() ) include View::Get('profile_email.html', $prefix);	
 	
-		if ($user->gender() > 1 ) 
-		
-			include View::Get('profile_gender.html', $prefix);
+		if ($user->gender() > 1 ) include View::Get('profile_gender.html', $prefix);
 			
 	include View::Get('cp_form_footer.html', $prefix);
 	
