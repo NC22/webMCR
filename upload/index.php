@@ -40,7 +40,7 @@ $menu = new Menu();
 
 if ($config['offline'] and (empty($user) or $user->group() != 3)) exit(View::ShowStaticPage('site_closed.html'));
 
-$content_main = ''; $content_side = ''; $addition_events = ''; $content_advice = GetRandomAdvice();
+$content_main = ''; $content_side = ''; $addition_events = ''; $content_js = ''; $content_advice = GetRandomAdvice();
 
 if (!empty($user)) {
 
