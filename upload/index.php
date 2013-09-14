@@ -78,7 +78,7 @@ switch ($mode) {
 
 include('./location/side.php'); 
 
-$content_menu = $menu->Show(); $content_js = InitJS();
+$content_menu = $menu->Show(); $content_js .= InitJS();
 
 include View::Get('index.html');
 ?>
