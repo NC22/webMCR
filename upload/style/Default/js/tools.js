@@ -1,10 +1,12 @@
 /* WEB-APP : WebMCR (С) 2013 NC22 */
 
-var iframe;
+var iframe; var mcr_pass_init = false
 
 /* Base init on page load */
 
 function mcr_init () {
+
+if (mcr_pass_init) return
 
 var tmpLinks = getByClass('comment-text','DIV')
 
@@ -27,6 +29,8 @@ setTimeout(function() { LoadServers() }, 1000)
 
 pbm = ProgressBarManager('progressbar_meter pbar',true)
 pbm.Live(100,100)
+
+mcr_pass_init = true
 }
 
 /* Prototypes */
