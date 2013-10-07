@@ -2,8 +2,8 @@
 	function cGetName(pl) {
 		
 		var item = GetById('comment-add-text')		
-		if (item == null) return false		
-		    item.innerHTML += '[b]'+pl.innerHTML+'[/b]'
+		if (!item) return false		
+		    item.innerHTML += '[b]' + pl.innerHTML + '[/b]'
 			item.onclick()
 		  
 		return false

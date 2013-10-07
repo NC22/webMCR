@@ -12,9 +12,13 @@ function CheckLen() {
 
 function DrawLenInfo(e) {
 
-  e = e || window.event;
+  var code = -1
   
-  var code   = e.keyCode?e.keyCode:(e.which?e.which:e.charCode)
+  if (e) {
+  
+  e = e || window.event  
+  code   = e.keyCode ? e.keyCode : (e.which ? e.which : e.charCode)
+  }
   
   var used = CheckLen()
 
@@ -24,7 +28,7 @@ function DrawLenInfo(e) {
   GetById('comment-length').innerHTML = used
 
 	switch (code){
-        case 13:
+        /*case 13:*/
         case 8:
         case 9:
         case 46:

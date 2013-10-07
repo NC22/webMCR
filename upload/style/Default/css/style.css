@@ -310,7 +310,9 @@ a.news-link:hover{
   font-size: 14px;
   width: 500px;
   
-  /* Перенос длинных слов */
+  /* Перенос длинных слов */ 
+  
+  word-wrap: break-word;
 
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;

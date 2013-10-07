@@ -343,8 +343,9 @@ Class Message {
 
 	public static function Comment($text) {
        
-	   $text = TextBase::CutString(TextBase::HTMLDestruct($text));
+	   $text = trim($text);
 	   $text = TextBase::CutWordWrap(nl2br($text));
+	   $text = TextBase::CutString(TextBase::HTMLDestruct($text));	   
 	   
 	  return TextBase::SQLSafe($text);      
 	}
