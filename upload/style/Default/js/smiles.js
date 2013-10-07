@@ -15,7 +15,7 @@ var smiles =
 function StringWithSmiles(text) {
 
 	for (var i=0; i<=smiles.length-1; ++i) 
-		 text = text.replaceAll(smiles[i].smile,'<img src="' + base_url + way_style + '/img/smiles/' + smiles[i].image + '" alt="Смайлик" />')
+		 text = text.replaceAll(smiles[i].smile,'<img src="' + base_url + way_style + 'img/smiles/' + smiles[i].image + '" alt="Смайлик" />')
 		 
   return text	 
 }

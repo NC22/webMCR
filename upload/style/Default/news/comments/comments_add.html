@@ -110,7 +110,7 @@ var smile_holder = GetById('comment-smile-list')
 if ( smile_holder.innerHTML.length ) return false
 
   for (var i=0; i<=smiles.length-1; ++i) 
-     smile_holder.innerHTML += '<a href="#" onclick="return cAddSmile('+ i +')" class="smile"><img src="' + base_url + way_style + '/img/smiles/' + smiles[i].image + '" alt="Смайлик"/></a>'
+     smile_holder.innerHTML += '<a href="#" onclick="return cAddSmile('+ i +')" class="smile"><img src="' + base_url + way_style + 'img/smiles/' + smiles[i].image + '" alt="Смайлик"/></a>'
 }
 
 function Quote(id) {
