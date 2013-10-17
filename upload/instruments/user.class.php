@@ -237,7 +237,7 @@ private $deadtry;
 			$result  = BD("SELECT `{$bd_money['money']}` FROM `{$bd_names['iconomy']}` WHERE `{$bd_money['login']}`='".TextBase::SQLSafe($this->name())."'");
 			if (!mysql_num_rows( $result )) {
 			
-			$result = BD("INSERT INTO `{$bd_names['iconomy']}` (`{$bd_money['login']}`,`{$bd_money['money']}`) values ('".TextBase::SQLSafe($this->name())."','0')");	
+			$result = BD("INSERT INTO `{$bd_names['iconomy']}` (`{$bd_money['login']}`) values ('".TextBase::SQLSafe($this->name())."')");	
 			return 0;			
 			}
 			
