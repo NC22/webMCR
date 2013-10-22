@@ -96,7 +96,7 @@ class ThemeManager extends View {
 
 		while (($file = readdir($fdir)) !== false) {
 		
-			if ( in_array($file, self::$false_dir) )  continue;
+			if ( in_array($file, self::$false_dir) or !is_dir( MCR_STYLE . $file) )  continue;
 			
 			if (!is_file($dir . $file)) 
 			
@@ -282,7 +282,7 @@ class ThemeManager extends View {
 
        while (false !== ($theme = readdir($theme_dir))) {
 	   
-			if ( in_array($theme, self::$false_dir) or !file_exists(MCR_STYLE. $theme . '/' . self::sign_file)) 
+			if ( in_array($theme, self::$false_dir) or !is_dir( MCR_STYLE . $theme ) or !file_exists(MCR_STYLE. $theme . '/' . self::sign_file)) 
 			
 				continue;
 				
