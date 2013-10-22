@@ -28,7 +28,14 @@ class ThemeManager extends View {
 	
 	const tmp_dir = 'tmp/'; // from const dir MCRAFT
 	const sign_file = 'sign.txt';
-
+	
+	/** @const */
+	public static $false_dir = array (
+		'.',
+		'..',
+		'.htaccess',
+	);	
+	
 	/** @const */
 	public static $true_info = array (
 		'id',
@@ -89,7 +96,7 @@ class ThemeManager extends View {
 
 		while (($file = readdir($fdir)) !== false) {
 		
-			if ($file == ".." || $file == ".") continue;
+			if ( in_array($file, self::$false_dir) )  continue;
 			
 			if (!is_file($dir . $file)) 
 			
@@ -275,7 +282,7 @@ class ThemeManager extends View {
 
        while (false !== ($theme = readdir($theme_dir))) {
 	   
-			if ($theme == '.' or  $theme == '..' or !file_exists(MCR_STYLE. $theme . '/' . self::sign_file)) 
+			if ( in_array($theme, self::$false_dir) or !file_exists(MCR_STYLE. $theme . '/' . self::sign_file)) 
 			
 				continue;
 				
