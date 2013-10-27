@@ -415,7 +415,7 @@ private $work_skript;
   
 		while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 		
-            $inf_user = new User($line[0],$bd_users['id']);
+            $inf_user = new User($line[0]);
 			
             $user_name = $inf_user->name();
             $user_id   = $inf_user->id();

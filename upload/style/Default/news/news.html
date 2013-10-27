@@ -1,36 +1,42 @@
-<!-- <?php echo $hits ?> -->
-
 <div class="news-box">
 
-	<?php echo $admin_buttons; ?>
+	<?php echo $admin_buttons ?>
 	
 	<div class="news-header"> 
 	
-	<b><?php echo $title; ?></b> 
+	<b><?php echo $title ?></b> 
+	
+		<?php if ( $vote ) { ?>
 	
 		<div style="float: right; display: inline-block; padding-right: 6px;">
 
-			<a class="news-link" style="color: #36a24a" id="like<?php echo $id; ?>type<?php echo ItemType::News; ?>" href="#" onclick="return Like(0,<?php echo $id; ?>,<?php echo ItemType::News; ?>)">
-			<?php echo $likes; ?>
+			<a class="news-link" style="color: #36a24a" id="like<?php echo $id ?>type<?php echo ItemType::News ?>" href="#" onclick="return Like(0,<?php echo $id ?>,<?php echo ItemType::News ?>)">
+			<?php echo $likes ?>			
 			</a>
+			
 			<span style="color: #8da2b0">/</span>
-			<a class="news-link" style="color: #b34b3a" id="dislike<?php echo $id; ?>type<?php echo ItemType::News; ?>" href="#" onclick="return Like(1,<?php echo $id; ?>,<?php echo ItemType::News; ?>)">
-			<?php echo $dlikes; ?>
+			
+			<a class="news-link" style="color: #b34b3a" id="dislike<?php echo $id ?>type<?php echo ItemType::News ?>" href="#" onclick="return Like(1,<?php echo $id ?>,<?php echo ItemType::News ?>)">
+			<?php echo $dlikes ?>		
 			</a>
 			
 		</div>
-	
+		
+		<?php } ?>
+		
 	</div>
 
-	<div class="news-text"><?php echo $text; ?></div>
+	<div class="news-text"><?php echo $text ?></div>
 
 	<div class="news-footer">
 
-		<?php echo $date; ?> <span class="divider">|</span> <?php echo $time; ?> 
+		<?php echo $date; ?> <span class="divider">|</span> <?php echo $time ?> 
 		<span class="divider">|</span> <a class="news-link" href="<?php echo $category_link ?>"><?php echo $category; ?></a>
 
 		<div style="float: right; display: inline-block; padding-right: 10px;">
-
+			
+			<i class="icon-eye-open"></i>&nbsp;<?php echo $hits ?>&nbsp;
+			
 			<div style="display: inline-block; margin-right: 6px;">
 
 				<a class="news-link" href="<?php echo $link; ?>">

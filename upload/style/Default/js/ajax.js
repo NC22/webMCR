@@ -61,13 +61,14 @@ function Like(dislike, id, type) {
 	return false
 }
 
-function PostComment() {
+function PostComment(script) {
 
     var addition_post = ''    
     var text          = getValById('comment-add-text')
 	var item_id       = getValById('comment-item-id')
-
-	if (text == null || item_id == null || item_id.value <= 0 ) return false
+	var item_type     = getValById('comment-item-type')
+	
+	if (text == null || item_id == null || item_type == null || item_id.value <= 0 ) return false
     if (text.length < 1) return false
 	
 	var antibot = GetById('antibot')
@@ -107,7 +108,7 @@ function PostComment() {
 	
 	}
 	
-	SendByXmlHttp('action.php', 'method=comment&comment=' + encodeURIComponent(text) + '&item_id=' + encodeURIComponent(item_id) + addition_post, event)
+	SendByXmlHttp('action.php', 'method=comment&comment=' + encodeURIComponent(text) + '&item_id=' + encodeURIComponent(item_id) + '&item_type=' + encodeURIComponent(item_type) + addition_post, event)
 	return false
 }
 

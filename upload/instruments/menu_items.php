@@ -1,11 +1,9 @@
 <?php if (!defined('MCR')) exit;
-
 $menu_items = array (
-
-  0 => array (
-  
-    'main' => array (
-	
+  0 => 
+  array (
+    'main' => 
+    array (
       'name' => 'Главная',
       'url' => '',
       'parent_id' => -1,
@@ -14,44 +12,52 @@ $menu_items = array (
       'active' => false,
       'inner_html' => '',
     ),
-
-    'guide' => array (
+    'guide' => 
+    array (
       'name' => 'Начать играть',
-      'url' => Rewrite::GetURL('guide'),
+      'url' => 'go/guide/',
       'parent_id' => -1,
       'lvl' => -1,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'rules' => array (
-	
+    'rules' => 
+    array (
       'name' => 'Правила',
-      'url' => Rewrite::GetURL('rules'),
+      'url' => 'go/rules/',
       'parent_id' => -1,
       'lvl' => -1,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'options' => array (
-	
+    'options' => 
+    array (
       'name' => 'Настройки',
-      'url' => Rewrite::GetURL('options'),
+      'url' => 'go/options/',
       'parent_id' => -1,
       'lvl' => 1,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
+    'skinposer' => 
+    array (
+      'name' => 'Образы',
+      'url' => 'go/skinposer',
+      'parent_id' => -1,
+      'lvl' => 0,
+      'permission' => -1,
+      'config' => 'sp_online',
+      'active' => false,
+      'inner_html' => '',
+    ),
   ),
-  
-  1 => array (
-
-    'admin' => array (
-	
+  1 => 
+  array (
+    'admin' => 
+    array (
       'name' => 'Администрирование',
       'url' => '',
       'parent_id' => -1,
@@ -60,124 +66,126 @@ $menu_items = array (
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'add_news' => array (
-	
+    'add_news' => 
+    array (
       'name' => 'Добавить новость',
-      'url' => Rewrite::GetURL('news_add'),
+      'url' => 'go/news_add/',
       'parent_id' => 'admin',
       'lvl' => 1,
       'permission' => 'add_news',
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'control' => array (
-	
+    'control' => 
+    array (
       'name' => 'Пользователи',
-      'url' => Rewrite::GetURL(array('control', 'user')),
+      'url' => 'control/user/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'category_news' => array (
-	
+    'category_news' => 
+    array (
       'name' => 'Категории новостей',
-      'url' => Rewrite::GetURL(array('control', 'category')),
+      'url' => 'control/category/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-
-    'reg_edit' => array (
-	
+    'reg_edit' => 
+    array (
       'name' => 'Регистрация',
-      'url' => Rewrite::GetURL(array('control', 'ipbans')),
+      'url' => 'control/ipbans/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'group_edit' => array (
-	
+    'group_edit' => 
+    array (
       'name' => 'Группы',
-      'url' => Rewrite::GetURL(array('control', 'group')),
+      'url' => 'control/group/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-    'file_edit' => array (
-	
+    'file_edit' => 
+    array (
       'name' => 'Файлы',
-      'url' => Rewrite::GetURL(array('control', 'filelist')),
+      'url' => 'control/filelist/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-    'site_edit' => array (
-	
+    'site_edit' => 
+    array (
       'name' => 'Сайт',
-      'url' => Rewrite::GetURL(array('control', 'constants')),
+      'url' => 'control/constants/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-    'rcon' => array (
-	
+    'rcon' => 
+    array (
       'name' => 'RCON',
-      'url' => Rewrite::GetURL(array('control', 'rcon')),
+      'url' => 'control/rcon/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'game_edit' => array (
-	
+    'game_edit' => 
+    array (
       'name' => 'Настройки игры',
-      'url' => Rewrite::GetURL(array('control', 'update')),
+      'url' => 'control/update/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-	
-    'serv_edit' => array (
-	
+    'serv_edit' => 
+    array (
       'name' => 'Мониторинг серверов',
-      'url' => Rewrite::GetURL(array('control', 'servers')),
+      'url' => 'control/servers/',
       'parent_id' => 'admin',
       'lvl' => 15,
       'permission' => -1,
       'active' => false,
       'inner_html' => '',
     ),
-
-    'exit' => array (
-	
+    'exit' => 
+    array (
       'name' => 'Выход',
       'url' => 'login.php?out=1',
       'parent_id' => -1,
       'lvl' => 1,
       'permission' => -1,
       'active' => false,
-      'inner_html' => '',	  
+      'inner_html' => '',
     ),
-	
+    'sp_admin' => 
+    array (
+      'name' => 'SkinPoser',
+      'url' => '?mode=skinposer&do=admin',
+      'parent_id' => 'admin',
+      'lvl' => -1,
+      'permission' => -1,
+      'config' => -1,
+      'active' => false,
+      'inner_html' => '',
+    ),
   ),
 );

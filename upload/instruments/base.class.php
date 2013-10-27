@@ -1,16 +1,61 @@
 <?php
-define('MCR', '2.3'); 
+define('MCR', '2.35b'); 
 define('PROGNAME', 'webMCR '.MCR);
 define('FEEDBACK', '<a href="http://drop.catface.ru/index.php?nid=17">'.PROGNAME.'</a> &copy; 2013 NC22');  
 
-/* TODO обобщенная модель для удаления \ проверки существования объекта */
+class Item extends View {
 
-class ItemType { 
+protected $type;
+protected $id;
+
+protected $db;
+
+	public function __construct( $id, $type, $db, $style_sd = false ) {
+	
+		parent::View($style_sd);
+		 
+		$this->id = (int)$id; 
+		$this->db = $db;
+		
+		$this->type = (int)$type;	
+	}
+	
+	public function type() {
+		
+		if (!$this->Exist()) return false;
+		
+		return $this->type;	
+	}	
+	
+	public function id() {
+	
+		return $this->id;	
+	}	
+		
+    public function Exist() {
+	
+        if ($this->id) return true;
+        return false;
+    }	
+	
+	public function Delete() {
+	
+        if (!$this->Exist()) return false;
+        
+        BD("DELETE FROM `{$this->db}` WHERE `id`='" . $this->id . "'");	
+		
+        $this->id = false;
+        return true; 
+    }
+}
+
+class ItemType {  // stock types 
 
 	const News = 1;
 	const Comment = 2;
-	const Skin = 3;	
-	
+	const Skin = 3;
+	const Server = 4;
+
 	/** @const */
 	public static $SQLConfigVar = array (
 		 

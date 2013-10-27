@@ -5,7 +5,6 @@ if (!defined('MCR')) exit;
  
  - Менеджер каталогизатора новостей
  - Новость
- - Комментарий
  - Категории новостей 
 
 */
@@ -158,163 +157,68 @@ Class CategoryManager {
 	}
 }
 
-Class Comments_Item extends View { 
-private $db;
-
-private $id;
-private $user_id;
-
-	public function Comments_Item($id = false, $style_sd = false) {
-	global $bd_names;	
-
-		parent::View($style_sd);
-	
-		$this->db    = $bd_names['comments'];
-	
-		$this->id = (int)$id; if (!$this->id) return false;
-		
-		$result = BD("SELECT `user_id` FROM `{$this->db}` WHERE `id`='".TextBase::SQLSafe($this->id)."'"); 
-		if ( mysql_num_rows( $result ) != 1 ) {	$this->id = false; return false; }		
-	
-	    $line = mysql_fetch_array($result, MYSQL_NUM);        
-        $this->user_id = (int)$line[0];		
-	}
-	
-	public function Create($message, $item_id) {
-	global $user,$bd_names,$bd_users;	
-	
-		if (empty($user) or !$user->canPostComment()) return 0; 
-		
-		$item_id = (int)$item_id;
-		$message = Message::Comment($message);
-		if ( TextBase::StringLen($message) < 2 ) return 1701;
-
-		$result = BD("SELECT `id` FROM `{$bd_names['news']}` WHERE `id`='".TextBase::SQLSafe($item_id)."'"); 
-		if ( mysql_num_rows( $result ) != 1 ) return 1702;			
-			
-		if ( BD("INSERT INTO `{$this->db}` ( `message`, `time` , `item_id`, `user_id`) values ('".TextBase::SQLSafe($message)."', NOW(), '".TextBase::SQLSafe($item_id)."' , '".$user->id()."')") ) {
-			
-		$this->id = mysql_insert_id();
-		$this->user_id = $user->id();
-		
-		BD("UPDATE {$bd_names['users']} SET comments_num=comments_num+1 WHERE {$bd_users['id']}='".$user->id()."'"); 		
-		}
-	return 1; 
-	}
-	
-	public function Exist() {
-		if ($this->id) return true;
-		return false;
-	}
-	
-	public function Show() {
-	global $user, $bd_users;
-	
-		if (!$this->Exist()) return $this->ShowPage('comments/comment_not_found.html');
-			
-		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y %H:%i:%S') AS time,message,item_id FROM `{$this->db}` WHERE id='".$this->id."'"); 
-		if (!mysql_num_rows( $result )) return ''; 
-		
-		$line = mysql_fetch_array( $result, MYSQL_ASSOC );
-			
-		$admin_buttons 	= '';
-		$female_mark	= '';
-		$text 			= Message::BBDecode($line['message']);
-		$date 			= $line['time'];
-			
-		$id		 = $this->id;		
-		$item_id = $line['item_id'];		
-		$user_id = $this->user_id;
-			
-		$user_post = new User($user_id, $bd_users['id']);
-				
-		$user_name   = ($user_post->id())? $user_post->name() : 'Удаленный пользователь';
-		$user_female = ($user_post->id())? $user_post->isFemale() : false;	
-		
-		$user_img_get = $user_post->getSkinLink(true);
-		
-		unset($user_post);
-			
-		if ( !empty($user) and ( $user->getPermission('adm_comm') or $user->id() == $user_id ) ) { 
-
-			ob_start(); include $this->GetView('comments/comments_admin.html');			  
-			$admin_buttons = ob_get_clean();
-		}
-
-		if ( $user_female ) $female_mark = $this->ShowPage('comments/comments_girl.html');
-		
-		ob_start();	
-		if ( !empty($user) ) include $this->GetView('comments/comments.html');
-		else 	             include $this->GetView('comments/comments_unauth.html');
-	 
-	return ob_get_clean();		
-	}
-
-    public function GetAuthorID() {
-		if (!$this->Exist()) return false;		
-        return $this->user_id;
-    }
-
-	public function Edit($message) {
-		$message = Message::Comment($message);				
-		BD("UPDATE `{$this->db}` SET message='".TextBase::SQLSafe($message)."' WHERE id='".$this->id."'");
-		
-		return true; 
-	}	
-		
-	public function Delete() {
-		if (!$this->Exist()) return false;
-		
-		BD("DELETE FROM `{$this->db}` WHERE id='".$this->id."'");	
-		$this->id = false;
-		return true; 
-	}
-}
-
 /* Класс записи в каталоге */
 
-Class News_Item extends View {
-private $db;
-
-private $id;
+Class News_Item extends Item {
 private $category_id;
+private $discus;
 private $title;
+private $vote;
 
-	public function News_Item($id = false, $style_sd = false) {
+private $link;
+private $link_work;
+
+private $comments;
+
+	public function __construct($id = false, $style_sd = false ) {
 	global $bd_names;
 	
-		parent::View($style_sd);
+		parent::__construct($id, ItemType::News, $bd_names['news'], $style_sd);
+		if (!$this->id ) return false;
 		
-		$this->db = $bd_names['news'];	
-		
-	    $this->id = (int)$id; if (!$this->id) return false;
-
-		$result = BD("SELECT `category_id`,`title` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
+		$result = BD("SELECT `category_id`, `title`, `discus`, `comments`, `vote` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
 		if ( mysql_num_rows( $result ) != 1 ) { $this->id = false; return false; }
 		
-		$line = mysql_fetch_array( $result, MYSQL_NUM );
-		$this->category_id = $line[0];	
-		$this->title = $line[1];	
+		$line = mysql_fetch_array( $result, MYSQL_ASSOC );
+		
+		$this->category_id	= (int) $line['category_id'];	
+		$this->title		= $line['title'];	
+		$this->discus		= ((int) $line['discus'] == 1) ? true : false;	
+		$this->vote			= ((int) $line['vote'] == 1) ? true : false;
+		
+		$this->link 	 = Rewrite::GetURL(array('news', $this->id), array('', 'id'));
+		$this->link_work = 'index.php?id=' . $this->id . '&amp;';
+		
+		$this->comments = (int) $line['comments'];
 		
 	return true;
 	}
 	
-	public function Create($cat_id, $title, $message, $message_full = false) {
+	public function Create($cat_id, $title, $message, $message_full = false, $vote = true, $discus = true) {
 	global $user;	
 		
 		if ($this->Exist() or empty($user) or !$user->getPermission('add_news')) return false; 
 					
 	    $sql = ''; $sql2 = '';		
-	    if ( $message_full ) { $sql = '`message_full`, '; $sql2 = "'".TextBase::SQLSafe($message_full)."', "; }
+	    if ( $message_full ) { $sql = ' `message_full`,'; $sql2 = "'".TextBase::SQLSafe($message_full)."', "; }
 		
 		$cat_id = (int) $cat_id;
 		if (!CategoryManager::ExistByID($cat_id)) return false; 
 
-		BD("INSERT INTO `{$this->db}` ( `title`, `message`, ".$sql."`time`, `category_id`, `user_id`) VALUES ( '".TextBase::SQLSafe($title)."', '".TextBase::SQLSafe($message)."', ".$sql2."NOW(), '".TextBase::SQLSafe($cat_id)."', '".$user->id()."' )");
+		$vote  = ($vote) ? 1 : 0;
+		$discus		= ($discus) ? 1 : 0;
+		
+		BD("INSERT INTO `{$this->db}` ( `title`, `message`, ".$sql." `time`, `category_id`, `user_id`, `discus`, `vote`) VALUES ( '".TextBase::SQLSafe($title)."', '".TextBase::SQLSafe($message)."', ".$sql2."NOW(), '".TextBase::SQLSafe($cat_id)."', '".$user->id()."', '".$discus."', '".$vote."' )");
 		
 		$this->id = mysql_insert_id();
+		
 		$this->category_id 	= $cat_id;
 		$this->title 		= $title;
+						
+		$this->discus   = ($discus == 1) ? true : false;	
+		$this->vote		= ($vote == 1) ? true : false;
+		
+		$this->comments = 0;
 		
 	return true; 
 	}
@@ -327,42 +231,71 @@ private $title;
         $like = new ItemLike(ItemType::News, $this->id, $user->id());
 
 		return $like->Like($dislike);
+	}	
+	
+	public function OnComment() {
+	
+		if ( !$this->Exist()) return false;
+		
+		BD("UPDATE `{$this->db}` SET `comments` = comments + 1 WHERE `id`='". $this->id ."'");	
+		$this->comments++;
 	}
 	
-	public function GetCategoryID() {
+	public function OnDeleteComment() {
+	
+		if ( !$this->Exist()) return false;
+		
+		BD("UPDATE `{$this->db}` SET `comments` = comments - 1 WHERE `id`='". $this->id ."'");	
+		$this->comments--;
+	}
+	
+	public function categoryID() {
 		if (!$this->Exist()) return false;		
         return $this->category_id;		
 	}
 	
-	public function GetTitle() {
+	public function title() {
 		if (!$this->Exist()) return false;		
         return $this->title;		
 	}
 	
-	public function Exist() {
-		if ($this->id) return true;
-		return false;
-	} 
-
+	public function getInfo() { 
+		if (!$this->Exist()) return false; 
+		
+		$result = BD("SELECT `message`, `message_full` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
+		if (!mysql_num_rows( $result )) return ''; 
+		
+		$line = mysql_fetch_array($result, MYSQL_ASSOC);
+		
+		return array (	'id' 		=> $this->id,
+						'type' 		=> $this->type(),
+						'title' 	=> $this->title,
+						'vote'		=> $this->vote,
+						'discus'	=> $this->discus,
+						'comments'	=> $this->comments,
+						'text'		=> $line['message'],
+						'text_full'	=> $line['message_full'], 
+						'category_id' => $this->category_id, );		
+	}
+	
 	public function Show($full_text = false) {
     global $config, $user, $bd_names;
 	
 	if (!$this->Exist()) return $this->ShowPage('news_not_found.html');
 		
-		$result = BD("SELECT COUNT(*) FROM `{$bd_names['comments']}` WHERE item_id='".$this->id."'");
-		$line   = mysql_fetch_array($result, MYSQL_NUM);	  
-		$comments = $line[0];	
-		
-		$sql = ( $full_text )? ' `message_full`,' : ''; //:%S
+		$sql_text = ( $full_text )? ' `message_full`,' : ''; 
 				
 		$sql_hits = ' `hits`,';
+		
 		if ( $full_text ) {
 		
 			BD("UPDATE `{$this->db}` SET `hits` = LAST_INSERT_ID( `hits` + 1 ) WHERE `id`='".$this->id."'");
 			$sql_hits = " LAST_INSERT_ID() AS hits,"; 
 		}
 		
-		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS `date`, DATE_FORMAT(time,'%H:%i') AS `time`,".$sql_hits." `likes`, `dislikes`,".$sql." `message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
+		$sql_likes = ( $this->vote ) ? ' `likes`, `dislikes`,' : '';
+		
+		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS `date`, DATE_FORMAT(time,'%H:%i') AS `time`, ".$sql_hits.$sql_likes.$sql_text." `message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
 		if (!mysql_num_rows( $result )) return ''; 
 		
 		$line = mysql_fetch_array($result, MYSQL_ASSOC);
@@ -376,11 +309,17 @@ private $title;
 		$title = $this->title;
 		$date  = $line['date'];
 		$time  = $line['time'];
-		$likes = $line['likes'];
-		$hits  = $line['hits'];
-		$dlikes = $line['dislikes']; 
+		
+		$vote = ( $this->vote ) ? true : false;
 
-		$link  = Rewrite::GetURL(array('news', $id), array('', 'id'));
+		$likes = ( $this->vote ) ? $line['likes'] : '-';
+		$dlikes = ( $this->vote ) ? $line['dislikes'] : '-';
+		
+		$hits  = $line['hits'];		 
+
+		$link  = $this->link;
+		
+		$comments = $this->comments;
 		
 		$category_id = $this->category_id;		
         $category    = CategoryManager::GetNameByID($category_id);
@@ -408,7 +347,36 @@ private $title;
 		return ob_get_clean();				
 	}
 	
-	public function Edit($cat_id, $title, $message, $message_full = false) {
+	public function ShowFull($comment_list = false) { 
+	global $config, $bd_names;
+
+	$link  = Rewrite::GetURL(array('news', $this->id), array('', 'id'));
+
+		$item_exist = $this->Exist();
+		
+		$title      	= ($item_exist)? $this->title() : 'Новость не найдена'; 			
+		$category_id 	= ($item_exist)? $this->categoryID() : 0;
+		$category 		= ($item_exist)? CategoryManager::GetNameByID($category_id) : 'Без категории';
+		$category_link 	= Rewrite::GetURL(array('category', $category_id), array('', 'cid'));
+		
+	    ob_start(); include $this->GetView('news_full_header.html');					  
+	    $html = ob_get_clean();
+
+		$html .= $this->Show(true);		
+		
+		if (!$item_exist) return $html;
+		
+		loadTool('comment.class.php');
+
+		$comments = new CommentList($this, $this->link_work, $this->st_subdir . 'comments/');
+		$html .= $comments->Show($comment_list);
+	
+		if ($this->discus) $html .= $comments->ShowAddForm();
+	
+	return $html;	
+	}
+	
+	public function Edit($cat_id, $title, $message, $message_full = false, $vote = true, $discus = true ) {
 	global $user;
 		
 		if (!$this->Exist() or empty($user) or !$user->getPermission('add_news')) return false; 
@@ -416,12 +384,19 @@ private $title;
 		$cat_id = (int)$cat_id;
 		if (!CategoryManager::ExistByID($cat_id)) return false; 
 				
-		if(!$message_full) $message_full = '';
-				
-		BD("UPDATE `{$this->db}` SET `message`='".TextBase::SQLSafe($message)."',`title`='".TextBase::SQLSafe($title)."',`message_full`='".TextBase::SQLSafe($message_full)."',`category_id`='".TextBase::SQLSafe($cat_id)."' WHERE `id`='".$this->id."'"); 		
+		if (!$message_full) $message_full = '';
+		
+		$vote   = ($vote)   ? 1 : 0;
+		$discus	= ($discus) ? 1 : 0;
+		
+		BD("UPDATE `{$this->db}` SET `message`='".TextBase::SQLSafe($message)."',`title`='".TextBase::SQLSafe($title)."',`message_full`='".TextBase::SQLSafe($message_full)."',`category_id`='".TextBase::SQLSafe($cat_id)."', `discus`='".$discus."', `vote`='".$vote."' WHERE `id`='".$this->id."'"); 		
 		
 		$this->category_id 	= (int)$cat_id;
 		$this->title 		= $title;
+				
+		$this->discus   = ($discus == 1) ? true : false;	
+		$this->vote		= ($vote == 1) ? true : false;
+		
 		return true; 
 	}	
 		
@@ -432,44 +407,44 @@ private $title;
 		    !$user->getPermission('add_news') or 
 			!$this->Exist()) return false; 
 		
-		$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE `item_id`='".$this->id."'"); 
+		$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE `item_id`='".$this->id."' AND `item_type` = '". $this->type() ."'"); 
 		if ( mysql_num_rows( $result ) != 0 ) {
+	  
+		loadTool('comment.class.php');
 	  
 		  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 		  		
-				$comments_item = new Comments_Item($line[0]);
+				$comments_item = new Comments_Item($line[0], false);
 				$comments_item->Delete(); 
 				unset($comments_item);
 		  }
 		}
+	
+		BD("DELETE FROM `{$bd_names['likes']}` WHERE `item_id` = '".$this->id."' AND `item_type` = '". $this->type() ."'");
 		
-		BD("DELETE FROM `{$this->db}` WHERE `id`='".$this->id."'");		
-		BD("DELETE FROM `{$bd_names['likes']}` WHERE `item_id` = '".$this->id."' AND `item_type` = '".ItemType::News."'");
-		
-		$this->id = false;
-		return true; 
+		return parent::Delete(); 
 	}	
 }
 
 /* Менеджер вывода записей из каталога */
 
 Class NewsManager extends View {
-private $work_skript;
+private $work_link;
 private $category_id;
 
-    public function NewsManager($category = 1, $style_sd = false, $work_skript = 'index.php?') { // category = -1 -- all last news
+    public function NewsManager($category = 1, $style_sd = false, $work_link = 'index.php?') { // category = -1 -- all last news
 	
 		parent::View($style_sd);
 	
 		if ((int) $category <= 0) $category = 0;
 		
 		$this->category_id = (int)$category; 
-		$this->work_skript = $work_skript;
+		$this->work_link = $work_link;
 	}
 	
 	public function destroy() {
 
-	  unset($this->work_skript); 
+	  unset($this->work_link); 
 	  unset($this->category_id);   
 	}
 
@@ -483,17 +458,18 @@ private $category_id;
 	return ob_get_clean();	
 	}	
 	
-	public function ShowNewsEditor() { /* Перевести на AJAX как в случае с комментариями */
+	public function ShowNewsEditor() { 
 	global $bd_names;
 
 	$editorTitle  = 'Добавить новость';
 	$editorButton = 'Добавить';
 	
+	$editInfo = array ( 'vote' => isset($_POST['hide_vote']) ? false : true, 'discus' => isset($_POST['hide_discus']) ? false : true );
 	$editCategory = 0;
 	$editMode     = 0;
-	$editTitle    = '';
-	$editMessage  = '';
-	$editMessage_Full  = '';
+	$editTitle    = InputGet('title');
+	$editMessage  = InputGet('message');
+	$editMessage_Full  = InputGet('message_full');
 	$error        = '';
 
 		if (isset($_POST['title']) and isset($_POST['message']) and isset($_POST['cid'])) {
@@ -519,21 +495,21 @@ private $category_id;
 				
 				    $news_item = new News_Item($editMode, $this->st_subdir);
 				
-				if ($news_item->Edit($editCategory, $title, $mes, $mesFull)) {
+				if ($news_item->Edit($editCategory, $title, $mes, $mesFull, $editInfo['vote'], $editInfo['discus'])) {
 				
 				    $state       = 'success';
-				    $text_str    = 'Новость обновлена.';
+				    $text_str    = 'Новость обновлена';
 					
 				} else
 				
-				    $text_str    = 'Недостаточно прав.';
+				    $text_str    = 'Недостаточно прав';
 				
 				$editMode = 0;
 				
 				} else {
 				
 				$news_item = new News_Item();				
-				$news_item->Create($editCategory, $title, $mes, $mesFull);
+				$news_item->Create($editCategory, $title, $mes, $mesFull, $editInfo['vote'], $editInfo['discus']);
 				
 				$state     = 'success';
 				$text_str = 'Новость добавлена';
@@ -549,23 +525,24 @@ private $category_id;
 		    $news_item = new News_Item((int)$_GET['delete']);
 			$news_item->Delete();
 			
-			header("Location: ".$this->work_skript."ok");
+			header("Location: ".$this->work_link."ok");
 			
 		} elseif (isset($_GET['edit'])) {
 			
 			$editorTitle  = 'Обновить новость';
 			$editorButton = 'Изменить';
 			
-			$mesid  = (int)$_GET['edit']; 
+			$news_item = new News_Item((int)$_GET['edit']);
 			
-			$result = BD("SELECT * FROM `{$bd_names['news']}` WHERE `id`='".TextBase::SQLSafe($mesid)."'");
-			$line   = mysql_fetch_array($result, MYSQL_ASSOC);
+			if (!$news_item->Exist() ) return ''; 
 			
-			$editMode         = $mesid;
-			$editCategory     = $line['category_id'];
-			$editTitle        = TextBase::HTMLDestruct($line['title']);
-			$editMessage      = TextBase::HTMLDestruct($line['message']);
-			$editMessage_Full = TextBase::HTMLDestruct($line['message_full']);
+			$editInfo = $news_item->getInfo();
+			
+			$editMode         = $editInfo['id'];
+			$editCategory     = $editInfo['category_id'];
+			$editTitle        = TextBase::HTMLDestruct($editInfo['title']);
+			$editMessage      = TextBase::HTMLDestruct($editInfo['text']);
+			$editMessage_Full = TextBase::HTMLDestruct($editInfo['text_full']);
 			
 		}
 
@@ -623,89 +600,8 @@ private $category_id;
 				 unset($news_item);				 
 		  }
 
-	$html_news .= $this->arrowsGenerator($this->work_skript, $list, $newsnum, $news_pnum, 'news');		  		  
+	$html_news .= $this->arrowsGenerator($this->work_link, $list, $newsnum, $news_pnum, 'news');		  		  
 	}		
-	return $html_news;	
-	}
-	
-	public function ShowCommentForm($id) {
-	global $user;
-
-	if (empty($user) or !$user->getPermission('add_comm')) return '';
-	
-         $news_item = new News_Item($id, $this->st_subdir);
-	if (!$news_item->Exist()) return '';
-	
-	$postTitle  = 'Добавить комментарий';
-	$postButton = 'Добавить';
-	
-	$editMode     = 0;
-	$editTitle    = '';
-	$editMessage  = '';
-	$error        = '';
-
-	ob_start();
-		
-	include $this->GetView('comments/comments_add.html');
-				  
-	return ob_get_clean();
-	}
-	
-	public function ShowFullById($id,$list = false) { 
-	global $config,$bd_names;
-
-	$id   = (int) $id;
-	$link  = Rewrite::GetURL(array('news', $id), array('', 'id'));
-    
-		$news_item  = new News_Item($id, $this->st_subdir); // можно определять некоторые переменные на этапе инициализации н. заглавие
-		$item_exist = $news_item->Exist();
-		
-		$title      	= ($item_exist)? $news_item->GetTitle() : 'Новость не найдена'; 			
-		$category_id 	= ($item_exist)? $news_item->GetCategoryID() : 0;
-		$category 		= ($item_exist)? CategoryManager::GetNameByID($category_id) : 'Без категории';
-		$category_link 	= Rewrite::GetURL(array('category', $category_id), array('', 'cid'));
-		
-	    ob_start(); include $this->GetView('news_full_header.html');					  
-	    $html_news = ob_get_clean();
-
-		$html_news .= $news_item->Show(1);			
-		unset($news_item);
-		
-		if (!$item_exist) return $html_news;	
-
-		$result = BD("SELECT COUNT(*) FROM `{$bd_names['comments']}` WHERE item_id='".TextBase::SQLSafe($id)."'");
-		$line = mysql_fetch_array($result);
-		
-		$comments_html = '';  
-		$arrows_html = '';  
-		
-		$commentnum = $line[0];
-		if ($commentnum) {
-		
-			$comm_pnum = $config['comm_by_page']; 
-			$comm_order = ($config['comm_revers'])? 'ASC' : 'DESC';	
-			
-			$list_def = ($config['comm_revers'])? ceil($commentnum / $comm_pnum) : 1;	
-			$list = ($list <= 0)? $list_def : (int)$list;		
-			
-			$result = BD("SELECT id FROM `{$bd_names['comments']}` WHERE item_id='".TextBase::SQLSafe($id)."' ORDER by time $comm_order LIMIT ".($comm_pnum*($list-1)).",".$comm_pnum); 
-			if ( mysql_num_rows( $result ) != 0 ) {			
-			
-			  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
-			  
-					 $comments_item = new Comments_Item($line[0], $this->st_subdir);
-					 
-					 $comments_html.= $comments_item->Show(); 
-					 unset($comments_item);
-			  }
-			  
-			$arrows_html = $this->arrowsGenerator($this->work_skript, $list, $commentnum, $comm_pnum, 'news');		  
-			}
-		}
-		
-	ob_start(); include $this->GetView('comments/comments_container.html');					  
-	$html_news .= ob_get_clean();
-	
 	return $html_news;	
 	}	
 }

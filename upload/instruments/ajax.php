@@ -18,13 +18,13 @@ function escapeJsonString($value) { // экранирование строки J
     return $result;
   }
   
-function CaptchaCheck($exit_mess = 2, $ajaxExit = true) { 
+function CaptchaCheck($exit_mess = 2, $ajaxExit = true, $post_name = 'antibot') { 
 
 	if (!isset($_SESSION)) session_start();
 	
 	if ( empty($_SESSION['code']) or 
-         empty($_POST['antibot']) or 
-         $_SESSION['code'] != (int)$_POST['antibot'] ) {
+         empty($_POST[$post_name]) or 
+         $_SESSION['code'] != (int)$_POST[$post_name] ) {
        
             if (isset($_SESSION['code'])) unset($_SESSION['code']);
             if ($ajaxExit) 

@@ -23,7 +23,7 @@ $html = ''; $info = ''; $server_info = '';
 
 $user_id = (!empty($_POST['user_id']))? (int)$_POST['user_id'] : false;
 $user_id = (!empty($_GET['user_id']))? (int)$_GET['user_id'] : $user_id;
-$ban_user = new User($user_id, $bd_users['id']);
+$ban_user = new User($user_id);
 
 if ($ban_user->id()) { 
 

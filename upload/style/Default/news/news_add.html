@@ -2,19 +2,19 @@
 
 <div class="form-block">
 
-	<div class="block-header"><?php echo $editorTitle; ?></div>
+	<div class="block-header"><?php echo $editorTitle ?></div>
 	
 	<div class="block-line"></div>
 	
 	<form action="index.php?mode=news_add" name="adminform" method="post">
 	
-	<input type="hidden" name="editMode" value="<?php echo $editMode; ?>">
+	<input type="hidden" name="editMode" value="<?php echo $editMode ?>">
 	
 	<div class="input-prepend">
 	
 		<span class="add-on">Заголовок:</span>
 		
-		<input type="text" name="title" class="span12" value="<?php echo $editTitle; ?>" />
+		<input type="text" name="title" class="span12" value="<?php echo $editTitle ?>" />
 		
 	</div> 
 
@@ -29,9 +29,23 @@
 	
 	<label style="padding-top: 10px;">Подробное описание: </label>
 	
-	<textarea class="span11 tinymce" style="height:200px" name="message_full"><?php echo $editMessage_Full; ?></textarea>
+	<textarea class="span11 tinymce" style="height:200px;" name="message_full"><?php echo $editMessage_Full; ?></textarea>
 	
 	<div class="block-line"></div>
+	
+	<label class="checkbox">
+			
+			<input type="checkbox" name="hide_vote" value="1" <?php echo (!$editInfo['vote']) ? 'checked="checked"': '' ?>> Без голосования			
+			
+	</label>
+	
+	<label class="checkbox">
+	
+	<input type="checkbox" name="hide_discus" value="1" <?php echo (!$editInfo['discus']) ? 'checked="checked"': '' ?>> Без обсуждения
+	
+	<div class="block-line"></div>
+	
+	</label>
 	
 	<div style="float: right;">	
 		<input class="btn" type="submit" value="<?php echo $editorButton; ?>" />

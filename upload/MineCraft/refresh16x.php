@@ -37,7 +37,7 @@ if (mysql_num_rows($result) != 1) logExit("[refresh16x.php] refresh process, wro
 
 $line = mysql_fetch_array($result, MYSQL_NUM);
 
-$auth_user = new User($line[0], $bd_users['id']);
+$auth_user = new User($line[0]);
 
 $sessid = generateSessionId();
 BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['session']}`='" . TextBase::SQLSafe($sessid) . "' WHERE `{$bd_users['id']}`='" . $auth_user->id() . "'");

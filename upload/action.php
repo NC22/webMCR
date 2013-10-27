@@ -96,7 +96,7 @@ switch ($method) {
 			
 			$item = new News_Item($id);
 			
-		} elseif ($type == ItemType::Skin and file_exists(MCR_ROOT.'instruments/skinposer.class.php')) {
+		} elseif ($type == ItemType::Skin and isset($bd_names['sp_skins'])) {
 
 			loadTool('skinposer.class.php');
 			
@@ -133,7 +133,7 @@ switch ($method) {
 		
 		$line = mysql_fetch_array( $result, MYSQL_NUM );
         
-		$restore_user = new User($line[0],$bd_users['id']);		
+		$restore_user = new User($line[0]);		
 	     
 		$new_pass = randString(8);
 	   
@@ -149,32 +149,23 @@ switch ($method) {
     break;
 	case 'comment': 
 	
-        if (empty($user) or empty($_POST['comment']) or empty($_POST['item_id']) or empty($_POST['antibot'])) aExit(1, lng('MESS_FAIL')); 
-
-	    if ( !$user->canPostComment() ) aExit(1, lng('MESS_TIMEOUT')); 
-
-	    CaptchaCheck(3); 
-			
-	    loadTool('catalog.class.php');
-				
-		$comments_item = new Comments_Item(false, 'news/');				
-		$rcode = $comments_item->Create($_POST['comment'],(int)$_POST['item_id']);
-        
-            if ( $rcode == 1701 ) aExit(1, lng('MESS_SHORT'));       
-        elseif ( $rcode == 1702 ) aExit(2, lng('MESS_NOT_FOUND'));       
-        elseif ( $rcode == 1 ) { 		
-									$ajax_message['comment_html'] = $comments_item->Show(); 
-									$ajax_message['comment_revers'] = $config['comm_revers'];
-									aExit(0, lng('MESS_COMPLITE')); 
- 									
-        } else                      aExit(3, lng('MESS_FAIL'));  
+        if (empty($user) or empty($_POST['comment']) or empty($_POST['item_id']) or empty($_POST['item_type']) or empty($_POST['antibot'])) aExit(1, lng('MESS_FAIL')); 
+		
+		loadTool('comment.class.php');
+		
+		$comments_item = new Comments_Item(false, 'news/comments/');	
+		
+		$item_type = (int) $_POST['item_type'] ;
+		$item_id   = (int) $_POST['item_id']   ;		
+		
+		$comments_item->aCreate($_POST['comment'], $user, $item_id, $item_type ); 
 
     break;
     case 'del_com':
 
 		if (empty($user) or empty($_POST['item_id'])) aExit(1);		
 		
-		loadTool('catalog.class.php');
+		loadTool('comment.class.php');
 			
 		$comments_item = new Comments_Item((int)$_POST['item_id']);
 		
@@ -201,7 +192,7 @@ switch ($method) {
 
         if (empty($_POST['id'])) aExit(1, 'Empty POST param ID'); 
          
-        $inf_user = new User((int) $_POST['id'],$bd_users['id']);
+        $inf_user = new User((int) $_POST['id']);
         if (!$inf_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
         
         $ajax_message['name']   = $inf_user->name();
@@ -239,7 +230,7 @@ switch ($method) {
         $mod_user = $user;
 		
         if ($user->lvl() >= 15 and !empty($_POST['user_id'])) 
-        $mod_user = new User((int) $_POST['user_id'], $bd_users['id']);
+        $mod_user = new User((int) $_POST['user_id']);
 
         if (!$mod_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
 		

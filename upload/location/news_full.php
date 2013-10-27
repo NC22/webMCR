@@ -10,10 +10,9 @@ $curlist = (isset($_GET['l']))? (int) $_GET['l'] : false;
 
 loadTool('catalog.class.php');
 
-$news_manager = new NewsManager(2, 'news/','index.php?id='.$item_id.'&amp;');    
+$news_item = new News_Item($item_id, 'news/');    
     
-    $content_main  = $news_manager->ShowFullById($item_id,$curlist);
-	$content_main .= $news_manager->ShowCommentForm($item_id); 
+$content_main = $news_item->ShowFull($curlist);
 	   	   
 $menu->SetItemActive('main');
 ?>

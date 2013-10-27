@@ -139,13 +139,14 @@ return false
 
 <div class="form-block">
 
-<div class="block-header"><?php echo $postTitle; ?></div>
+<div class="block-header">Добавить комментарий</div>
 
 <div class="block-line"></div>
 
-<form action="index.php?mode=news_full&id=<?php echo $id; ?>" name="adminform" method="post">
+<form method="post">
 
-<input id="comment-item-id" type="hidden" name="id" value="<?php echo $id; ?>" />
+<input id="comment-item-id" type="hidden" name="id" value="<?php echo $id ?>" />
+<input id="comment-item-type" type="hidden" value="<?php echo $type ?>" />
 
 <div class="btn-toolbar">
 	<div class="btn-group">
@@ -183,8 +184,8 @@ return false
   
 	<img id="comment-captcha" src="instruments/captcha/captcha.php?refresh=<?php echo rand(1337,31337) ?>" class="img-polaroid" alt="Код подтверждения" width="70" height="30"/>
 	
-	<input id="antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" class="antibot" style="top: 0px;" />
-	<input id="comment-button" class="btn" type="submit" onclick="PostComment(); return false" value="<?php echo $postButton; ?>" />
+	<input id="antibot" type="text" name="antibot" placeholder="Код:" maxlength="4" class="antibot" style="top: 4px;" />
+	<input id="comment-button" class="btn" type="submit" onclick="PostComment(); return false" value="Добавить" />
   
   </div>
 </form>	

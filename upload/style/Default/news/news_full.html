@@ -7,14 +7,18 @@
 	<b><?php echo $title; ?></b> 
 	
 		<div style="float: right; display: inline-block; padding-right: 6px;">
-
-			<a class="news-link" style="color: #36a24a" id="like<?php echo $id; ?>type<?php echo ItemType::News; ?>" href="#" onclick="return Like(0,<?php echo $id; ?>,<?php echo ItemType::News; ?>)">
+		
+			<?php if ( $vote ) { ?>
+			
+			<a class="news-link" style="color: #36a24a" id="like<?php echo $id; ?>type<?php echo ItemType::News ?>" href="#" onclick="return Like(0,<?php echo $id; ?>,<?php echo ItemType::News ?>)">
 			<?php echo $likes; ?>
 			</a>
 			<span style="color: #8da2b0">/</span>
-			<a class="news-link" style="color: #b34b3a" id="dislike<?php echo $id; ?>type<?php echo ItemType::News; ?>" href="#" onclick="return Like(1,<?php echo $id; ?>,<?php echo ItemType::News; ?>)">
+			<a class="news-link" style="color: #b34b3a" id="dislike<?php echo $id; ?>type<?php echo ItemType::News ?>" href="#" onclick="return Like(1,<?php echo $id; ?>,<?php echo ItemType::News ?>)">
 			<?php echo $dlikes; ?>
 			</a>
+			
+			<?php } ?>
 			
 		</div>	
 		

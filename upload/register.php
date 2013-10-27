@@ -65,7 +65,7 @@ global $rcodes;
 
 if ($method == 2) {
 
-	$tmp_user = new User((int)$_GET['id'], $bd_users['id']);
+	$tmp_user = new User((int)$_GET['id']);
 	
 	if ($tmp_user->id() and !strcmp($tmp_user->getVerificationStr(), $_GET['verificate'])) $tmp_user->changeGroup(1);
 
@@ -118,7 +118,7 @@ if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email'])) a
 	if (!BD("INSERT INTO `{$bd_names['users']}` (`{$bd_users['login']}`,`{$bd_users['password']}`,`{$bd_users['ip']}`,`{$bd_users['female']}`,`{$bd_users['ctime']}`,`{$bd_users['group']}`) VALUES('".TextBase::SQLSafe($login)."','".MCRAuth::createPass($pass)."','".TextBase::SQLSafe(GetRealIp())."',$female,NOW(),'$group')"))
 	  aExit(14);
 
-	$tmp_user = new User(mysql_insert_id(), $bd_users['id']);
+	$tmp_user = new User(mysql_insert_id());
 	$tmp_user->setDefaultSkin();	
 
     $next_reg = (int) sqlConfigGet('next-reg-time');	

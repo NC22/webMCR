@@ -99,7 +99,7 @@ public static function logout() {
 /* Проверка авторизации пользователя в webMCR */
 
 public static function userInit() { 
-global $user, $bd_users, $config;
+global $user, $config;
 
 	MCRAuth::LoadSession();
 	
@@ -111,7 +111,7 @@ global $user, $bd_users, $config;
 
 		if ($id) {
 		
-			 $user = new User($id, $bd_users['id']);
+			 $user = new User($id);
 			 
 			 if ($user->lvl() <= 0)
 			 

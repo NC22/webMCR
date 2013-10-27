@@ -1,10 +1,7 @@
 <?php
 if (!defined('MCR')) exit;
 
-Class Server extends View {
-private $db;
-
-private $id;
+Class Server extends Item {
 
 private $address;
 private $port; // port for connection to monitoring service
@@ -23,11 +20,9 @@ private $s_user;
 	public function Server($id = false, $style_sd = false) {
 	global $bd_names;
 	
-		parent::View($style_sd);
-	
-		$this->db    = $bd_names['servers'];
-		
-	    $this->id = (int)$id; if (!$this->id) return false;
+		parent::__construct($id, ItemType::Server, $bd_names['servers'], $style_sd);
+        
+		if (!$this->id) return false;
 		
 		$result = BD("SELECT online, address, port, name, numpl, service_user, slots, info, refresh_time, method, rcon FROM `".$this->db."` WHERE id='".TextBase::SQLSafe($this->id)."'");
 		if ( mysql_num_rows( $result ) != 1 ) { $this->id = false; return false; }
@@ -143,7 +138,7 @@ private $s_user;
 	}
 	
 	public function UpdateState($extra = false) {
-        global $config;
+    global $config;
     
 	if ((!$extra and !$this->IsTimeToUpdate()) or !$this->Exist()) return;
 	
@@ -413,20 +408,6 @@ private $s_user;
 	  aExit(0,'server_state');
    }
    
-   public function Delete() {
-	
-		if (!$this->Exist()) return false; 
-	
-		BD("DELETE FROM `".$this->db."` WHERE `id`='".$this->id."'");
-		
-		return true; 
-	}
-	
-   public function Exist() {
-   if ($this->id) return true;
-   return false;
-   } 
-   
 	public function getInfo() { 
 		if (!$this->Exist()) return false; 
 		
@@ -449,10 +430,6 @@ private $s_user;
    return ($this->online)? true : false ; 
    }
    
-   public function id() {
-   return $this->id;	
-   }     
- 
    public function name() {
    return $this->name;	
    }   

@@ -22,10 +22,24 @@ private $female;
 
 private $deadtry;
 
-	public function User($input, $method) {
+	/** @const */
+	public static $int_statistic = array (
+		'comments_num',
+		'play_times',
+		'undress_times',
+	);
+	
+	public function __construct($input, $method = false) {
 	global $bd_users, $bd_names;	
 	
 		$this->db = $bd_names['users'];
+		
+		if (!$method) $method = $bd_users['id'];
+		if ( $method === $bd_users['id'] ) { 
+		
+			$input = (int) $input;
+			if ( !$input ) { $this->id = false; return false; }	
+		}		
 		
 		$sql = "SELECT `{$bd_users['login']}`,
 		               `{$bd_users['id']}`,
@@ -225,6 +239,26 @@ private $deadtry;
 				return mysql_fetch_array($result);
 				
 		else 	return false;		
+	}
+	
+	public function setStatistic($field_name, $var) {
+	global $bd_users;	
+	
+		if (!$this->id) return false;
+		if ( !in_array($field_name, self::$int_statistic) ) return false;
+		
+		$field = TextBase::SQLSafe($field_name);
+		
+		$var = (int) $var;
+		$dec = ( $var < 0 )? '-' : '+';
+		$var = abs($var);
+		
+		if ( $var > 0 ) $sql_var = $field.$dec.$var ;
+		else  $sql_var = "'0'"; 
+	
+		BD("UPDATE {$this->db} SET ".$field."=".$sql_var." WHERE {$bd_users['id']}='". $this->id ."'");
+		
+		return true;		
 	}
 	
     public function getMoney() {
@@ -686,7 +720,12 @@ private $deadtry;
 	public function gender() {
 		return $this->gender;
 	}
-	
+
+	public function Exist() {
+		if ($this->id) return true;
+		return false;
+	} 
+
 	public function id() {
 		return $this->id;
 	}
@@ -787,11 +826,13 @@ private $pavailable;
 
 		if (!$this->id) return false;
 		
-		$result = BD("SELECT `id` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
-
-		if ( mysql_num_rows( $result ) == 1 ) return true;
-		else return false;
+		$result = BD("SELECT COUNT(*) FROM `{$this->db}` WHERE `id`='".$this->id."'");
+		$num = mysql_fetch_array($result, MYSQL_NUM);
 		
+		if ($num[0]) return true;
+
+		$this->id = false;
+		return false;
 	}
 	
 	public function Create($name, &$permissions) {
@@ -882,7 +923,7 @@ private $pavailable;
 	}	
 	
 	public function Delete() {
-	global $bd_names, $bd_users;	
+	global $bd_names;	
 
 		if (!$this->id) return false; 
 		if ($this->IsSystem()) return false;
@@ -892,7 +933,7 @@ private $pavailable;
 	  
 		  while ( $line = mysql_fetch_array( $result, MYSQL_NUM ) ) {
 		  		
-				$user_del = new User($line[0], $bd_users['id']);
+				$user_del = new User($line[0]);
 				$user_del->Delete(); 
 				unset($user_del);
 		  }
