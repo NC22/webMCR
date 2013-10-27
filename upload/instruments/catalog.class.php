@@ -362,7 +362,7 @@ private $title;
 			$sql_hits = " LAST_INSERT_ID() AS hits,"; 
 		}
 		
-		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS date, DATE_FORMAT(time,'%H:%i') AS time,".$sql_hits." `likes`, `dislikes`,".$sql." `message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
+		$result = BD("SELECT DATE_FORMAT(time,'%d.%m.%Y') AS `date`, DATE_FORMAT(time,'%H:%i') AS `time`,".$sql_hits." `likes`, `dislikes`,".$sql." `message` FROM `{$this->db}` WHERE `id`='".$this->id."'"); 
 		if (!mysql_num_rows( $result )) return ''; 
 		
 		$line = mysql_fetch_array($result, MYSQL_ASSOC);
