@@ -512,6 +512,7 @@ if ($do) {
 				case 6: $t_error = lng('T_WRONG_TINFO'); break;
 				case 7: $t_error = lng('T_MKDIRFAIL'); break;
 				case 8: $t_error = lng('TZIP_UNZIP_FAIL'); break;
+				case 9: $t_error = lng('T_WRONG_VERSION'); break;
 			}
 
 		$info .= lng('UPLOAD_FAIL').'<br>'; 

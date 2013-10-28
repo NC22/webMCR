@@ -42,17 +42,6 @@ $menu_items = array (
       'active' => false,
       'inner_html' => '',
     ),
-    'skinposer' => 
-    array (
-      'name' => 'Образы',
-      'url' => 'go/skinposer',
-      'parent_id' => -1,
-      'lvl' => 0,
-      'permission' => -1,
-      'config' => 'sp_online',
-      'active' => false,
-      'inner_html' => '',
-    ),
   ),
   1 => 
   array (
@@ -173,17 +162,6 @@ $menu_items = array (
       'parent_id' => -1,
       'lvl' => 1,
       'permission' => -1,
-      'active' => false,
-      'inner_html' => '',
-    ),
-    'sp_admin' => 
-    array (
-      'name' => 'SkinPoser',
-      'url' => '?mode=skinposer&do=admin',
-      'parent_id' => 'admin',
-      'lvl' => -1,
-      'permission' => -1,
-      'config' => -1,
       'active' => false,
       'inner_html' => '',
     ),

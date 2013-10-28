@@ -210,7 +210,7 @@ BD("ALTER TABLE `{$bd_names['news']}` ADD `hide_vote` tinyint(1) NOT NULL DEFAUL
 /* 2.31 UPDATE */
 if (!BD_ColumnExist($bd_names['comments'], 'item_type')) {
 
-BD("ALTER TABLE `{$bd_names['comments']}` ADD `item_type` smallint(3) DEFAULT 1;");
+BD("ALTER TABLE `{$bd_names['comments']}` ADD `item_type` smallint(3) DEFAULT ". ItemType::News .";");
 BD("ALTER TABLE `{$bd_names['comments']}` DROP KEY `item_id`");
 BD("ALTER TABLE `{$bd_names['comments']}` ADD KEY `uniq_item` (`item_id`, `item_type`);");
 

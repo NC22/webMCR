@@ -44,6 +44,7 @@ class ThemeManager extends View {
 		'author',	
 		'about',
 		'editable',
+		'work_with',
 	);	
 	
     public function ThemeManager($style_sd = false, $work_skript = '?mode=control') { 
@@ -142,6 +143,9 @@ class ThemeManager extends View {
 		$theme_info = self::GetThemeInfo(false, $theme_info);
 		if ($theme_info === false or empty($theme_info['name'])) { unlink($way); return 5; }
 
+		$theme_ver = (empty($theme_info['work_with'])) ? false : explode(',', $theme_info['work_with']);
+		if ( $theme_ver !== false and !in_array(MCR, $theme_ver) )  return 9;
+		
 		$theme_dir = self::GetThemeDir($theme_info['id']);
 		
 		if (!is_dir($theme_dir)) {
@@ -471,7 +475,7 @@ private $work_skript;
 			case 0: $server_method = 'Simple query'; break;
 			case 1: $server_method = 'Query'; break; 
 			case 2: $server_method = 'RCON'; break;
-                        case 3: $server_method = 'JSONAPI'; break;
+			case 3: $server_method = 'JSONAPI'; break;
 			}			
 			$server_id       = $line['id'];
 		
