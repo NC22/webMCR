@@ -1,8 +1,8 @@
 # webMCR
 
  - **Автор** : NC22 
- - **Версия** : [2.3b](https://github.com/upisfree/webMCR/releases/tag/v2.3b)
- - **Сайт** : [github.com/NC22/webMCR](https://github.com/NC22/webMCR)
+ - **Версия** : 2.35
+ - **Сайт** : [webMCR.com](http://webmcr.com)
  - **Wiki** : [github.com/NC22/webMCR/wiki](https://github.com/NC22/webMCR/wiki)
 
 ## Лицензия 
