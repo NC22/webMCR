@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `title` char(255) NOT NULL,
   `vote` tinyint(1) NOT NULL DEFAULT 0,
   `discus` tinyint(1) NOT NULL DEFAULT 1,
-  `comments_num` int(10) NOT NULL DEFAULT 0,
+  `comments` int(10) NOT NULL DEFAULT 0,
   `message` text NOT NULL,
   `message_full` mediumtext NOT NULL,
   `time` datetime DEFAULT NULL,  

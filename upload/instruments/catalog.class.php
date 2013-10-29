@@ -206,7 +206,7 @@ private $comments;
 		if (!CategoryManager::ExistByID($cat_id)) return false; 
 
 		$vote  = ($vote) ? 1 : 0;
-		$discus		= ($discus) ? 1 : 0;
+		$discus	= ($discus) ? 1 : 0;
 		
 		BD("INSERT INTO `{$this->db}` ( `title`, `message`, ".$sql." `time`, `category_id`, `user_id`, `discus`, `vote`) VALUES ( '".TextBase::SQLSafe($title)."', '".TextBase::SQLSafe($message)."', ".$sql2."NOW(), '".TextBase::SQLSafe($cat_id)."', '".$user->id()."', '".$discus."', '".$vote."' )");
 		
