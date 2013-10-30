@@ -515,8 +515,7 @@ if ($do) {
 				case 9: $t_error = lng('T_WRONG_VERSION'); break;
 			}
 
-		$info .= lng('UPLOAD_FAIL').'<br>'; 
-		vtxtlog($t_error);
+		$info .= lng('T_INSTALL_FAIL').' - '. $t_error .'</br>'; 
 			
 		} else {
 		
