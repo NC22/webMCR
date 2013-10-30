@@ -10,8 +10,11 @@ if ($num) {
 	    $id = $line['id'];
 		$mess = TextBase::HTMLRestore($line['message']);
 		$mess_full = TextBase::HTMLRestore($line['message_full']);
-			
-	BD("UPDATE `{$bd_names['news']}` SET `message`='$mess',`message_full`='$mess_full' WHERE `id`='$id'");
+		
+		$sql_where = "`item_id`='". $id ."' AND `item_type`='" . ItemType::News . "'";
+		$commentnum = mysql_result(mysql_query("SELECT COUNT(*) FROM {$bd_names['comments']} WHERE " . $sql_where), 0);
+		
+	BD("UPDATE `{$bd_names['news']}` SET `message`='".TextBase::SQLSafe($mess)."',`message_full`='".TextBase::SQLSafe($mess_full)."',`comments`='$commentnum' WHERE `id`='$id'");
 	}
 }
 ?>
