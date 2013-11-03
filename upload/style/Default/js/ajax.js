@@ -243,7 +243,8 @@ function LoadProfile(form,pid) {
             GetById(form + '-comments_num').innerHTML  = response['comments_num']
             GetById(form + '-play_times').innerHTML    = response['play_times']
             GetById(form + '-undress_times').innerHTML = response['undress_times']			
-
+			var admin = GetById(form + '-addition_info'); if (admin && response['addition_info']) admin.innerHTML = response['addition_info']	
+			
             GetById(form).style.display = 'block'	
             user_profile_id = pid						 					   
 		}  

@@ -216,6 +216,12 @@ switch ($method) {
 		$ajax_message['undress_times'] = $statistic['undress_times'];
 		}
 		
+		if ( $user->lvl() >= 15 ) {
+			
+			ob_start(); include View::Get('mprofile_ainfo.html', 'other/'); 
+			$ajax_message['addition_info'] = ob_get_clean();  
+		}
+		
         aExit(0);	
 
     break;
