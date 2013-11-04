@@ -97,14 +97,21 @@ class ThemeManager extends View {
 
 		while (($file = readdir($fdir)) !== false) {
 				
-			if ( in_array($file, self::$false_dir) or !is_dir( MCR_STYLE . $file) )  continue;
+			if ( in_array($file, self::$false_dir) ) {
 			
-			if (!is_file($dir . $file)) 
+			vtxtlog($file);
+			continue;
+			
+			}
+			
+			$result = false;
+			
+			if (is_dir( $dir . $file)) 
 			
 				$result = self::AddFolderToZip($dir . $file . '/', $local_cut, $zipArchive);
 			
-			else {
-				//echo 'Create file ' . $lcut_name  . $file. '<br>' ;
+			elseif (is_file($dir . $file)) {
+
 				$result = $zipArchive->addFile($dir . $file, $lcut_name . $file);
 			}
 			
@@ -137,7 +144,7 @@ class ThemeManager extends View {
 		
 		$way  = $tmp_base_dir.$new_file_info['tmp_name'];
 
-		$zip = new ZipArchive;
+		$zip = new ZipArchive();
 		
 		if ($zip->open($way) === false) { unlink($way); return 3; }
 		
@@ -197,8 +204,10 @@ class ThemeManager extends View {
 		$tmp_fname = tmp_name($tmp_base_dir);
 		$tmp_file = $tmp_base_dir.$tmp_fname;
 		
-		$zip = new ZipArchive;
-		$zip_error = $zip->open($tmp_file, ZipArchive::CREATE);
+		if (!file_put_contents($tmp_file, base64_decode('UEsFBgAAAAAAAAAAAAAAAAAAAAAAAA=='))) return false; // some windows servers fail to create by ZipArchive module
+		
+		$zip = new ZipArchive();
+		$zip_error = $zip->open($tmp_file, ZipArchive::OVERWRITE);
 
 		if ($zip_error !== true) { vtxtlog('Cant create zip : error code: ' . $zip_error); return false; }
 		

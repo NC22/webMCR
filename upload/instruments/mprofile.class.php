@@ -44,7 +44,7 @@ class MProfile extends View {
 	}
 	
 	public function Show() {
-	global $user;
+	global $user, $config;
 	
         if (!$this->user) return false; 
         
