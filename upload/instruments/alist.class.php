@@ -97,12 +97,7 @@ class ThemeManager extends View {
 
 		while (($file = readdir($fdir)) !== false) {
 				
-			if ( in_array($file, self::$false_dir) ) {
-			
-			vtxtlog($file);
-			continue;
-			
-			}
+			if ( in_array($file, self::$false_dir) ) continue;
 			
 			$result = false;
 			
