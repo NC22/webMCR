@@ -14,7 +14,7 @@ for (i=0; i<=tmpLinks.length-1; ++i)
 
    tmpLinks[i].innerHTML = StringWithSmiles(tmpLinks[i].innerHTML)
 
-var tmpCaptcha = getByClass('antibot','INPUT')
+var tmpCaptcha = getByClass('antibot', 'INPUT')
 var tmpCaptchaF = function (e) { this.value = this.value.replace (/[A-Za-z-А-Яа-я]/, '') }
 
 for (i=0; i<=tmpCaptcha.length-1; ++i) {

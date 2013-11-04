@@ -10,12 +10,23 @@
   <div class="controls">
      <input id="profile-cloak-file" type="file" name="new_cloak" size="20" />
   </div>
-</div> 									
-																
-<a class="btn" href="?mode=control" >К поиску</a> 
-<input id="profile-button" class="btn" type="submit" onclick="UpdateProfile(1); return false" value="Изменить" />
+</div> 		
+							
+<div class="control-group">
+  <label class="control-label" for="profile-cloak-file">Действия</label>
+  <div class="controls">
+	<a class="news-link" href="?mode=control&amp;user_id=<?php echo $user_id; ?>&amp;do=banip" >Бан по IP</a> <br />
+	<a class="news-link" href="?mode=control&amp;user_id=<?php echo $user_id; ?>&amp;do=ban" >Заблокировать</a> <br />
+	<a class="news-link" href="?mode=control&amp;user_id=<?php echo $user_id; ?>&amp;do=delete" >Удалить</a> <br />
+  </div>
+</div> 
 
-											
+<div class="control-group">
+    <div class="controls">
+		<input id="profile-button" class="btn" type="submit" onclick="UpdateProfile(1); return false" value="Изменить" />								
+    </div>
+</div> 
+			
 <input type="hidden" name="user_id" value="<?php echo $user_id; ?>" />
 											
 <input type="hidden" name="method" value="profile" />

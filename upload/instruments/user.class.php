@@ -83,6 +83,18 @@ private $deadtry;
 		if ($this->id) BD("UPDATE `{$this->db}` SET `active_last`= NOW() WHERE `{$bd_users['id']}`='".$this->id."'");	
 	}
 	
+	public function isOnline() {
+	
+		if ( $this->tmp === '0') return false;
+
+		$last_active = $this->getStatisticTime('active_last');
+		if ( !$last_active ) return false;
+
+		if ( time() - strtotime($last) > 300 ) return false;
+		
+		return true;
+	}
+	
 	public function authenticate($pass) {
 	global $bd_users;
 	
@@ -136,13 +148,11 @@ private $deadtry;
 			
 		if (!isset($_SESSION)) session_start();
 		if (isset($_SESSION)) session_destroy();
-				  
-		if (isset($_COOKIE['PRTCookie1'])) { 
-				  
-			BD("UPDATE `{$this->db}` SET `{$bd_users['tmp']}`='0' WHERE `{$bd_users['tmp']}`='".TextBase::SQLSafe($_COOKIE['PRTCookie1'])."'");					  
-			setcookie("PRTCookie1","",time()-3600);					
-			$this->tmp = 0;		  
-		}	
+		
+		$this->tmp = 0;	  
+		BD("UPDATE `{$this->db}` SET `{$bd_users['tmp']}`='".$this->tmp."' WHERE `{$bd_users['id']}`='".$this->id."'");
+			
+		if (isset($_COOKIE['PRTCookie1'])) setcookie("PRTCookie1", "", time()-3600);	
 	}
 	
 	public function canPostComment() {
@@ -574,7 +584,7 @@ private $deadtry;
 		return 1;
 	}
 	
-	public function getSkinLink($mini = false, $amp = '&amp;') {
+	public function getSkinLink($mini = false, $amp = '&amp;', $refresh = false) {
 	global $config;
 	
 		$use_def_skin = $this->defaultSkinTrigger();	
@@ -598,6 +608,8 @@ private $deadtry;
 		else 			
 			$get_p .= 'user_name='.$name;
 	
+		if ($refresh) $get_p .= '&amp;refresh='.rand(1000, 9999);
+		
 	return $get_p;
 	}
 	

@@ -176,54 +176,15 @@ switch ($method) {
     break;
     case 'load_info':
 
-        $ajax_message = array('code' => 0, 
-		                      'message' => 'load_info',
- 							  'name' => '',
-							  'group' => '',
-							  'skin' => 0, 
-							  'cloak' => 0,
-							  'comments_num' => 0,
-							  'female' => 0,
-							  'play_times' => 0,
-							  'undress_times' => 0,
-							  'create_time' => 0,
-							  'active_last' => 0,
-							  'play_last' => 0);
-
         if (empty($_POST['id'])) aExit(1, 'Empty POST param ID'); 
-         
-        $inf_user = new User((int) $_POST['id']);
-        if (!$inf_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
         
-        $ajax_message['name']   = $inf_user->name();
-        $ajax_message['group']  = $inf_user->getGroupName();
-		$ajax_message['skin']   = ($inf_user->defaultSkinTrigger())? 1 : 0;
-		$ajax_message['female'] = ($inf_user->isFemale())? 1 : 0;
+		loadTool('mprofile.class.php');
 		
-		    $timeParam = $inf_user->gameLoginLast();
-		if ($timeParam) $ajax_message['play_last'] = strtotime($timeParam);		
-		    $timeParam = $inf_user->getStatisticTime('create_time');
-		if ($timeParam) $ajax_message['create_time'] = ($config['p_logic'] == 'xenforo' or $config['p_logic'] == 'ipb' or $config['p_logic'] == 'dle')? $timeParam : strtotime($timeParam);			
-	        $timeParam = $inf_user->getStatisticTime('active_last');
-		if ($timeParam) $ajax_message['active_last'] = strtotime($timeParam);
+		$user_profile = new MProfile((int) $_POST['id'], 'profile/');
+		$ajax_message['player_info'] = $user_profile->Show();
 		
-		$statistic = $inf_user->getStatistic();		
+		aExit(0);
 		
-		if ($statistic) {
-		
-		$ajax_message['comments_num']  = $statistic['comments_num'];
-		$ajax_message['play_times']    = $statistic['play_times'];
-		$ajax_message['undress_times'] = $statistic['undress_times'];
-		}
-		
-		if ( $user->lvl() >= 15 ) {
-			
-			ob_start(); include View::Get('mprofile_ainfo.html', 'other/'); 
-			$ajax_message['addition_info'] = ob_get_clean();  
-		}
-		
-        aExit(0);	
-
     break;
 	case 'profile': 
 

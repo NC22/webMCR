@@ -2,6 +2,7 @@
 
 var user_profile_id = -1;
 var err404 = 'incorrect address : error : '
+var custom_profile;
 
 function DeleteComment(id) {
 
@@ -198,60 +199,36 @@ function Restore() {
 	return false
 }
 
-function LoadProfile(form,pid) {
-    
-	if (user_profile_id == pid) {
-		BlockVisible(form,true)
-		return false
+function LoadProfile(form, pid) {
+
+	custom_profile = GetById(form) 
+	if (!custom_profile) {
+		custom_profile = document.createElement("DIV")	
+		custom_profile.id = form
+		custom_profile.className = "info-big-frame"
+		document.body.appendChild(custom_profile)	
 	}
 	
-	var Ava = new Image()
-	    Ava.src = base_url + 'skin.php?user_id=' + pid + '&refresh=' + rand(1337,31337)
-	    Ava.onload = function () {
+	if (user_profile_id == pid) { 
+	
+	BlockVisible(form, true)	
+	return false
+	}		
+	
+	var event = function(response) {
 
-        var ava_link = Ava.src
- 
-		GetById(form + '-skin-front').style.backgroundImage = 'url('+ava_link+')'
-        GetById(form + '-skin-back').style.backgroundImage = 'url('+ava_link+')'
-
-		var event = function(response) {
-
-			var margin = Math.round(GetScrollTop() + (getClientH()/2) - (224/2))
-				
-			GetById(form).style.top =  margin +'px' 
+		var margin = Math.round(GetScrollTop() + (getClientH()/2) - (224/2))
 		
-			if (response['code'] != 0) return false 
-					   
-			if (response['female'] == 1) GetById(form + '-female').style.display = 'block'	
-            else GetById(form + '-female').style.display = 'none'							 
-                            
-            GetById(form + '-name').innerHTML = response['name']
-            GetById(form + '-group').innerHTML = response['group']
-						 
-			var date
-						 
-			if (response['play_last'] != 0) {
-				date = new Date(response['play_last']*1000)								
-				GetById(form + '-play_last').innerHTML  = timeFrom(date)
-			} else GetById(form + '-play_last').innerHTML = 'Никогда'
-					
-			if (response['create_time'] != 0) {
-				date = new Date(response['create_time']*1000)
-				GetById(form + '-create_time').innerHTML = date.getLocaleFormat('%H:%M:%S %d.%m.%y')
-			} else GetById(form + '-create_time').innerHTML = 'Неизвестно'
-						 
-            GetById(form + '-comments_num').innerHTML  = response['comments_num']
-            GetById(form + '-play_times').innerHTML    = response['play_times']
-            GetById(form + '-undress_times').innerHTML = response['undress_times']			
-			var admin = GetById(form + '-addition_info'); if (admin && response['addition_info']) admin.innerHTML = response['addition_info']	
+		if ( !response['player_info'] ) return false
+		
+		custom_profile.style.top =  margin + 'px' 
+		custom_profile.innerHTML = response['player_info']				
+        custom_profile.style.display = 'block'	
 			
-            GetById(form).style.display = 'block'	
-            user_profile_id = pid						 					   
-		}  
-
-		SendByXmlHttp('action.php', 'method=load_info&id=' + encodeURIComponent(pid), event)		
-	    }
-
+        user_profile_id = pid				
+	}
+	
+	SendByXmlHttp('action.php', 'method=load_info&id=' + encodeURIComponent(pid), event)
     return false
 }
 
