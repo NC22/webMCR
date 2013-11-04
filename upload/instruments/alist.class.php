@@ -96,18 +96,22 @@ class ThemeManager extends View {
 	//echo 'Create dir ' . $lcut_name . '<br>';
 
 		while (($file = readdir($fdir)) !== false) {
-		
+				
 			if ( in_array($file, self::$false_dir) or !is_dir( MCR_STYLE . $file) )  continue;
 			
 			if (!is_file($dir . $file)) 
 			
-				self::AddFolderToZip($dir . $file . '/', $local_cut, $zipArchive);
+				$result = self::AddFolderToZip($dir . $file . '/', $local_cut, $zipArchive);
 			
 			else {
 				//echo 'Create file ' . $lcut_name  . $file. '<br>' ;
-				$zipArchive->addFile($dir . $file, $lcut_name . $file);
+				$result = $zipArchive->addFile($dir . $file, $lcut_name . $file);
 			}
-		}		 
+			
+			if ( $result === false ) return false;
+		}
+	
+	return true;
 	}
 	
 	private static function EndZipWorkAndDel($zipArchive, $fname) {
@@ -135,7 +139,7 @@ class ThemeManager extends View {
 
 		$zip = new ZipArchive;
 		
-		if ($zip->open($way, ZipArchive::CREATE) === false) { unlink($way); return 3; }
+		if ($zip->open($way) === false) { unlink($way); return 3; }
 		
 		$theme_info = $zip->getFromName(self::sign_file);
 		if ($theme_info === false) { self::EndZipWorkAndDel($zip, $way); return 4; }
@@ -194,13 +198,17 @@ class ThemeManager extends View {
 		$tmp_file = $tmp_base_dir.$tmp_fname;
 		
 		$zip = new ZipArchive;
-		if ($zip->open($tmp_file, ZipArchive::CREATE) === false) return false;
+		$zip_error = $zip->open($tmp_file, ZipArchive::CREATE);
+
+		if ($zip_error !== true) { vtxtlog('Cant create zip : error code: ' . $zip_error); return false; }
 		
-		self::addFolderToZip(self::GetThemeDir($theme_id), self::GetThemeDir($theme_id), $zip);
+		$result = self::addFolderToZip(self::GetThemeDir($theme_id), self::GetThemeDir($theme_id), $zip);
+		if ( $result === false ) return false;
 		
 		$zip->close();
 		
 		$fsize = filesize($tmp_file);
+		if ($fsize === false) return false;
 		
 		if (round($fsize / 1048576) > 50) { unlink($tmp_file);	return false; }
 		
