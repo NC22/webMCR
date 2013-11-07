@@ -1,0 +1,38 @@
+<?php if ($modal_mode) { ?>
+
+<div class="block-header">Профиль пользователя 
+    <div style="display: inline-block;" id="<?php echo $this->id ?>-name"><?php echo $main_info['name'] ?></div>
+	<div style="display: inline-block; float: right;"><a href="#" onclick="BlockVisible('<?php echo $this->id ?>', false); return false">Закрыть</a></div>
+</div>
+<div class="block-line"></div>
+
+<?php } ?>	
+
+	<div class="skin-block" >
+	  <div id="<?php echo $this->id ?>-skin-front" style="background:url(skin.php<?php echo $main_info['skin'] ?>); display:inline-block; height: 224px; width: 112px;">
+		
+		<?php if ($main_info['female']) { ?>
+			
+			<img id="<?php echo $this->id ?>-female" class="female" style="position: relative;" src="<?php View::URL('img/ribbon.png') ?>" alt="Девочка"/>
+			
+		<?php } ?>
+		
+	  </div>	  
+    </div>   
+
+    <div class="skin-block" >
+      <div id="<?php echo $this->id ?>-skin-back" style="background:url(skin.php<?php echo $main_info['skin'] ?>); background-position: 112px 0px; display:inline-block; height: 224px; width: 112px;"></div>
+	</div>
+	
+	<div style="display:inline-block; padding: 10px; margin-right: 10px;">
+	
+		<?php foreach ($user_info as $key => $info) { ?>
+
+			<div class="info"><div class="longleft"><?php echo $info[1] ?>:</div><div id="<?php echo $this->id ?>-group" class="longright"><?php echo $info[0] ?></div></div> 
+
+		<?php } if ($this->admin_mode) { ?>
+		
+	    <div class="info"><div class="longleft">Действия:</div><div id="<?php echo $this->id ?>-play_last" class="longright"><a href="index.php?mode=control&amp;do=profile&amp;user_id=<?php echo $this->user->id() ?>">Редактировать</a></div></div>
+		
+		<?php } ?>
+	</div>

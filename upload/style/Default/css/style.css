@@ -136,7 +136,7 @@ textarea {
   top: 50%;
   left: 50%;
   margin-left: -320px;
-  height: 280px;
+  min-height: 280px;
   width: 640px;
   
   border: 1px solid #868686;

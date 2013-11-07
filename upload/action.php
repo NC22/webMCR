@@ -178,9 +178,9 @@ switch ($method) {
 
         if (empty($_POST['id'])) aExit(1, 'Empty POST param ID'); 
         
-		loadTool('mprofile.class.php');
+		loadTool('profile.class.php');
 		
-		$user_profile = new MProfile((int) $_POST['id'], 'profile/');
+		$user_profile = new Profile((int) $_POST['id'], 'other/');
 		$ajax_message['player_info'] = $user_profile->Show();
 		
 		aExit(0);
@@ -295,8 +295,8 @@ switch ($method) {
         $ajax_message['group'] = $mod_user->getGroupName();   
         $ajax_message['id']    = $mod_user->id();
 		
-		$ajax_message['skin_link'] = $mod_user->getSkinLink(false, '&');
-		$ajax_message['mskin_link'] = $mod_user->getSkinLink(true, '&');
+		$ajax_message['skin_link'] = $mod_user->getSkinLink(false, '&', true);
+		$ajax_message['mskin_link'] = $mod_user->getSkinLink(true, '&', true);
 		
         if (file_exists($mod_user->getCloakFName())) $ajax_message['cloak'] = 1; 
         if ($mod_user->defaultSkinTrigger())         $ajax_message['skin']  = 1; 

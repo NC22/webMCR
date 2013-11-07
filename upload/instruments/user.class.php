@@ -23,6 +23,13 @@ private $female;
 private $deadtry;
 
 	/** @const */
+	public static $date_statistic = array (
+		'create_time',
+		'gameplay_last',
+		'active_last',
+	);
+	
+	/** @const */
 	public static $int_statistic = array (
 		'comments_num',
 		'play_times',
@@ -212,24 +219,24 @@ private $deadtry;
 	}
 	
 	public function getStatisticTime($param) {
-	global $bd_users;	
+	global $bd_users, $config;	
 	
 		if (!$this->id) return false;	
 		
 		$param = TextBase::SQLSafe($param);
+		if ( !in_array($param, self::$date_statistic) ) return false;
 		
-		switch ($param) {
-		case 'create_time': $param = $bd_users['ctime']; break;
-		case 'gameplay_last': 		
-		case 'active_last': break;
-		default: return false; break;
-		}
-		
+		if ( $param === 'create_time' ) $param = $bd_users['ctime'];
+	
  		$result = BD("SELECT `$param` FROM `{$this->db}` WHERE `$param`<>'0000-00-00 00:00:00' and `{$bd_users['id']}`='".$this->id."'");
 		
-		if (mysql_num_rows( $result ) == 1) {
+		if (mysql_num_rows( $result ) == 1) {		
 		
-			$line = mysql_fetch_array($result);
+			$line = mysql_fetch_array($result);	
+			
+			if ($config['p_logic'] == 'xenforo' or 
+				$config['p_logic'] == 'ipb' or 
+				$config['p_logic'] == 'dle') return date('Y-m-d H:i:s', $line[$param]);	// from UNIX time		
 
 			return $line[$param];
 			
@@ -242,7 +249,7 @@ private $deadtry;
 	
 		if (!$this->id) return false;
 	
-		$result = BD("SELECT `comments_num`, `play_times`, `undress_times` FROM `{$this->db}` WHERE `{$bd_users['id']}`='".$this->id."'");
+		$result = BD("SELECT `".implode("`, `", self::$int_statistic)."` FROM `{$this->db}` WHERE `{$bd_users['id']}`='".$this->id."'");
 		
 		if (mysql_num_rows( $result ) == 1)
 				
@@ -266,7 +273,7 @@ private $deadtry;
 		if ( $var > 0 ) $sql_var = $field.$dec.$var ;
 		else  $sql_var = "'0'"; 
 	
-		BD("UPDATE {$this->db} SET ".$field."=".$sql_var." WHERE {$bd_users['id']}='". $this->id ."'");
+		BD("UPDATE `{$this->db}` SET `".$field."`=".$sql_var." WHERE {$bd_users['id']}='". $this->id ."'");
 		
 		return true;		
 	}
@@ -608,7 +615,7 @@ private $deadtry;
 		else 			
 			$get_p .= 'user_name='.$name;
 	
-		if ($refresh) $get_p .= '&amp;refresh='.rand(1000, 9999);
+		if ($refresh) $get_p .= $amp.'refresh='.rand(1000, 9999);
 		
 	return $get_p;
 	}

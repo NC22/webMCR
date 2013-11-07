@@ -311,13 +311,13 @@ function UpdateProfile(admTrg) {
 		
 		}
         
-		var name = GetById('profile-name')
-		if (name != null) name.innerHTML = response['name']
+		GetById('profile-mini-name').innerHTML = response['name']
+		
 		var group = GetById('profile-group')
 		if (group != null) group.innerHTML = response['group']
 
 	    var Ava = new Image()
-	        Ava.src = base_url + 'skin.php' + response['skin_link'] + '&refresh='+rand(1337,31337)
+	        Ava.src = base_url + 'skin.php' + response['skin_link'] 
 	        Ava.onload = function () {
 
                 var ava_link = Ava.src
@@ -332,7 +332,7 @@ function UpdateProfile(admTrg) {
 		if (admTrg == null) {
 		
 			var Mini = new Image()
-				Mini.src =  base_url + 'skin.php' + response['mskin_link'] + '&refresh=' + rand(1337,31337)  
+				Mini.src =  base_url + 'skin.php' + response['mskin_link'] 
 				Mini.onload = function () {
 				   GetById('profile-mini').src = Mini.src 
 				}	

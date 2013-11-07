@@ -60,7 +60,10 @@ if ($user->group() != 4 ) {
 	if ($user->getPermission('change_pass'))  include View::Get('profile_pass.html', $prefix);
 
 	$profile_inputs = ob_get_clean();
-
+	
+	loadTool('profile.class.php'); $user_profile = new Profile($user, 'other/', 'profile', true);
+	$profile_info = $user_profile->Show(false); 
+	
 	ob_start(); include View::Get('profile.html', $prefix);
 
 	$content_main .= ob_get_clean();

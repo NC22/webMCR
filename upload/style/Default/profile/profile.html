@@ -13,26 +13,11 @@
         </div>
     </div>
 
-	<div class="tabbable" style="display: inline-block;">
-	  <div class="tab-content">
+	<div class="tabbable" style="display: inline-block;"><div class="tab-content">
+	  
 		<div class="tab-pane active" id="tab1" style="margin-top: 6px;">
-		
-			<div class="skin-block" >
-			  <div id="profile-skin-front" style="background:url(skin.php<?php echo $user_img_get; ?>); display:inline-block; height: 224px; width: 112px;"></div>
-			</div>   
-
-			<div class="skin-block" >
-			  <div id="profile-skin-back" style="background:url(skin.php<?php echo $user_img_get; ?>); background-position: 112px 0px; display:inline-block; height: 224px; width: 112px;"></div>
-			</div>
 			
-			<div style="display: inline-block;">
-	
-			  <div class="info"><div class="ileft">Ваш ник:</div><div id="profile-name" class="iright"><?php echo $player ?></div></div> 
-			  <div class="info"><div class="ileft">Почта:</div><div class="iright"><?php echo $player_email ?></div></div> 
-			  <div class="info"><div class="ileft">Группа:</div><div id="profile-group" class="iright"><?php echo $player_group ?></div></div> 
-			  <div class="info"><div class="ileft">Баланс:</div><div class="iright"><?php echo $player_money ?> руб.</div></div> 
-		  
-			</div>
+			<?php echo $profile_info ?>
 			
 		</div>        
 
@@ -52,10 +37,8 @@
 			 
         </form>
 		
-		</div>		
+		</div>	
 		
-		
-	  </div>	
-    </div>
+	</div></div>	
 	
 </div>
