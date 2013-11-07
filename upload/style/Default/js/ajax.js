@@ -311,10 +311,11 @@ function UpdateProfile(admTrg) {
 		
 		}
         
-		GetById('profile-mini-name').innerHTML = response['name']
+		var name = GetById('profile-mini-name')
+		if (name && !admTrg) name.innerHTML = response['name']
 		
 		var group = GetById('profile-group')
-		if (group != null) group.innerHTML = response['group']
+		if (group && !admTrg) group.innerHTML = response['group']
 
 	    var Ava = new Image()
 	        Ava.src = base_url + 'skin.php' + response['skin_link'] 
@@ -329,7 +330,7 @@ function UpdateProfile(admTrg) {
 			    toggleButton('profile-button')
             }
 		
-		if (admTrg == null) {
+		if (admTrg) {
 		
 			var Mini = new Image()
 				Mini.src =  base_url + 'skin.php' + response['mskin_link'] 
