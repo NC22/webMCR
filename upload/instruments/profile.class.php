@@ -62,7 +62,7 @@ class Profile extends View {
 		$tmpParam = $this->user->getStatisticTime('active_last');	
 		$main_info['active_last'] = ($tmpParam) ? self::TimeFrom($tmpParam) : 'Никогда'; // toDo show Online \ Offline	
 		
-		$main_info['skin']   = $this->user->getSkinLink();
+		$main_info['skin']   = $this->user->getSkinLink(false, '&amp;', true);
 		$main_info['female'] = ($this->user->isFemale())? 1 : 0;
 		
         $user_info['group']  = array($this->user->getGroupName(), 'Группа');		
