@@ -16,7 +16,7 @@ global $uInfo, $config;
 	
 		$image = ($uInfo['mini'])? skinGenerator2D::saveHead($buffer, $skin) : skinGenerator2D::savePreview($buffer, $skin, GetVisual('cloak'));
 	else 	
-		$image = (!$uInfo['mini'])? skinGenerator2D::createHead($skin) : skinGenerator2D::createPreview($skin, GetVisual('cloak'));
+		$image = ($uInfo['mini'])? skinGenerator2D::createHead($skin) : skinGenerator2D::createPreview($skin, GetVisual('cloak'));
 
 	if ($image) { imagepng($image); imagedestroy($image); } 
 }
