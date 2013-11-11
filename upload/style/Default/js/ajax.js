@@ -330,7 +330,7 @@ function UpdateProfile(admTrg) {
 			    toggleButton('profile-button')
             }
 		
-		if (admTrg) {
+		if (!admTrg) {
 		
 			var Mini = new Image()
 				Mini.src =  base_url + 'skin.php' + response['mskin_link'] 
