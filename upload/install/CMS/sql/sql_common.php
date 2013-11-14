@@ -163,9 +163,11 @@ BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 
 if (!BD_ColumnExist($bd_names['ip_banning'], 'ban_type'))
 
-BD("ALTER TABLE `{$bd_names['ip_banning']}` 
-	ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1,
-	ADD `reason` varchar(255) DEFAULT NULL;");
+BD("ALTER TABLE `{$bd_names['ip_banning']}` ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1;");
+
+if (!BD_ColumnExist($bd_names['ip_banning'], 'reason'))	
+
+BD("ALTER TABLE `{$bd_names['ip_banning']}`  ADD `reason` varchar(255) DEFAULT NULL;");
 	
 /* 2.1 UPDATE */
 
