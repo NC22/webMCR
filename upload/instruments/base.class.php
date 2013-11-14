@@ -388,9 +388,12 @@ Class Message {
 
 	public static function Comment($text) {
        
-	   $text = trim($text);
-	   $text = TextBase::CutWordWrap(TextBase::HTMLDestruct($text));
-	   $text = TextBase::CutString(nl2br($text));	   
+	   $text = trim($text);	   
+	   $text = TextBase::HTMLDestruct($text);
+       $text = preg_replace('/(\\R{2})\\R++/Usi', '$1', $text);	  
+	   $text = nl2br($text);
+	   $text = TextBase::CutWordWrap($text);
+	   $text = TextBase::CutString($text);	   
 	   
 	  return TextBase::SQLSafe($text);      
 	}
