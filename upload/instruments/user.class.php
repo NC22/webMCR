@@ -236,7 +236,7 @@ private $deadtry;
 			
 			if ($config['p_logic'] == 'xenforo' or 
 				$config['p_logic'] == 'ipb' or 
-				$config['p_logic'] == 'dle') return date('Y-m-d H:i:s', $line[$param]);	// from UNIX time		
+				$config['p_logic'] == 'dle') return date('Y-m-d H:i:s', (int)$line[$param]);	// from UNIX time		
 
 			return $line[$param];
 			
