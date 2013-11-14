@@ -122,6 +122,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['ip_banning']}` (
   `time_start` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ban_until` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ban_type` tinyint(1) NOT NULL DEFAULT 1,
+  `reason` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`IP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
