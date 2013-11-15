@@ -15,7 +15,7 @@ $now = true;
 
 BDConnect('monitoring');
 
-$server = new Server($id);
+$server = new Server($id, 'serverstate/');
 $server->UpdateState($now);
 $server->ShowInfo();
 ?>

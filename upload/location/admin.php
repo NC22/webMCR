@@ -364,6 +364,8 @@ if ($do) {
 	
     include View::Get('server_edit_header.html', $st_subdir.'server/');  
 	
+	/* POST data check */ 
+	
 	if (isset($_POST['address']) and isset($_POST['port']) and isset($_POST['method'])) {  
 		 $serv_address  = $_POST['address'];
 		 
@@ -404,7 +406,7 @@ if ($do) {
 		} else {
 		
 		  if (is_bool($serv_method)) { $info .= lng('SERVER_PROTO_EMPTY'); break; }
-		  
+		 
 		  $server = new Server();
 		  
 		  if ($server->Create($serv_address, $serv_port, $serv_method, $serv_rcon, $serv_name, $serv_info, $serv_s_user) == 1) $info .= lng('SERVER_COMPLITE');
@@ -430,8 +432,10 @@ if ($do) {
 		$id = false;
 	}
 	
+	/* Output */
+	
 	if ($id) {	 
-	    $server = new Server($id, 'admin/');
+	    $server = new Server($id, $st_subdir . 'server/');
 		
 		$server->UpdateState(true);
         $server_info = $server->ShowHolder('mon','adm');	
@@ -457,6 +461,7 @@ if ($do) {
 		include View::Get('server_edit.html', $st_subdir.'server/');  
 
 	} else include View::Get('server_add.html', $st_subdir.'server/');  
+	
     break;	
     case 'constants':  	
 

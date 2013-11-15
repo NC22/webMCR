@@ -20,7 +20,7 @@ $content_side .= ob_get_clean();
 
 loadTool('monitoring.class.php');
 
-$servManager = new ServerManager();
+$servManager = new ServerManager('serverstate/');
 $content_servers = $servManager->Show('side');
 
 unset($servManager);

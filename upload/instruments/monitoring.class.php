@@ -359,11 +359,11 @@ private $s_user;
 				
     	switch ($type) {		
 		case 'mon':            
-		case 'side': include $this->GetView('serverstate/serverstate_'.$type.'.html');	break;
+		case 'side': include $this->GetView('serverstate_'.$type.'.html');	break;
 		case 'game':
 		
-		if ( $this->online ) include $this->GetView('serverstate/serverstate_'.$type.'_online.html');  
-		else include $this->GetView('serverstate/serverstate_'.$type.'_offline.html');	
+		if ( $this->online ) include $this->GetView('serverstate_'.$type.'_online.html');  
+		else include $this->GetView('serverstate_'.$type.'_offline.html');	
 		
         break;		
 		default: return false; break;
@@ -437,7 +437,7 @@ private $s_user;
 
 Class ServerManager extends View {
 
-	public function ServerManager($style_sd = false) { 
+	public function __construct($style_sd = false) { 
 	global $site_ways;
 	
 	   parent::View($style_sd);
@@ -449,7 +449,7 @@ Class ServerManager extends View {
 	         $page = self::getPageName($type);
         if (!$page) return false;
 		
-		$html_serv = $this->ShowPage('serverstate/serverstate_'.$type.'_header.html'); 
+		$html_serv = $this->ShowPage('serverstate_'.$type.'_header.html'); 
 		
 		$result = BD("SELECT `id` FROM `{$bd_names['servers']}` WHERE `$page`=1 ORDER BY priority DESC LIMIT 0,10"); 
 			
@@ -464,9 +464,9 @@ Class ServerManager extends View {
 			unset($server);
 		   }
 		   
-		} else $html_serv .= $this->ShowPage('serverstate/serverstate_'.$type.'_empty.html');
+		} else $html_serv .= $this->ShowPage('serverstate_'.$type.'_empty.html');
 		
-		$html_serv .= $this->ShowPage('serverstate/serverstate_'.$type.'_footer.html');	
+		$html_serv .= $this->ShowPage('serverstate_'.$type.'_footer.html');	
 		
         return $html_serv;		
 	}	
