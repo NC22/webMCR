@@ -92,9 +92,7 @@ function InputGet($key, $method = 'POST', $type = 'str') {
 	
     switch($type){
 		case 'str': return TextBase::HTMLDestruct($var); break;
-		case 'int': return (int) $var; break;
-		case 'float': return (float) $var; break;
-		case 'bool': return (bool) $var; break;
+		default: settype($var, $type); return $var; break;
 	}	
 }
 
