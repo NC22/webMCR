@@ -266,8 +266,7 @@ Class TextBase
      */
     public static function SQLSafe($text)
     {
-        global $link;
-        return mysql_real_escape_string($text, $link);
+        return mysql_real_escape_string($text, getDB()->getLink());
     }
 
     public static function HTMLDestruct($text)

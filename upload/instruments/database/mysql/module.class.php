@@ -1,6 +1,8 @@
 <?php
 class MySqlDriver implements DataBaseInterface
 {
+    private static $pVarCharset = "abcdefghijklmnopqrstuvwxyz0123456789_";
+    
     public $link = false;
     private $lastError = '';
     
@@ -57,6 +59,62 @@ class MySqlDriver implements DataBaseInterface
         return $quotes . $str . $quotes;
     }
     
+    public function getLink() 
+    {
+        return $this->link;
+    }
+
+    private function parseLikePDO(&$queryTpl, $data)
+    {
+        $asoc = null;
+
+        $querySize = strlen($queryTpl);
+        $utfSafeStack = array();
+        $posStack = array();
+        
+        if (!$querySize) return $queryTpl;
+        
+        foreach ($data as $k => $v) {
+
+            for ($i = 0; $i < $querySize; $i++) {
+
+                $pos = strpos($queryTpl, ':' . $k, $i);
+
+                if ($pos === false)
+                    continue;
+
+                $next = $pos + strlen(':' . $k);
+
+                if ($next < $querySize and strpos(self::$pVarCharset, $queryTpl[$next]) !== false)
+                    continue;
+
+                $posStack[$next] = $k;
+                $data[$k] = $this->safe($v);
+            }
+        }
+        
+        if (!sizeof($posStack))
+            return $queryTpl;
+
+        ksort($posStack, SORT_NUMERIC);
+
+        $cursor = 0;
+
+        foreach ($posStack as $pos => &$key) {
+
+            $length = (int) $pos - $cursor;
+            $sqlPart = substr($queryTpl, $cursor, $length - strlen(':' . $key)) . $data[$key];
+            $utfSafeStack[] = $sqlPart;
+
+            $cursor = $pos;
+        }
+
+        $length = $querySize - $cursor;
+        $utfSafeStack[] = substr($queryTpl, $cursor, $length);
+
+        return implode('', $utfSafeStack);
+    }
+
     public function ask($queryTpl, $data = array())
     {
         if (!$this->link) {
@@ -67,23 +125,23 @@ class MySqlDriver implements DataBaseInterface
         $i = 0;
 
         if (is_array($data)) {
-            foreach ($data as $k => &$v) {
+            
+            if (!isset($data[0])) {
+               $query = $this->parseLikePDO($queryTpl, $data); 
+            } else {
                 
-                $v = $this->safe($v);
-                
-                if ($asoc === null) {
-                    $asoc = is_numeric($k) ? false : true;
+                foreach ($data as $k => &$v) {
+                    
+                    $v = $this->safe($v);
+                    $query = str_replace("?", $v, $queryTpl, $count = 1);
                 }
-                
-                $queryTpl = str_replace(($asoc) ? ":" . $k : "?", $v, $queryTpl, $count = 1);
             }
-        }
+        } else $query = $queryTpl;
         
-        $result = mysql_query($queryTpl, $this->link);
-
+        $result = mysql_query($query, $this->link);
         if ($result === false) {
             
-            $this->lastError = 'SQLError: [' . $queryTpl . ']'; 
+            $this->lastError = 'SQLError: [' . $query . ']'; 
             
             if (function_exists('vtxtlog')) {
                 vtxtlog($this->lastError);

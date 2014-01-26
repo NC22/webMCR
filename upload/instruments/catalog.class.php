@@ -458,7 +458,7 @@ Class News_Item extends Item
         . "`message_full`=:message_full,"
         . "`category_id`=:category_id, "
         . "`discus`=:discus,"
-        . "`vote`=:vote' WHERE `id`='" . $this->id . "'";
+        . "`vote`=:vote WHERE `id`='" . $this->id . "'";
         
         $result = getDB()->ask($sql, array(
             'title' => $title, 
