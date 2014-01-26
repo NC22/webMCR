@@ -41,15 +41,8 @@ date_default_timezone_set($config['timezone']);
  */
 function BD($query)
 {
-    global $link;
-
-    $result = $link->ask($query);
-
-    if (is_bool($result) and $result == false) {
-        vtxtlog('SQLError: [' . $query . ']');
-    }
-
-    return $result;
+    $resultStatement = getDB()->ask($query);
+    return $resultStatement->getResult();
 }
 
 /**
@@ -80,8 +73,11 @@ function DBinit($log_script = 'default')
     $link = new $class();
 
     try {
-        $link->connect($config['db_host'], $config['db_port'], $config['db_login'], $config['db_passw'], $config['db_name']
-        );
+        $link->connect($config['db_host'], 
+                        $config['db_port'], 
+                        $config['db_login'], 
+                        $config['db_passw'], 
+                        $config['db_name']);
     } catch (Exception $e) {
         exit($e->getMessage());
     }
