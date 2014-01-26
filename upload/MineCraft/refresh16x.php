@@ -22,7 +22,7 @@ if (empty($json->accessToken) or empty($json->clientToken))
     logExit("[refresh16x.php] refresh process [Empty input] [ " . ((empty($json->accessToken)) ? 'Session ' : '') . ((empty($json->clientToken)) ? 'clientToken ' : '') . "]");
 
 loadTool('user.class.php');
-BDConnect('auth');
+DBinit('auth');
 
 $sessionid = $json->accessToken;
 $clientToken = $json->clientToken;
@@ -31,16 +31,21 @@ if (!preg_match("/^[a-f0-9-]+$/", $sessionid) or
     !preg_match("/^[a-f0-9-]+$/", $clientToken))
     logExit("[refresh16x.php] refresh process [Bad symbols] Session [$sessionid] clientToken [$clientToken]");
 
-$result = BD("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['session']}`='" . TextBase::SQLSafe($sessionid) . "' AND `{$bd_users['clientToken']}`='" . TextBase::SQLSafe($clientToken) . "'");
+$sql = "SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` "
+     . "WHERE `{$bd_users['session']}`=:session "
+     . "AND `{$bd_users['clientToken']}`=:token ";
+     
+$result = getDB()->fetchRow($sql, array(
+    'token' => $clientToken, 
+    'session' => $sessionid
+ ), 'num');
 
-if (mysql_num_rows($result) != 1) logExit("[refresh16x.php] refresh process, wrong accessToken/clientToken pair [$sessionid] [$clientToken]");
-
-$line = mysql_fetch_array($result, MYSQL_NUM);
+if (!$result) logExit("[refresh16x.php] refresh process, wrong accessToken/clientToken pair [$sessionid] [$clientToken]");
 
 $auth_user = new User($line[0]);
 
 $sessid = generateSessionId();
-BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['session']}`='" . TextBase::SQLSafe($sessid) . "' WHERE `{$bd_users['id']}`='" . $auth_user->id() . "'");
+getDB()->ask("UPDATE `{$bd_names['users']}` SET `{$bd_users['session']}`='$sessid' WHERE `{$bd_users['id']}`='" . $auth_user->id() . "'");
 
 $profile = array('id' => $auth_user->id(), 'name' => $auth_user->name());
 

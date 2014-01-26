@@ -1,8 +1,8 @@
 <?php 
 if ($mysql_rewrite) 
-BD("DROP TABLE IF EXISTS `{$bd_names['users']}`;");
+getDB()->ask("DROP TABLE IF EXISTS `{$bd_names['users']}`;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['users']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['users']}` (
   `{$bd_users['id']}` bigint(20) NOT NULL AUTO_INCREMENT,
   `{$bd_users['login']}` char(32) DEFAULT NULL,
   `{$bd_users['female']}` tinyint(1) NOT NULL DEFAULT '2',
@@ -28,7 +28,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['users']}` (
   KEY `group_id` (`{$bd_users['group']}`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
-BD("INSERT INTO `{$bd_names['groups']}` 
+getDB()->ask("INSERT INTO `{$bd_names['groups']}` 
 (`id`,`name`,`lvl`,`system`,`change_skin`,`change_pass`,`change_login`,`change_cloak`,`add_news`,`add_comm`,`adm_comm`) VALUES 
 (1,'Пользователь',2,1,1,1,0,0,0,1,0), 
 (2,'Заблокированный',0,1,0,0,0,0,0,0,0), 

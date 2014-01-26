@@ -6,7 +6,7 @@ if (empty($_GET['user']) or empty($_GET['serverId'])) {
   exit('NO');
 }
 	loadTool('user.class.php'); 
-	BDConnect('checkserver');
+	DBinit('checkserver');
 	
 	$user 		= $_GET['user']; 
 	$serverid 	= $_GET['serverId'];
@@ -17,12 +17,15 @@ if (empty($_GET['user']) or empty($_GET['serverId'])) {
 		vtxtlog("[checkserver.php] error checkserver process [info login ".$user." serverid ".$serverid."]");
 		exit('NO');				
 	} 	
-		
-	$result = BD("SELECT `{$bd_users['login']}` FROM {$bd_names['users']} WHERE `{$bd_users['login']}`='".TextBase::SQLSafe($user)."' AND `{$bd_users['server']}`='".TextBase::SQLSafe($serverid)."'");
+	
+        $sql = "SELECT  COUNT(*) FROM {$bd_names['users']} "
+             . "WHERE `{$bd_users['login']}`=:user AND `{$bd_users['server']}`=:serverid";
+             
+	$result = getDB()->fetchRow($sql, array('user' => $user, 'serverid' => $serverid), 'num');
 
-	if( mysql_num_rows($result) == 1 ){
+	if((int)$result[0]){
 		
-	   $user_login = new User($user,$bd_users['login']);
+	   $user_login = new User($user, $bd_users['login']);
 	   $user_login->gameLoginConfirm();
 	   vtxtlog("[checkserver.php] Server Test [Success]");
 	   exit('YES'); 		   

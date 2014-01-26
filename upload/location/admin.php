@@ -1,7 +1,11 @@
 <?php
-if (!defined('MCR')) exit;
- 
-if (empty($user) or $user->lvl() < 15) { header("Location: ".BASE_URL); exit; }
+if (!defined('MCR'))
+    exit;
+
+if (empty($user) or $user->lvl() < 15) {
+    header("Location: " . BASE_URL);
+    exit;
+}
 
 loadTool('catalog.class.php');
 loadTool('alist.class.php');
@@ -14,41 +18,48 @@ $menu->SetItemActive('admin');
 $st_subdir = 'admin/';
 $default_do = 'user';
 
-$page    = lng('PAGE_ADMIN');
+$page = lng('PAGE_ADMIN');
 
-$curlist = (isset($_GET['l']))? (int) $_GET['l'] : 1;
-$do      = (isset($_GET['do']))? $_GET['do'] : $default_do ; 
+$curlist = (isset($_GET['l'])) ? (int) $_GET['l'] : 1;
+$do = (isset($_GET['do'])) ? $_GET['do'] : $default_do;
 
-$html = ''; $info = ''; $server_info = '';
+$html = '';
+$info = '';
+$server_info = '';
 
-$user_id = (!empty($_POST['user_id']))? (int)$_POST['user_id'] : false;
-$user_id = (!empty($_GET['user_id']))? (int)$_GET['user_id'] : $user_id;
+$user_id = (!empty($_POST['user_id'])) ? (int) $_POST['user_id'] : false;
+$user_id = (!empty($_GET['user_id'])) ? (int) $_GET['user_id'] : $user_id;
 $ban_user = new User($user_id);
 
-if ($ban_user->id()) { 
+tokenTool('set');
 
-	$user_name = $ban_user->name();
-	$user_gen  = $ban_user->isFemale();
-	$user_mail = $ban_user->email();
-	$user_id   = $ban_user->id();
-	$user_ip   = $ban_user->ip();
-	$user_lvl  = $ban_user->lvl();
-	
-} else $ban_user = false;
+if ($ban_user->id()) {
 
-if ($do == 'gettheme') $id = InputGet('sid', 'GET', 'str');
-else $id = InputGet('sid', 'GET', 'int');
+    $user_name = $ban_user->name();
+    $user_gen = $ban_user->isFemale();
+    $user_mail = $ban_user->email();
+    $user_id = $ban_user->id();
+    $user_ip = $ban_user->ip();
+    $user_lvl = $ban_user->lvl();
+} else
+    $ban_user = false;
 
-if (empty($id)) $id = false; 
- 
-function RatioList($selectid = 1) {
+if ($do == 'gettheme')
+    $id = InputGet('sid', 'GET', 'str');
+else
+    $id = InputGet('sid', 'GET', 'int');
 
-$html_ratio = '<option value="1" '.((1 == $selectid)?'selected':'').'>64x32 | 22x17</option>';
+if (empty($id))
+    $id = false;
 
-	for ($i=2;$i<=32;$i=$i+2)
-		$html_ratio .= '<option value="'.$i.'" '.(($i == $selectid)?'selected':'').'>'.(64*$i).'x'.(32*$i).' | '.(22*$i).'x'.(17*$i).'</option>';
-		
-return $html_ratio;
+function RatioList($selectid = 1)
+{
+    $html_ratio = '<option value="1" ' . ((1 == $selectid) ? 'selected' : '') . '>64x32 | 22x17</option>';
+
+    for ($i = 2; $i <= 32; $i = $i + 2)
+        $html_ratio .= '<option value="' . $i . '" ' . (($i == $selectid) ? 'selected' : '') . '>' . (64 * $i) . 'x' . (32 * $i) . ' | ' . (22 * $i) . 'x' . (17 * $i) . '</option>';
+
+    return $html_ratio;
 }
 
 if ($do) {
@@ -91,7 +102,7 @@ if ($do) {
 	$html .= '<b>'.$log_file.'</b><br>';
 	
 	for($i = $first;$i<=$last;$i++)
-		if(@$file[$i]) $html .= $file[$i].'<br>';	
+		if(@$file[$i]) $html .= Message::Comment ($file[$i]).'<br>';	
 	
 	$arrGen = new View();
 	$html .= $arrGen->arrowsGenerator('index.php?mode=control&do=log&', $curlist, $count, $max);
@@ -106,80 +117,84 @@ if ($do) {
 	
 	$do = false;	
 	break;
-    case 'search': 
+    case 'search':
 
-	$html .= View::ShowStaticPage('user_find.html', $st_subdir.'user/');
-	
-	if ( !empty($_GET["sby"]) and 
-	     !empty($_GET['input'])     and 
-		( preg_match("/^[a-zA-Z0-9_-]+$/", $_GET['input']) or 
-		  preg_match("/[0-9.]+$/", $_GET['input'])         or 
-		  preg_match("/[0-9]+$/", $_GET['input']) )) {
-		  
-	$search_by = $_GET["sby"];
-	$input     = $_GET['input'];
- 
-    $controlManager = new ControlManager(false, 'index.php?mode=control&do=search&sby='.$search_by.'&input='.$input.'&');
-    $html .= $controlManager->ShowUserListing($curlist, $search_by, $input);	
-	}	
-	
-	$do = false;	
-	break;
-    case 'ipbans': 
-		
-    if (isset($_POST['timeout'])) {
-	
-	 if (isset($_POST['timeout']))
-      sqlConfigSet('next-reg-time',(int)$_POST['timeout']);
-	  
-	  sqlConfigSet('email-verification',(isset($_POST['emailver']))? 1 : 0);
-	  
-	 $info .= lng('OPTIONS_COMPLETE');
-	 
-    } elseif (  POSTGood('def_skin_male')  or POSTGood('def_skin_female')) {		
+            $html .= View::ShowStaticPage('user_find.html', $st_subdir . 'user/');
 
-		$female = (POSTGood('def_skin_female'))? true : false;
-		$tmp_dir = MCRAFT.'tmp/';
-		
-		$default_skin     = $tmp_dir.'default_skins/Char'.(($female)? '_female' : '').'.png';
-		$default_skin_md5 = $tmp_dir.'default_skins/md5'.(($female)? '_female' : '').'.md5';		
-        $way_buffer_mini  = $tmp_dir.'skin_buffer/default/Char_Mini'.(($female)? '_female' : '').'.png';
-        $way_buffer       = $tmp_dir.'skin_buffer/default/Char'.(($female)? '_female' : '').'.png';  	
-		
-		$new_file_info = POSTSafeMove(($female)? 'def_skin_female' : 'def_skin_male', $tmp_dir);
-		
-		loadTool('skin.class.php');
-		
-		if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir.$new_file_info['tmp_name']) and rename( $tmp_dir.$new_file_info['tmp_name'], $default_skin)) {
-		
-			chmod($default_skin, 0777);
-			$info .= lng('SKIN_CHANGED').' ('.((!$female)? lng('MALE') : lng('FEMALE')).') <br/>';  
-					
-			if (file_exists($default_skin_md5) ) unlink($default_skin_md5);	
-			if (file_exists($way_buffer_mini) )  unlink($way_buffer_mini);
-			if (file_exists($way_buffer) )       unlink($way_buffer);
-			
-		} else $info .= lng('UPLOAD_FAIL').'. ('.((!$female)? lng('MALE') : lng('FEMALE')).') <br/>';  
-	}	
-  
-	$timeout = (int)sqlConfigGet('next-reg-time');
-	$verification = ((int)sqlConfigGet('email-verification'))? true : false;
+            if (!empty($_GET["sby"]) and
+                    !empty($_GET['input']) and
+                    ( preg_match("/^[a-zA-Z0-9_-]+$/", $_GET['input']) or
+                    preg_match("/[0-9.]+$/", $_GET['input']) or
+                    preg_match("/[0-9]+$/", $_GET['input']) )) {
 
-	ob_start(); include View::Get('timeout.html', $st_subdir); $html .= ob_get_clean();  
-	
-    $controlManager = new ControlManager(false, 'index.php?mode=control&do=ipbans&');
-    $html .= $controlManager->ShowIpBans($curlist);
-	
-	$do = false;	
-	break;
-    case 'servers': 
-		
-    $controlManager = new ControlManager(false, 'index.php?mode=control&do=servers&');
-    $html .= $controlManager->ShowServers($curlist);
-	
-	$do = false;	
-	break;		
- }
+                $search_by = $_GET["sby"];
+                $input = $_GET['input'];
+
+                $controlManager = new ControlManager(false, 'index.php?mode=control&do=search&sby=' . $search_by . '&input=' . $input . '&');
+                $html .= $controlManager->ShowUserListing($curlist, $search_by, $input);
+            }
+
+            $do = false;
+            break;
+    case 'ipbans':
+
+        if (isset($_POST['timeout'])) {
+
+            if (isset($_POST['timeout']))
+                sqlConfigSet('next-reg-time', (int) $_POST['timeout']);
+
+            sqlConfigSet('email-verification', (isset($_POST['emailver'])) ? 1 : 0);
+
+            $info .= lng('OPTIONS_COMPLETE');
+        } elseif (POSTGood('def_skin_male') or POSTGood('def_skin_female')) {
+
+            $female = (POSTGood('def_skin_female')) ? true : false;
+            $tmp_dir = MCRAFT . 'tmp/';
+
+            $default_skin = $tmp_dir . 'default_skins/Char' . (($female) ? '_female' : '') . '.png';
+            $default_skin_md5 = $tmp_dir . 'default_skins/md5' . (($female) ? '_female' : '') . '.md5';
+            $way_buffer_mini = $tmp_dir . 'skin_buffer/default/Char_Mini' . (($female) ? '_female' : '') . '.png';
+            $way_buffer = $tmp_dir . 'skin_buffer/default/Char' . (($female) ? '_female' : '') . '.png';
+
+            $new_file_info = POSTSafeMove(($female) ? 'def_skin_female' : 'def_skin_male', $tmp_dir);
+
+            loadTool('skin.class.php');
+
+            if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir . $new_file_info['tmp_name']) and rename($tmp_dir . $new_file_info['tmp_name'], $default_skin)) {
+
+                chmod($default_skin, 0777);
+                $info .= lng('SKIN_CHANGED') . ' (' . ((!$female) ? lng('MALE') : lng('FEMALE')) . ') <br/>';
+
+                if (file_exists($default_skin_md5))
+                    unlink($default_skin_md5);
+                if (file_exists($way_buffer_mini))
+                    unlink($way_buffer_mini);
+                if (file_exists($way_buffer))
+                    unlink($way_buffer);
+            } else
+                $info .= lng('UPLOAD_FAIL') . '. (' . ((!$female) ? lng('MALE') : lng('FEMALE')) . ') <br/>';
+        }
+
+        $timeout = (int) sqlConfigGet('next-reg-time');
+        $verification = ((int) sqlConfigGet('email-verification')) ? true : false;
+
+        ob_start();
+        include View::Get('timeout.html', $st_subdir);
+        $html .= ob_get_clean();
+
+        $controlManager = new ControlManager(false, 'index.php?mode=control&do=ipbans&');
+        $html .= $controlManager->ShowIpBans($curlist);
+
+        $do = false;
+        break;
+    case 'servers':
+
+        $controlManager = new ControlManager(false, 'index.php?mode=control&do=servers&');
+        $html .= $controlManager->ShowServers($curlist);
+
+        $do = false;
+        break;
+    }
 }
 
 if ($do) { 
@@ -200,26 +215,33 @@ if ($do) {
 	if ($ban_user) include View::Get('user_ban.html', $st_subdir.'user/'); 
 	
 	break;
-	case 'banip':  
-	if (isset($_POST['confirm']) and $ban_user and !empty($_POST['banip_days'])) { 	
-  
-	$ban_time	= (int)$_POST['banip_days'];
-	$ban_type	= (isset($_POST['banip_all']))? 2 : 1;
-	$ban_user_t	= (isset($_POST['banip_anduser']) and (int)$_POST['banip_anduser'])? true : false;
-		
-		BD("DELETE FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ban_user->ip())."'");	
-		BD("INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type) VALUES ('".TextBase::SQLSafe($ban_user->ip())."', NOW(), NOW()+INTERVAL ".TextBase::SQLSafe($ban_time)." DAY, '".$ban_type."')");
-		
-		$info .= lng('ADMIN_BAN_IP').' (IP '.$ban_user->ip().') <br/>';
-		
-		if ($ban_user_t) {
-			
-			$ban_user->changeGroup(2);			
-			$info .= lng('USER_BANNED');
-		} 
-	}			
-	if ($ban_user) include View::Get('user_ban_ip.html', $st_subdir.'user/');    
-	break;
+	case 'banip': 
+            
+            if (isset($_POST['confirm']) and $ban_user and !empty($_POST['banip_days'])) {
+
+                $ban_time = (int) $_POST['banip_days'];
+                $ban_type = (isset($_POST['banip_all'])) ? 2 : 1;
+                $ban_user_t = (isset($_POST['banip_anduser']) and (int) $_POST['banip_anduser']) ? true : false;
+
+                getDB()->ask("DELETE FROM {$bd_names['ip_banning']} "
+                        . "WHERE IP=:ip", array('ip' => $ban_user->ip()));
+
+                getDB()->ask("INSERT INTO {$bd_names['ip_banning']} (IP, time_start, ban_until, ban_type) "
+                        . "VALUES (:ip, NOW(), NOW()+INTERVAL $ban_time DAY, '" . $ban_type . "')", array('ip' => $ban_user->ip()));
+
+                $info .= lng('ADMIN_BAN_IP') . ' (IP ' . $ban_user->ip() . ') <br/>';
+
+                if ($ban_user_t) {
+
+                    $ban_user->changeGroup(2);
+                    $info .= lng('USER_BANNED');
+                }
+            }
+            
+            if ($ban_user)
+                include View::Get('user_ban_ip.html', $st_subdir . 'user/');
+            
+        break;
 	case 'delete':	
 	if (isset($_POST['confirm']) and $ban_user) {     
 	
@@ -391,19 +413,25 @@ if ($do) {
 		if ($id) {
 		    
 			$server = new Server($id);
-		
-			if (!$server->Exist()) { $info .=  lng('SERVER_NOT_EXIST'); break; }
-			
-			if ($serv_name)     $server->SetText($serv_name, 'name');
-			if ($serv_info)     $server->SetText($serv_info, 'info');
-			
-			if (!is_bool($serv_method))   $server->SetConnectMethod($serv_method, $serv_rcon, $serv_s_user);
-			
-			if ($serv_address and $serv_port) $server->SetConnectWay($serv_address, $serv_port);
-			
-			$info .= lng('SERVER_UPDATED');
 
-		} else {
+                    if (!$server->Exist()) {
+                        $info .= lng('SERVER_NOT_EXIST');
+                        break;
+                    }
+
+                    if ($serv_name)
+                        $server->SetText($serv_name, 'name');
+                    if ($serv_info)
+                        $server->SetText($serv_info, 'info');
+
+                    if (!is_bool($serv_method))
+                        $server->SetConnectMethod($serv_method, $serv_rcon, $serv_s_user);
+
+                    if ($serv_address and $serv_port)
+                        $server->SetConnectWay($serv_address, $serv_port);
+
+                    $info .= lng('SERVER_UPDATED');
+                } else {
 		
 		  if (is_bool($serv_method)) { $info .= lng('SERVER_PROTO_EMPTY'); break; }
 		 
@@ -597,7 +625,9 @@ if ($do) {
     case 'delete_banip': 
 	if (!empty($_GET['ip']) and preg_match("/[0-9.]+$/", $_GET['ip'])) {
 	
-	$ip = $_GET['ip']; BD("DELETE FROM {$bd_names['ip_banning']} WHERE IP='".TextBase::SQLSafe($ip)."'");
+	$ip = $_GET['ip']; 
+        
+        getDB()->ask("DELETE FROM {$bd_names['ip_banning']} WHERE IP=:ip", array('ip' => $ip));
 		                  
     $info .= lng('IP_UNBANNED') . ' ( '.$ip.') ';
 	} 
@@ -609,17 +639,19 @@ $html .= ob_get_clean();
 
 if ($do == 'sign') {
 
-	$data = file_get_contents(View::Get('edit.png', 'img/'));
-	if (!$data) exit;
-	$data = explode("\x49\x45\x4E\x44\xAE\x42\x60\x82", $data );
-	if (sizeof($data) != 2) exit;
+    $data = file_get_contents(View::Get('edit.png', 'img/'));
+    if (!$data)
+        exit;
+    $data = explode("\x49\x45\x4E\x44\xAE\x42\x60\x82", $data);
+    if (sizeof($data) != 2)
+        exit;
 
-	$data[1] = str_replace("\x20", ' ', $data[1]);
-	$data[1] = str_replace(array("\r\n", "\n", "\r"),'<br />', substr($data[1], 0, -1).'.');
-	$data[1] = '<pre style="word-wrap: break-word; white-space: pre-wrap; font-size: 6px; min-width: 640px;">'.$data[1].'</pre>';
+    $data[1] = str_replace("\x20", ' ', $data[1]);
+    $data[1] = str_replace(array("\r\n", "\n", "\r"), '<br />', substr($data[1], 0, -1) . '.');
+    $data[1] = '<pre style="word-wrap: break-word; white-space: pre-wrap; font-size: 6px; min-width: 640px;">' . $data[1] . '</pre>';
 
-	echo $data[1];
-	exit;
+    echo $data[1];
+    exit;
 }
 
 ob_start(); 
@@ -631,4 +663,3 @@ if ($info) include View::Get('info.html', $st_subdir);
 include View::Get('admin.html', $st_subdir); 
 
 $content_main .= ob_get_clean();
-?>

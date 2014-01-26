@@ -1,24 +1,25 @@
-<?php 
+<?php
+
 /* SQL COMMON TABLES CREATE + ADD DEFAULT INFO + UPDATES */
 
-BD("SET FOREIGN_KEY_CHECKS=0;");
+getDB()->ask("SET FOREIGN_KEY_CHECKS=0;");
 
 if ($mysql_rewrite) {
 
-BD("DROP TABLE IF EXISTS `{$bd_names['ip_banning']}`,
-						 `{$bd_names['news']}`,
-						 `{$bd_names['news_categorys']}`,
-						 `{$bd_names['likes']}`,
-                         `{$bd_names['groups']}`,
-						 `{$bd_names['data']}`,
-						 `{$bd_names['comments']}`,
-						 `{$bd_names['files']}`,
-                         `{$bd_names['servers']}`;");
+    getDB()->ask("DROP TABLE IF EXISTS `{$bd_names['ip_banning']}`,
+                                        `{$bd_names['news']}`,
+                                        `{$bd_names['news_categorys']}`,
+                                        `{$bd_names['likes']}`,
+                                        `{$bd_names['groups']}`,
+                                        `{$bd_names['data']}`,
+                                        `{$bd_names['comments']}`,
+                                        `{$bd_names['files']}`,
+                                        `{$bd_names['servers']}`;");
 }
 
 /* CREATE TABLES */
-	
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['likes']}` (
+
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['likes']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL,
   `item_id` bigint(20) NOT NULL,
@@ -27,7 +28,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['likes']}` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=0;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['files']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['files']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `id_word` char(255) DEFAULT NULL,
   `user_id` bigint(20) NOT NULL,
@@ -41,7 +42,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['files']}` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['news']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `category_id` int(10) NOT NULL DEFAULT 1,
   `user_id` bigint(20) NOT NULL,
@@ -58,7 +59,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news']}` (
   KEY `user_id` (`user_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news_categorys']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['news_categorys']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` char(255) NOT NULL,
   `description` char(255) NOT NULL,
@@ -66,7 +67,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['news_categorys']}` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['servers']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['servers']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `last_update` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `online` tinyint(1) DEFAULT 0,
@@ -89,7 +90,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['servers']}` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['groups']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['groups']}` (
   `id`      int(10) NOT NULL AUTO_INCREMENT,
   `name`   char(64) NOT NULL,
   `lvl`     int(10) NOT NULL DEFAULT 1,
@@ -106,7 +107,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['groups']}` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=100;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['comments']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['comments']}` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL,
   `item_id` bigint(20) NOT NULL,
@@ -117,7 +118,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['comments']}` (
   KEY `item_id` (`item_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['ip_banning']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['ip_banning']}` (
   `IP` varchar(16) NOT NULL,
   `time_start` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `ban_until` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -126,7 +127,7 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['ip_banning']}` (
   PRIMARY KEY (`IP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['data']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['data']}` (
   `property` varchar(255) DEFAULT NULL,
   `value` varchar(255) DEFAULT NULL,
   UNIQUE KEY `property` (`property`)
@@ -134,9 +135,9 @@ BD("CREATE TABLE IF NOT EXISTS `{$bd_names['data']}` (
 
 /* DEFAULT INFO ADD */
 
-BD("INSERT INTO `{$bd_names['news_categorys']}` (`id`,`name`) VALUES (1,'Без категории');");
+getDB()->ask("INSERT INTO `{$bd_names['news_categorys']}` (`id`,`name`) VALUES (1,'Без категории');");
 
-BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('latest-game-build', '10746'),
 ('launcher-version', '13'),
 ('next-reg-time', '2'),
@@ -145,7 +146,7 @@ BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('rcon-pass', '0'),
 ('rcon-serv', '0');");
 
-BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('smtp-user', ''),
 ('smtp-pass', ''),
 ('smtp-host', 'localhost'),
@@ -155,74 +156,71 @@ BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('game-link-osx', ''),
 ('game-link-lin', '');");
 
-BD("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('email-name', 'Info'),
 ('email-mail', 'noreplay@noreplay.ru');");
 
 /* 2.05 UPDATE */
 
 if (!BD_ColumnExist($bd_names['ip_banning'], 'ban_type'))
+    getDB()->ask("ALTER TABLE `{$bd_names['ip_banning']}` ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1;");
 
-BD("ALTER TABLE `{$bd_names['ip_banning']}` ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1;");
+if (!BD_ColumnExist($bd_names['ip_banning'], 'reason'))
+    getDB()->ask("ALTER TABLE `{$bd_names['ip_banning']}` ADD `reason` varchar(255) DEFAULT NULL;");
 
-if (!BD_ColumnExist($bd_names['ip_banning'], 'reason'))	
-
-BD("ALTER TABLE `{$bd_names['ip_banning']}`  ADD `reason` varchar(255) DEFAULT NULL;");
-	
 /* 2.1 UPDATE */
 
 if (!BD_ColumnExist($bd_names['news'], 'user_id')) {
 
-BD("ALTER TABLE `{$bd_names['news']}` 
+    getDB()->ask("ALTER TABLE `{$bd_names['news']}` 
 	ADD `user_id` bigint(20) NOT NULL,
 	ADD `dislikes` int(10) DEFAULT 0,
 	ADD `likes` int(10) DEFAULT 0;");
-	
-BD("ALTER TABLE `{$bd_names['news']}`	ADD KEY `category_id` (`category_id`),
-										ADD KEY `user_id` (`user_id`);");
-					
-BD("ALTER TABLE `{$bd_names['comments']}`	ADD KEY `user_id` (`user_id`),
-											ADD	KEY `item_id` (`item_id`);");
 
-BD("ALTER TABLE `{$bd_names['users']}`	ADD	KEY `group_id` (`{$bd_users['group']}`);");	
-}	
+    getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD KEY `category_id` (`category_id`),
+                                                    ADD KEY `user_id` (`user_id`);");
+
+    getDB()->ask("ALTER TABLE `{$bd_names['comments']}`	ADD KEY `user_id` (`user_id`),
+                                                        ADD KEY `item_id` (`item_id`);");
+
+    getDB()->ask("ALTER TABLE `{$bd_names['users']}` ADD KEY `group_id` (`{$bd_users['group']}`);");
+}
 
 /* 2.15 UPDATE */
 if (!BD_ColumnExist($bd_names['users'], $bd_users['deadtry'])) {
 
-BD("ALTER TABLE `{$bd_names['users']}`	ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");	
+    getDB()->ask("ALTER TABLE `{$bd_names['users']}` ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");
 }
 
 /* 2.25b UPDATE */
 if (!BD_ColumnExist($bd_names['users'], $bd_users['clientToken'])) {
 
-BD("ALTER TABLE `{$bd_names['users']}` ADD `{$bd_users['clientToken']}` varchar(255) DEFAULT NULL;");	
+    getDB()->ask("ALTER TABLE `{$bd_names['users']}` ADD `{$bd_users['clientToken']}` varchar(255) DEFAULT NULL;");
 }
 
 /* 2.3 UPDATE */
 if (!BD_ColumnExist($bd_names['servers'], 'service_user')) {
 
-BD("ALTER TABLE `{$bd_names['servers']}` ADD `service_user` char(64) default NULL;");
-BD("ALTER TABLE `{$bd_names['news']}` ADD `hits` int(10) DEFAULT 0;");	
+    getDB()->ask("ALTER TABLE `{$bd_names['servers']}` ADD `service_user` char(64) default NULL;");
+    getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `hits` int(10) DEFAULT 0;");
 }
 
 if (!BD_ColumnExist($bd_names['news'], 'hide_vote'))
-
-BD("ALTER TABLE `{$bd_names['news']}` ADD `hide_vote` tinyint(1) NOT NULL DEFAULT 0;");	
+    getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `hide_vote` tinyint(1) NOT NULL DEFAULT 0;");
 
 /* 2.31 UPDATE */
 if (!BD_ColumnExist($bd_names['comments'], 'item_type')) {
 
-BD("ALTER TABLE `{$bd_names['comments']}` ADD `item_type` smallint(3) DEFAULT ". ItemType::News .";");
-BD("ALTER TABLE `{$bd_names['comments']}` DROP KEY `item_id`");
-BD("ALTER TABLE `{$bd_names['comments']}` ADD KEY `uniq_item` (`item_id`, `item_type`);");
+    getDB()->ask("ALTER TABLE `{$bd_names['comments']}` ADD `item_type` smallint(3) DEFAULT " . ItemType::News . ";");
+    getDB()->ask("ALTER TABLE `{$bd_names['comments']}` DROP KEY `item_id`");
+    getDB()->ask("ALTER TABLE `{$bd_names['comments']}` ADD KEY `uniq_item` (`item_id`, `item_type`);");
 
-BD("ALTER TABLE `{$bd_names['news']}` CHANGE COLUMN `hide_vote` `vote` tinyint(1) NOT NULL DEFAULT 1;");
-BD("ALTER TABLE `{$bd_names['news']}` ADD `discus` tinyint(1) NOT NULL DEFAULT 1;");
-BD("ALTER TABLE `{$bd_names['news']}` ADD `comments` int(10) NOT NULL DEFAULT 0;");
+    getDB()->ask("ALTER TABLE `{$bd_names['news']}` CHANGE COLUMN `hide_vote` `vote` tinyint(1) NOT NULL DEFAULT 1;");
+    getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `discus` tinyint(1) NOT NULL DEFAULT 1;");
+    getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `comments` int(10) NOT NULL DEFAULT 0;");
 }
 
-BD("CREATE TABLE IF NOT EXISTS `{$bd_names['action_log']}` (
+getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['action_log']}` (
   `IP` varchar(16) NOT NULL,
   `first_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `last_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',

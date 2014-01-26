@@ -6,7 +6,7 @@ require('./system.php');
 loadTool('ajax.php');
 loadTool('user.class.php');
 
-BDConnect('login');
+DBinit('login');
 
 if (isset($_GET['out'])) {
 
@@ -37,4 +37,3 @@ if (isset($_GET['out'])) {
 	$tmp_user->login(randString( 15 ), GetRealIp(), (!empty($_POST['save']))? true : false);
 	aExit(0, 'success');	  
 }
-?>

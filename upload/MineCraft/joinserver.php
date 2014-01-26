@@ -8,7 +8,7 @@ exit('Bad login');
 }	
 
 loadTool('user.class.php');  
-BDConnect('joinserver');
+DBinit('joinserver');
 
 $login 		= $_GET['user']; 
 $serverid	= $_GET['serverId'];
@@ -34,17 +34,33 @@ if ($tmp_user->id() === false or $tmp_user->name() !== $login)  {
 vtxtlog("[joinserver.php] Bad login register");
 exit ('Bad login');
 }
-	
-$result = BD("SELECT `{$bd_users['login']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['session']}`='".TextBase::SQLSafe($sessionid)."' AND `{$bd_users['login']}`='".TextBase::SQLSafe($login)."' AND `{$bd_users['server']}`='".TextBase::SQLSafe($serverid)."'");
 
-if( mysql_num_rows($result) == 1 ){
+$sql = "SELECT COUNT(*) FROM `{$bd_names['users']}` "
+     . "WHERE `{$bd_users['session']}`=:session "
+     . "AND `{$bd_users['login']}`=:login "
+     . "AND `{$bd_users['server']}`=:server";
+     
+$result = getDB()->fetchRow($sql, array(
+    'session' => $sessionid, 
+    'login' => $tmp_user->name(), 
+    'server' => $serverid
+ ), 'num');
+
+if((int)$result[0] == 1 ) {
 	vtxtlog('[joinserver.php] join Server [Result] Relogin OK'); 
 	exit('OK');
 } 
+$sql = "UPDATE `{$bd_names['users']}` SET `{$bd_users['server']}`=:server "
+     . "WHERE `{$bd_users['session']}`=:session "
+     . "AND `{$bd_users['login']}`=:login ";
+     
+$result = getDB()->ask($sql, array(
+    'session' => $sessionid, 
+    'login' => $tmp_user->name(), 
+    'server' => $serverid
+ ));
 
-$result = BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['server']}`='".TextBase::SQLSafe($serverid)."' WHERE `{$bd_users['session']}`='".TextBase::SQLSafe($sessionid)."' AND `{$bd_users['login']}`='".TextBase::SQLSafe($login)."'");
-
-if(mysql_affected_rows() == 1){
+if($result->rowCount() == 1){
 	vtxtlog('[joinserver.php] join Server [Result] login OK'); 
 	exit('OK');
 }

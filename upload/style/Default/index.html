@@ -1,137 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-	
-    <title><?php echo $config['s_name'] ?> — <?php echo $page; ?> </title>
-	
-	<base href="<?php echo BASE_URL ?>"> 
-	
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo $config['s_about'] ?>">
-    <meta name="author" content="NC22"><!-- first version of stylesheet was developed by KillerProst -->
+    <head>
+        <meta charset="utf-8">
 
-    <link href="<?php View::URL('css/style.css') ?>" rel="stylesheet">
-	<link href="<?php View::URL('css/serverbar.css') ?>" rel="stylesheet">
-	
-	<?php echo $content_js ?>
-	
-	<link rel="alternate" type="application/rss+xml" title="RSS" href="instruments/rss20/rss.php" />
-	
-    <!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+        <title><?php echo $config['s_name'] ?> — <?php echo $page; ?> </title>
 
-    <link rel="shortcut icon" href="<?php View::URL('ico/favicon.ico') ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php View::URL('ico/apple-touch-icon-144-precomposed.png') ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php View::URL('ico/apple-touch-icon-114-precomposed.png') ?>">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php View::URL('ico/apple-touch-icon-72-precomposed.png') ?>">
-    <link rel="apple-touch-icon-precomposed" href="<?php View::URL('ico/apple-touch-icon-57-precomposed.png') ?>">
-	
-</head>
+        <base href="<?php echo BASE_URL ?>"> 
 
-<body>
-<header class="jumbotron subhead">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="<?php echo $config['s_about'] ?>">
+        <meta name="author" content="NC22"><!-- first version of stylesheet was developed by KillerProst -->
 
-  <div class="container">
+        <link href="<?php View::URL('css/style.css') ?>" rel="stylesheet">
+        <link href="<?php View::URL('css/serverbar.css') ?>" rel="stylesheet">
 
-	    <div class="container-fluid">
-			<div class="row-fluid">
-			    <div class="span9">					
-					<h1><?php echo $config['s_name'] ?></h1>
-					<p class="lead"><?php echo $config['s_about'] ?></p>
-				</div>
+        <?php echo $content_js ?>
 
-				<div class="span3" style="padding-top: 30px;">	
-                    <p class="lead" ><a href="index.php?mode=start">СКАЧАТЬ КЛИЕНТ</a></p>
-				</div>	
-				
-			</div>
-		</div> 
-  </div>
-  
-</header>
+        <link rel="alternate" type="application/rss+xml" title="RSS" href="instruments/rss20/rss.php" />
 
-<div class="bs-docs-social">
-  <div class="container">
-    <ul class="bs-docs-social-buttons">
-      <li>
-        <b style="color:#999999;">Совет: </b><?php echo $content_advice; ?>
-		<div id="debug"></div>
-      </li>
-    </ul>
-  </div>
-</div>
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
 
-<div class="navbar navbar-fixed-top">
+        <link rel="shortcut icon" href="<?php View::URL('ico/favicon.ico') ?>">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php View::URL('ico/apple-touch-icon-144-precomposed.png') ?>">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php View::URL('ico/apple-touch-icon-114-precomposed.png') ?>">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php View::URL('ico/apple-touch-icon-72-precomposed.png') ?>">
+        <link rel="apple-touch-icon-precomposed" href="<?php View::URL('ico/apple-touch-icon-57-precomposed.png') ?>">
 
-      <div class="navbar-inner">
-        <div class="container">
-		
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-		  
-          <a class="brand" href=""><?php echo $config['s_name'] ?></a>
-		  
-          <div class="nav-collapse collapse">
+    </head>
 
-	         <?php echo $content_menu; ?>
-			 
-          </div>
+    <body>
+        <header class="jumbotron subhead">
+
+            <div class="container">
+
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div class="span9">					
+                            <h1><?php echo $config['s_name'] ?></h1>
+                            <p class="lead"><?php echo $config['s_about'] ?></p>
+                        </div>
+
+                        <div class="span3" style="padding-top: 30px;">	
+                            <p class="lead" ><a href="index.php?mode=start">СКАЧАТЬ КЛИЕНТ</a></p>
+                        </div>	
+
+                    </div>
+                </div> 
+            </div>
+
+        </header>
+
+        <div class="bs-docs-social">
+            <div class="container">
+                <ul class="bs-docs-social-buttons">
+                    <li>
+                        <b style="color:#999999;">Совет: </b><?php echo $content_advice; ?>
+                        <div id="debug"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="navbar navbar-fixed-top">
+
+            <div class="navbar-inner">
+                <div class="container">
+
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
+                    <a class="brand" href=""><?php echo $config['s_name'] ?></a>
+
+                    <div class="nav-collapse collapse">
+
+                        <?php echo $content_menu; ?>
+
+                    </div>
+
+                </div>
+            </div>
 
         </div>
-      </div>
-	  
-</div>
-	
-<!-- END -->
-<div class="container">	
-    <div class="container-fluid">
-			<div class="row-fluid">
-			<!-- Левый контейнер -->
-				<div class="span4">		
-						
-					<?php echo $content_side ?>
 
-					<?php echo $content_servers ?>
-										
-				</div>
-			<!-- /.Левый контейнер -->
-				
-            <!-- Правый контейнер -->
-				<div class="span8">	
+        <!-- END -->
+        <div class="container">	
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <!-- Левый контейнер -->
+                    <div class="span4">		
 
-				    <?php echo $content_main;?> 	
-		
-            	    <div class="inform-block" style="display: none;" id="main-error">
-                       <div class="alert alert-error" id="main-error-text"></div>
+                        <?php echo $content_side ?>
+
+                        <?php echo $content_servers ?>
+
                     </div>
-				</div>
-				
-			<!-- /.Правый контейнер  -->
-			</div>
-    </div> 
-</div>
-	<!-- /container -->
-	
-    <footer class="footer-block">	
+                    <!-- /.Левый контейнер -->
 
-		   <div style="float: right;"><?php echo FEEDBACK; ?>.</div>
-           Полное или частичное копирование сайта <?php echo $config['s_name'] ?>  запрещено.
-			
-    </footer>
-	
-	<script src="<?php View::URL('js/jquery.js') ?>"></script>
-	<script src="<?php View::URL('js/smiles.js') ?>"></script>	
-	<script src="<?php View::URL('js/tools.js') ?>"></script>
-	
-	<script src="<?php View::URL('js/monitoring.js') ?>"></script>
-	<script src="<?php View::URL('js/ajax.js') ?>"></script>
-	
-	<script src="<?php View::URL('js/bootstrap.min.js') ?>"></script>
-  </body>
+                    <!-- Правый контейнер -->
+                    <div class="span8">	
+
+                        <?php echo $content_main;?> 	
+
+                        <div class="inform-block" style="display: none;" id="main-error">
+                            <div class="alert alert-error" id="main-error-text"></div>
+                        </div>
+                    </div>
+
+                    <!-- /.Правый контейнер  -->
+                </div>
+            </div> 
+        </div>
+        <!-- /container -->
+
+        <footer class="footer-block">	
+
+            <div style="float: right;"><?php echo FEEDBACK; ?>.</div>
+            Полное или частичное копирование сайта <?php echo $config['s_name'] ?>  запрещено.
+
+        </footer>
+
+        <script src="<?php View::URL('js/smiles.js') ?>"></script>	
+        <script src="<?php View::URL('js/tools.js') ?>"></script>
+
+        <script src="<?php View::URL('js/monitoring.js') ?>"></script>
+        <script src="<?php View::URL('js/ajax.js') ?>"></script>
+     
+        <script src="<?php View::URL('js/bootstrap-without-jquery.js') ?>"></script>
+    </body>
 </html>

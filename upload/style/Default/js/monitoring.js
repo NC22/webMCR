@@ -1,4 +1,4 @@
-/* WEB-APP : WebMCR (С) 2013 NC22 */
+/* WEB-APP : WebMCR (С) 2013-2014 NC22 */
 
 var servers_stack = new Array(); 
 

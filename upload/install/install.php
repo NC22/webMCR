@@ -172,44 +172,66 @@ global $main_cms, $mode, $info;
 	return false;
 }
 
-function BD( $query ) {
-    return mysql_query( $query );
+function getDB() {
+    global $link;
+    
+    if ($link === false) {
+        DBinit();
+    }
+    
+    return $link;
 }
 
-function BD_ColumnExist($table, $column) {
-	return (@mysql_query("SELECT `$column` FROM `$table` LIMIT 0, 1"))? true : false;
+function BD_ColumnExist($table, $column)
+{
+    return (getDB()->ask("SELECT `$column` FROM `$table` LIMIT 0, 1")) ? true : false;
 }
 
 function Root_url(){
-	$root_url = str_replace('\\', '/', $_SERVER['PHP_SELF']); 
-	$root_url = explode("install/install.php", $root_url, -1);
-	if (sizeof($root_url)) return $root_url[0];
-	else return '/';
+    $root_url = str_replace('\\', '/', $_SERVER['PHP_SELF']); 
+    $root_url = explode("install/install.php", $root_url, -1);
+    if (sizeof($root_url)) return $root_url[0];
+    else return '/';
 }
 
 function Mode_rewrite(){
 	
-	if (function_exists('apache_get_modules')) {
-	  
-	  $modules = apache_get_modules();
-	  return in_array('mod_rewrite', $modules);
-	  
-	} else return getenv('HTTP_MOD_REWRITE')=='On' ? true : false ;	
-	return false;
+    if (function_exists('apache_get_modules')) {
+
+      $modules = apache_get_modules();
+      return in_array('mod_rewrite', $modules);
+
+    } else return getenv('HTTP_MOD_REWRITE')=='On' ? true : false ;	
+    return false;
 }
 
-function DBConnect() {
-global $link,$config;
+function DBinit() 
+{
+    global $link, $config;
+    
+    if ($link) return;
+    
+    $dir = MCR_ROOT.'instruments/database/';
+    
+    require($dir . 'databaseInterface.class.php');
+    require($dir . 'statementInterface.class.php');    
+    require($dir . $config['db_driver'] . '/module.class.php');
+    require($dir . $config['db_driver'] . '/statement.class.php');
+    
+    $class = $config['db_driver'] . 'Driver';
 
-$link = mysql_connect($config['db_host'].':'.$config['db_port'], $config['db_login'],  $config['db_passw'] );
-if (!$link) return 1;
-if (!mysql_select_db($config['db_name'],$link)) return 2;
+    $link = new $class();
 
-BD("set character_set_client = 'utf8'"); 
-BD("set character_set_results = 'utf8'"); 
-BD("set collation_connection = 'utf8_general_ci'");  
-
-return false;
+    try {
+        $link->connect($config['db_host'], 
+                       $config['db_port'], 
+                       $config['db_login'], 
+                       $config['db_passw'], 
+                       $config['db_name']
+        );
+    } catch (Exception $e) {
+        exit($e->getMessage());
+    }  
 }
 
 function ConfigPostStr($postKey){
@@ -231,13 +253,17 @@ global $config,$bd_names,$bd_users,$info;
 	elseif ( !TextBase::StringLen($site_repassword)	) $info = 'Введите повтор пароля.';
 	elseif ( strcmp($site_password,$site_repassword)) $info = 'Пароли не совпадают.';
 	else {
-
-		$result = BD("SELECT `{$bd_users['login']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['login']}`='$site_user'");			  
-		if ( mysql_num_rows($result) ) BD("DELETE FROM `{$bd_names['users']}` WHERE `{$bd_users['login']}`='$site_user'");
-					
 		require_once(MCR_ROOT.'instruments/auth/'.$config['p_logic'].'.php');
-				
-		BD("INSERT INTO `{$bd_names['users']}` (`{$bd_users['login']}`,`{$bd_users['password']}`,`{$bd_users['ip']}`,`{$bd_users['group']}`) VALUES('$site_user','".MCRAuth::createPass($site_password)."','127.0.0.1',3)");	
+		
+                $pass = MCRAuth::createPass($site_password);
+                
+		getDB()->ask("INSERT INTO `{$bd_names['users']}` ("
+                . "`{$bd_users['login']}`,"
+                . "`{$bd_users['password']}`,"
+                . "`{$bd_users['ip']}`,"
+                . "`{$bd_users['group']}`) "
+                . "VALUES('$site_user','$pass','127.0.0.1',3) "
+                . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass'");	
 		$result = true;
 	}
 
@@ -250,9 +276,10 @@ switch ($step) {
 	case 1:     
 	$mysql_port     = ConfigPostInt('mysql_port')		;
 	$mysql_adress   = ConfigPostStr('mysql_adress')		;
-	$mysql_bd       = ConfigPostStr('mysql_bd')			;
+	$mysql_bd       = ConfigPostStr('mysql_bd')         	;
 	$mysql_user     = ConfigPostStr('mysql_user')		;
 	$mysql_password = ConfigPostStr('mysql_password')	;
+        $mysql_driver   = ConfigPostStr('mysql_driver') 	;
 	$mysql_rewrite  = (empty($_POST['mysql_rewrite']))? false : true;
 	
 		if ( !$mysql_port ) $info = 'Укажите порт для подключения к БД.';
@@ -260,29 +287,31 @@ switch ($step) {
 	elseif ( !TextBase::StringLen($mysql_user) )   $info = 'Укажите пользователя для подключения к MySQL серверу.';
 	else {
 		
-		$config['db_host']  = $mysql_adress   ; 
-		$config['db_port']  = $mysql_port     ;
-		$config['db_name']  = $mysql_bd       ; 
-		$config['db_login'] = $mysql_user     ;
-		$config['db_passw'] = $mysql_password ;
-		
-				$connect_result = DBConnect();	
-			if ($connect_result == 1) $info = 'Данные для подключения к БД не верны. Возможно не правильно указан логин и пароль.';
-		elseif ($connect_result == 2) $info = 'Не найдена база данных с именем '.$mysql_bd;
-		else {
-		    
-			$config['rewrite'] = Mode_rewrite();
-			$config['s_root']  = Root_url();
-			
-			if (MainConfig::SaveOptions()) $step = 2; 
-			else $info = $save_conf_err;	
+            $config['db_host']  = $mysql_adress   ; 
+            $config['db_port']  = $mysql_port     ;
+            $config['db_name']  = $mysql_bd       ; 
+            $config['db_login'] = $mysql_user     ;
+            $config['db_passw'] = $mysql_password ;
+            $config['db_driver'] = $mysql_driver  ;
 
-			
-			include './CMS/sql/sql_common.php';				
-			if (!$main_cms) include './CMS/sql/sql_usual.php';	
-			
-			include './18_fix.php';
-		}		
+            $connect_result = DBinit();	
+
+            if ($connect_result == 1) $info = 'Данные для подключения к БД не верны. Возможно не правильно указан логин и пароль.';
+            elseif ($connect_result == 2) $info = 'Не найдена база данных с именем '.$mysql_bd;
+            else {
+
+                    $config['rewrite'] = Mode_rewrite();
+                    $config['s_root']  = Root_url();
+
+                    if (MainConfig::SaveOptions()) $step = 2; 
+                    else $info = $save_conf_err;	
+
+
+                    include './CMS/sql/sql_common.php';				
+                    if (!$main_cms) include './CMS/sql/sql_usual.php';	
+
+                    include './18_fix.php';
+            }		
 	}	
 	break;
 	case 2:
@@ -295,7 +324,7 @@ switch ($step) {
 		break;
 	}
 	
-		$connect_result = DBConnect();		
+		$connect_result = DBinit();		
 	if ($connect_result) { $info = 'Ошибка настройки соединения с БД.'; break; }	
 	
 	if ($main_cms) {
@@ -309,13 +338,11 @@ switch ($step) {
 		
 		$config['p_sync']  = (empty($_POST['session_sync']))? false : true;
 		
-		$result = BD("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['login']}`='$site_user'");
+		$userId = getDB()->fetchRow("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['login']}`='$site_user'", false, 'num');
 		
-		if (is_bool($result) and $result == false) { $info = 'Название таблицы пользователей указано неверно.'; break; }		
-		if (!mysql_num_rows( $result )) { $info = 'Пользователь с таким именем не найден.'; break; }		
-		
-		$line = mysql_fetch_array($result, MYSQL_NUM);		
-		
+                    if ($userId === false) { $info = 'Название таблицы пользователей указано неверно.'; break; }		
+		elseif (!$userId) { $info = 'Пользователь с таким именем не найден.'; break; }		
+
 		if ($mode == 'xenforo') {
 		
 			$cms_way = (isset( $_POST['main_cms']))? $_POST['main_cms'] : '';			
@@ -324,13 +351,13 @@ switch ($step) {
 			$site_ways['main_cms'] = $cms_way;			
 			$bd_names['user_auth']  = ConfigPostStr('bd_auth_xenforo');
 			
-			$result = BD("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['id']}`='".$line[0]."'");		
-			if (is_bool($result) and $result == false) { $info = 'Название таблицы c дополнительными данными указано неверно.'; break; }
+			$result = getDB()->ask("SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` WHERE `{$bd_users['id']}`='".$userId[0]."'");		
+			if ($result === false) { $info = 'Название таблицы c дополнительными данными указано неверно.'; break; }
 		}
 			
 		if ($mode == 'xauth' and !CreateAdmin($site_user)) break;		
 			
-		if ($mode != 'xauth') BD("UPDATE `{$bd_names['users']}` SET `{$bd_users['group']}`='3' WHERE `{$bd_users['login']}`='$site_user'");	
+		if ($mode != 'xauth') getDB()->ask("UPDATE `{$bd_names['users']}` SET `{$bd_users['group']}`='3' WHERE `{$bd_users['login']}`='$site_user'");	
 		$step = 3; 	
 		MainConfig::SaveOptions();			
 		
@@ -399,4 +426,3 @@ switch ($step) {
 $content_main = ob_get_clean();
 
 include View::Get('index.html');
-?>

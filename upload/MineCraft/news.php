@@ -7,7 +7,7 @@ loadTool('user.class.php');
 loadTool('monitoring.class.php');
 loadTool('catalog.class.php');
 
-BDConnect('news');
+DBinit('news');
 
 $news = '';
 $page_title = 'Новостная лента';

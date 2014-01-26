@@ -4,7 +4,7 @@ if (empty($_POST['command']) and empty($_POST['userlist']))
 	  
 require('../system.php');
 
-BDConnect('mcraft.rcon');
+DBinit('mcraft.rcon');
 
 loadTool('rcon.class.php');
 loadTool('user.class.php');

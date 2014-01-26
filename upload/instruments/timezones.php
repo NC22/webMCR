@@ -1,20 +1,5 @@
 <?php
-/*
-date_default_timezone_set('Asia/Vladivostok');
-
-$now = new \DateTime();
-$mins = $now->getOffset() / 60;
-$sgn = ($mins < 0 ? -1 : 1);
-$mins = abs($mins);
-$hrs = floor($mins / 60);
-$mins -= $hrs * 60;
-$offset = sprintf('%+d:%02d', $hrs*$sgn, $mins);
-echo $offset; 
-
-echo '<select>'.TimezoneList().'</select>';
-*/
-
-/* WEB-APP : WebMCR (С) 2013 NC22 | License : GPLv3 */
+/* WEB-APP : WebMCR (С) 2013-2014 NC22 | License : GPLv3 */
 
 if (!defined('MCR')) exit;
 
