@@ -1,45 +1,45 @@
 <form class="form-horizontal" id="profile-update" action="action.php" method="post" enctype="multipart/form-data">
 
-<legend>Изменить профиль пользователя <a href="#" onclick="LoadProfile('customp',<?php echo $user_id; ?>); return false"><?php echo $user_name; ?></a></legend>
+    <legend>Изменить профиль пользователя <a href="#" onclick="LoadProfile('customp', <?php echo $user_id ?>); return false"><?php echo $user_name; ?></a></legend>
 
-<!-- Добавить вывод текущей информации -->
+    <!-- Добавить вывод текущей информации -->
 
-  <div class="control-group">
-    <label class="control-label" for="inputLogin">Логин</label>
-    <div class="controls">
-      <input name="new_login" type="text" id="inputLogin" size="16" maxlength="16" placeholder="<?php echo $user_name; ?>">
+    <div class="control-group">
+        <label class="control-label" for="inputLogin">Логин</label>
+        <div class="controls">
+            <input name="new_login" type="text" id="inputLogin" size="16" maxlength="16" placeholder="<?php echo $user_name; ?>">
+        </div>
     </div>
-  </div>
-  
-  <div class="control-group">
-    <label class="control-label" for="inputPass">Пароль</label>
-    <div class="controls">
-      <input name="new_password" type="text" id="inputPass" size="16" maxlength="16" placeholder="Пароль">
-    </div>
-  </div>  
-  
-  <div class="control-group">
-    <label class="control-label" for="inputGroup">Группа</label>
-    <div class="controls">
-     <select id="inputGroup" name="new_group"><?php echo $group_list ?></select>
-    </div>
-  </div>
-  
-  <div class="control-group"> 
-  <label class="control-label" for="inputMail">Почта:</label>	 
-  <div class="controls">
-	<input id="inputMail" type="text" name="new_email" placeholder="<?php echo $user_mail; ?>">	
-   </div>
-   </div>    
-   
-  <div class="control-group"> 
-  <label class="control-label" for="inputGender">Пол:</label>	 
-  <div class="controls">
-	<select id="inputGender" name="new_gender">
 
-		<option value="0" <?php echo (!$user_gen)?'selected':'' ?>>Мальчик</option>
-		<option value="1" <?php echo ($user_gen)?'selected':'' ?> >Девочка</option>
+    <div class="control-group">
+        <label class="control-label" for="inputPass">Пароль</label>
+        <div class="controls">
+            <input name="new_password" type="text" id="inputPass" size="16" maxlength="16" placeholder="Пароль">
+        </div>
+    </div>  
 
-	</select>
-   </div>
-   </div>
+    <div class="control-group">
+        <label class="control-label" for="inputGroup">Группа</label>
+        <div class="controls">
+            <select id="inputGroup" name="new_group"><?php echo $group_list ?></select>
+        </div>
+    </div>
+
+    <div class="control-group"> 
+        <label class="control-label" for="inputMail">Почта:</label>	 
+        <div class="controls">
+            <input id="inputMail" type="text" name="new_email" placeholder="<?php echo $user_mail; ?>">	
+        </div>
+    </div>    
+
+    <div class="control-group"> 
+        <label class="control-label" for="inputGender">Пол:</label>	 
+        <div class="controls">
+            <select id="inputGender" name="new_gender">
+
+                <option value="0" <?php echo (!$user_gen)?'selected':'' ?>>Мальчик</option>
+                <option value="1" <?php echo ($user_gen)?'selected':'' ?> >Девочка</option>
+
+            </select>
+        </div>
+    </div>

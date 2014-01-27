@@ -9,14 +9,14 @@ $mode = (!empty($_POST['mode']) or !empty($_GET['mode']))? ((empty($_GET['mode']
 $step = (!empty($_POST['step']))? (int) $_POST['step'] : $step = 1;
 
 switch ($mode) { /* Допустимые идентификаторы CMS */
-	case 'xenforo':		$main_cms = 'xenForo';				break; /* [+] */
-	case 'ipb':			$main_cms = 'Invision Power Board';	break; /* [+] */
-	case 'dle':			$main_cms = 'DataLife Engine';		break; /* [+] */
-	case 'wp':			$main_cms = 'WordPress';			break; /* [+] */	
-	case 'joomla':		$main_cms = 'Joomla!';				break; /* [+] */
-	case 'xauth':		$main_cms = 'xAuth';				break; /* [+] */
-	case 'authme':		$main_cms = 'AuthMe';				break; /* [+] */
-	default :			$main_cms = false; $mode = 'usual';	break;
+    case 'xenforo':     $main_cms = 'xenForo';              break; /* [+] */
+    case 'ipb':         $main_cms = 'Invision Power Board'; break; /* [+] */
+    case 'dle':         $main_cms = 'DataLife Engine';      break; /* [+] */
+    case 'wp':          $main_cms = 'WordPress';            break; /* [+] */	
+    case 'joomla':      $main_cms = 'Joomla!';              break; /* [+] */
+    case 'xauth':       $main_cms = 'xAuth';                break; /* [+] */
+    case 'authme':      $main_cms = 'AuthMe';               break; /* [+] */
+    default :           $main_cms = false; $mode = 'usual'; break;
 } 	
 
 define('BASE_URL', Root_url());
@@ -30,9 +30,9 @@ include MCR_ROOT . 'config.php';
 if (!$config['install']) { header('Location: '.BASE_URL); exit; } 
 elseif ($config['p_logic'] != $mode) /* Установка была не завершена, файл существует и режим установки не совпадает с выбранным - удаляем */
 
-	if (unlink(MCR_ROOT.'config.php')) { header('Location: '.BASE_URL.'install/install.php?mode='.$mode); exit; }  
-	else { echo 'Файл '.MCR_ROOT.'config.php уже существует. Удалите его, для продолжения установки.'; exit; } 
-
+    if (unlink(MCR_ROOT.'config.php')) { header('Location: '.BASE_URL.'install/install.php?mode='.$mode); exit; }  
+    else { echo 'Файл '.MCR_ROOT.'config.php уже существует. Удалите его, для продолжения установки.'; exit; } 
+    
 } else { 
 
 include './CMS/config/config_usual.php';
@@ -73,6 +73,11 @@ $menu->AddItem($page, BASE_URL.'install/install.php', true);
 
 $create_ways = array("skins", "cloaks", "distrib");
 $content_menu = $menu->Show();
+
+/*function vtxtlog($err) {
+    
+    echo $err . '<br>';
+}*/
 
 function checkBaseRequire() {
 global $cErr, $site_ways, $create_ways;	
@@ -209,12 +214,15 @@ function DBinit()
 {
     global $link, $config;
     
-    if ($link) return;
+    if ($link) return true;
     
     $dir = MCR_ROOT.'instruments/database/';
     
     require($dir . 'databaseInterface.class.php');
-    require($dir . 'statementInterface.class.php');    
+    require($dir . 'statementInterface.class.php'); 
+    
+    if ( $config['db_driver'] != 'pdo') require($dir . 'PDOEmulator.class.php');    
+    
     require($dir . $config['db_driver'] . '/module.class.php');
     require($dir . $config['db_driver'] . '/statement.class.php');
     
@@ -223,15 +231,25 @@ function DBinit()
     $link = new $class();
 
     try {
-        $link->connect($config['db_host'], 
-                       $config['db_port'], 
-                       $config['db_login'], 
-                       $config['db_passw'], 
-                       $config['db_name']
-        );
+        if (!empty($config['db_file'])) {
+        
+            $link->connect(array('file' => $config['db_file']));
+            
+        } else {
+        
+            $link->connect(array(
+                'host' => $config['db_host'], 
+                'port' => $config['db_port'], 
+                'login' => $config['db_login'], 
+                'password' => $config['db_passw'], 
+                'db' => $config['db_name']
+            ));        
+        } 
     } catch (Exception $e) {
-        exit($e->getMessage());
+        return $e->getMessage();
     }  
+    
+    return true;
 }
 
 function ConfigPostStr($postKey){
@@ -242,32 +260,36 @@ function ConfigPostInt($postKey){
  return (isset( $_POST[$postKey]))? (int)$_POST[$postKey] : 0;
 }
 
-function CreateAdmin($site_user) {
-global $config,$bd_names,$bd_users,$info;
+function CreateAdmin($site_user)
+{
+    global $config, $bd_names, $bd_users, $info;
 
-	$site_password   = ConfigPostStr('site_password');
-	$site_repassword = ConfigPostStr('site_repassword');
-	$result = false;
-	
-		if ( !TextBase::StringLen($site_password)	) $info = 'Введите пароль.';
-	elseif ( !TextBase::StringLen($site_repassword)	) $info = 'Введите повтор пароля.';
-	elseif ( strcmp($site_password,$site_repassword)) $info = 'Пароли не совпадают.';
-	else {
-		require_once(MCR_ROOT.'instruments/auth/'.$config['p_logic'].'.php');
-		
-                $pass = MCRAuth::createPass($site_password);
-                
-		getDB()->ask("INSERT INTO `{$bd_names['users']}` ("
+    $site_password = ConfigPostStr('site_password');
+    $site_repassword = ConfigPostStr('site_repassword');
+    $result = false;
+
+    if (!TextBase::StringLen($site_password))
+        $info = 'Введите пароль.';
+    elseif (!TextBase::StringLen($site_repassword))
+        $info = 'Введите повтор пароля.';
+    elseif (strcmp($site_password, $site_repassword))
+        $info = 'Пароли не совпадают.';
+    else {
+        require_once(MCR_ROOT . 'instruments/auth/' . $config['p_logic'] . '.php');
+
+        $pass = MCRAuth::createPass($site_password);
+
+        getDB()->ask("INSERT INTO `{$bd_names['users']}` ("
                 . "`{$bd_users['login']}`,"
                 . "`{$bd_users['password']}`,"
                 . "`{$bd_users['ip']}`,"
                 . "`{$bd_users['group']}`) "
                 . "VALUES('$site_user','$pass','127.0.0.1',3) "
-                . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass'");	
-		$result = true;
-	}
+                . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass'");
+        $result = true;
+    }
 
-return $result;
+    return $result;
 }
 
 if (isset($_POST['step']))
@@ -276,12 +298,17 @@ switch ($step) {
 	case 1:     
 	$mysql_port     = ConfigPostInt('mysql_port')		;
 	$mysql_adress   = ConfigPostStr('mysql_adress')		;
-	$mysql_bd       = ConfigPostStr('mysql_bd')         	;
+	$mysql_bd       = ConfigPostStr('mysql_bd')         ;
 	$mysql_user     = ConfigPostStr('mysql_user')		;
 	$mysql_password = ConfigPostStr('mysql_password')	;
         $mysql_driver   = ConfigPostStr('mysql_driver') 	;
+        $mysql_file     = ConfigPostStr('mysql_file')   	;
 	$mysql_rewrite  = (empty($_POST['mysql_rewrite']))? false : true;
-	
+        
+        if ($mysql_driver !== 'pdolite') {
+            $mysql_file = null;
+        } else $mysql_driver = 'pdo';
+        
 		if ( !$mysql_port ) $info = 'Укажите порт для подключения к БД.';
 	elseif ( !TextBase::StringLen($mysql_adress) ) $info = 'Укажите адресс сервера MySQL.';
 	elseif ( !TextBase::StringLen($mysql_user) )   $info = 'Укажите пользователя для подключения к MySQL серверу.';
@@ -293,11 +320,11 @@ switch ($step) {
             $config['db_login'] = $mysql_user     ;
             $config['db_passw'] = $mysql_password ;
             $config['db_driver'] = $mysql_driver  ;
-
+            $config['db_file'] = $mysql_file      ;
+            
             $connect_result = DBinit();	
 
-            if ($connect_result == 1) $info = 'Данные для подключения к БД не верны. Возможно не правильно указан логин и пароль.';
-            elseif ($connect_result == 2) $info = 'Не найдена база данных с именем '.$mysql_bd;
+            if ($connect_result !== true) $info = 'Ошибка подключения к базе данных: ' . $connect_result;
             else {
 
                     $config['rewrite'] = Mode_rewrite();
@@ -324,8 +351,8 @@ switch ($step) {
 		break;
 	}
 	
-		$connect_result = DBinit();		
-	if ($connect_result) { $info = 'Ошибка настройки соединения с БД.'; break; }	
+            $connect_result = DBinit();		
+	if ($connect_result !== true) { $info = 'Ошибка настройки соединения с БД.'; break; }	
 	
 	if ($main_cms) {
 		
@@ -375,13 +402,13 @@ switch ($step) {
 	elseif (!$timezone)  $info = 'Выберите часовой пояс.';
     else {
 	
-	$config['s_name']		= $site_name 	;
-	$config['s_about']		= $site_about 	; 	
-	$config['s_keywords']	= $keywords   	;	
-	$config['sbuffer']		= $sbuffer    	;	
-	$config['timezone']		= $timezone		;
+	$config['s_name'] = $site_name;
+        $config['s_about'] = $site_about;
+        $config['s_keywords'] = $keywords;
+        $config['sbuffer'] = $sbuffer;
+        $config['timezone'] = $timezone;
 
-	$config['install']    = false; 
+        $config['install']    = false; 
 
 	if (MainConfig::SaveOptions()) $step = 4; 
 	else $info = $save_conf_err;	

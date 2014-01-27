@@ -6,10 +6,14 @@ interface StatementInterface
 	
     /**
      * Get one row from executed query
-     * @param string $mode set output mode directly in that function
-     * @return mixed  Return <b>array</b> or <b>null</b> (if count of rows is zero) 
+     * @param string $mode set output mode directly
+     * @return mixed return <b>array</b> or <b>null</b> (if count of rows is zero) 
      */
     public function fetch($mode = false); 
-	
+    
+    /**
+     * Get count of affected rows
+     * @return int 
+     */	
     public function rowCount();   
 }

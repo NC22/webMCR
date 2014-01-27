@@ -361,13 +361,14 @@ function UpdateProfile(admTrg) {
         if (!admTrg) {
 
             var Mini = new Image()
-            Mini.src = base_url + 'skin.php' + response['mskin_link']
-            Mini.onload = function() {
-                GetById('profile-mini').src = Mini.src
-            }
+                Mini.src = base_url + 'skin.php' + response['mskin_link']
+                Mini.onload = function() {
+                    GetById('profile-mini').src = Mini.src
+                }
         }
     }
-
+    
+    if (admTrg) addHiddenInput('profile_update_admin', '1', GetById('profile-update'))  
     sendFormByIFrame('profile-update', event)
     return false
 }

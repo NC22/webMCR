@@ -4,21 +4,35 @@ class PDODriver implements DataBaseInterface
     public $link = false;
     private $lastError = '';
 
-    public function connect($host, $port, $login, $pwd, $dbName)
+    public function connect($data)
     {
-        try {
-            
-            $this->link = new PDO("mysql:host=$host;dbname=$dbName", $login, $pwd);
-
-        } catch (PDOException $e) {
-           $this->log('SQLError: ' . $e->getMessage());
-           return false;
+        if ($this->link) {
+            return false;
         }
 
-        $this->ask("SET time_zone = '" . date('P') . "'");
-        $this->ask("SET character_set_client='utf8'");
-        $this->ask("SET character_set_results='utf8'");
-        $this->ask("SET collation_connection='utf8_general_ci'");
+        try {
+            if (isset($data['file'])) {
+                
+                $this->link = new PDO("sqlite:" . $data['file']);
+                $this->ask('PRAGMA encoding = "UTF-8";');
+                
+            } else {
+
+                $this->link = new PDO("mysql:host={$data['host']};dbname={$data['db']}", $data['login'], $data['password']);
+
+                $this->ask("SET time_zone = '" . date('P') . "'");
+                $this->ask("SET character_set_client='utf8'");
+                $this->ask("SET character_set_results='utf8'");
+                $this->ask("SET collation_connection='utf8_general_ci'");
+            }
+
+            $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            $this->log('SQLError: ' . $e->getMessage());
+            return false;
+        }
+
+
 
         return true;
     }
@@ -46,6 +60,19 @@ class PDODriver implements DataBaseInterface
         }
     }
 
+    public function query($query) 
+    {
+        $statement = $this->link->query($query); 
+        if ($statement === false) {
+            
+            $this->log('SQLError: [' . $query . ']');
+            return false;
+        }
+
+        $result = new PDODriverStatement($statement);  
+        return $result;
+    }
+    
     public function ask($queryTpl, $data = array())
     {
         if (!$this->link) {
@@ -63,21 +90,17 @@ class PDODriver implements DataBaseInterface
                 $this->log('SQLError: [' . $e->getMessage() . '] ' . $queryTpl);
                 return false;
             }
+   
+            if ($statement === false) {
+                return false;
+            }
+
+            $result = new PDODriverStatement($statement);
+            return $result;   
             
-        } else {
-            
-            $statement = $this->link->query($queryTpl);             
+        } else {            
+            return $this->query($queryTpl);             
         }
-
-        if ($statement === false) {
-            
-            $this->log('SQLError: [' . $queryTpl . ']');
-            return false;
-        }
-
-        $result = new PDODriverStatement($statement);
-
-        return $result;
     }
 
     public function fetchRow($queryTpl, $data = array(), $fetchMode = 'assoc')

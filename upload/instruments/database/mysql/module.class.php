@@ -1,14 +1,12 @@
 <?php
-class MySqlDriver implements DataBaseInterface
-{
-    private static $pVarCharset = "abcdefghijklmnopqrstuvwxyz0123456789_";
-    
+class MySqlDriver extends PDOEmulator implements DataBaseInterface
+{  
     public $link = false;
     private $lastError = '';
     
-    public function connect($host, $port, $login, $pwd, $dbName)
+    public function connect($data)
     {
-        $this->link = mysql_connect($host.':'.$port, $login, $pwd);
+        $this->link = mysql_connect($data['host'] . ':' . $data['port'], $data['login'], $data['password']);
         
         if ($this->link === false) {
             $this->log('SQLError: connect error');
@@ -16,7 +14,7 @@ class MySqlDriver implements DataBaseInterface
             return false;            
         }
         
-        if (mysql_select_db($dbName, $this->link) === false) {
+        if (mysql_select_db($data['db'], $this->link) === false) {
             $this->log('SQLError: select database error ');
             throw new Exception($this->lastError);
             return false;            
@@ -63,81 +61,9 @@ class MySqlDriver implements DataBaseInterface
     {
         return $this->link;
     }
-
-    private function parseLikePDO(&$queryTpl, $data)
-    {
-        $asoc = null;
-
-        $querySize = strlen($queryTpl);
-        $utfSafeStack = array();
-        $posStack = array();
-        
-        if (!$querySize) return $queryTpl;
-        
-        foreach ($data as $k => $v) {
-
-            for ($i = 0; $i < $querySize; $i++) {
-
-                $pos = strpos($queryTpl, ':' . $k, $i);
-
-                if ($pos === false)
-                    continue;
-
-                $next = $pos + strlen(':' . $k);
-
-                if ($next < $querySize and strpos(self::$pVarCharset, $queryTpl[$next]) !== false)
-                    continue;
-
-                $posStack[$next] = $k;
-                $data[$k] = $this->safe($v);
-            }
-        }
-        
-        if (!sizeof($posStack))
-            return $queryTpl;
-
-        ksort($posStack, SORT_NUMERIC);
-
-        $cursor = 0;
-
-        foreach ($posStack as $pos => &$key) {
-
-            $length = (int) $pos - $cursor;
-            $sqlPart = substr($queryTpl, $cursor, $length - strlen(':' . $key)) . $data[$key];
-            $utfSafeStack[] = $sqlPart;
-
-            $cursor = $pos;
-        }
-
-        $length = $querySize - $cursor;
-        $utfSafeStack[] = substr($queryTpl, $cursor, $length);
-
-        return implode('', $utfSafeStack);
-    }
-
-    public function ask($queryTpl, $data = array())
-    {
-        if (!$this->link) {
-            return false;
-        }
-
-        $asoc = null;
-        $i = 0;
-
-        if (is_array($data)) {
-            
-            if (!isset($data[0])) {
-               $query = $this->parseLikePDO($queryTpl, $data); 
-            } else {
-                
-                foreach ($data as $k => &$v) {
-                    
-                    $v = $this->safe($v);
-                    $query = str_replace("?", $v, $queryTpl, $count = 1);
-                }
-            }
-        } else $query = $queryTpl;
-        
+    
+    public function query($query) 
+    {        
         $result = mysql_query($query, $this->link);
         if ($result === false) {
             
@@ -153,6 +79,32 @@ class MySqlDriver implements DataBaseInterface
         $result = new MySqlStatement($result, mysql_affected_rows($this->link));
 
         return $result;
+    }
+    
+    public function ask($queryTpl, $data = array())
+    {
+        if (!$this->link) {
+            return false;
+        }
+
+        $asoc = null;
+        $i = 0;
+
+        if (is_array($data)) {
+            
+            if (!isset($data[0])) {
+               $query =  self::parse($queryTpl, $data, $this); 
+            } else {
+                
+                foreach ($data as $k => &$v) {
+                    
+                    $v = $this->safe($v);
+                    $query = str_replace("?", $v, $queryTpl, $count = 1);
+                }
+            }
+        } else $query = $queryTpl;
+  
+        return $this->query($query);
     }
 
     public function fetchRow($queryTpl, $data = array(), $fetchMode = 'assoc')

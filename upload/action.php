@@ -206,7 +206,7 @@ switch ($method)
 
         if (!$mod_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
 
-        if ($user->lvl() >= 15) {
+        if (isset($_POST['profile_update_admin']) and $user->lvl() >= 15) {
             
             tokenTool('check');
 

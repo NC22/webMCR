@@ -65,25 +65,37 @@ function DBinit($log_script = 'default')
     
     loadTool('databaseInterface.class.php', 'database/');
     loadTool('statementInterface.class.php', 'database/');
+    
+    if ( $config['db_driver'] != 'pdo') loadTool('PDOEmulator.class.php', 'database/' );
+    
     loadTool('module.class.php', 'database/' . $config['db_driver'] . '/');
     loadTool('statement.class.php', 'database/' . $config['db_driver'] . '/' );
     
     $class = $config['db_driver'] . 'Driver';
-
     $link = new $class();
 
-    try {
-        $link->connect($config['db_host'], 
-                        $config['db_port'], 
-                        $config['db_login'], 
-                        $config['db_passw'], 
-                        $config['db_name']);
+    try {    
+        if (!empty($config['db_file'])) {
+        
+            $link->connect(array('file' => $config['db_file']));
+            
+        } else {
+        
+            $link->connect(array(
+                'host' => $config['db_host'], 
+                'port' => $config['db_port'], 
+                'login' => $config['db_login'], 
+                'password' => $config['db_passw'], 
+                'db' => $config['db_name']
+            ));        
+        }        
     } catch (Exception $e) {
         exit($e->getMessage());
     }
 
     if ($log_script and $config['action_log'])
         ActionLog($log_script);
+        
     CanAccess(2);
 }
 
@@ -284,7 +296,7 @@ function vtxtlog($string)
 
 function tokenTool($mode = 'set')
 {
-    global $addition_events;
+    global $content_js;
 
     if (!isset($_SESSION)) {
         session_start();
@@ -294,7 +306,7 @@ function tokenTool($mode = 'set')
 
         if (empty($_SESSION['token_data']) or
                 empty($_POST['token_data']) or
-                $_SESSION['token_data'] !== (int) $_POST['token_data']) {
+                $_SESSION['token_data'] !== $_POST['token_data']) {
 
             if (isset($_SESSION['token_data']))
                 unset($_SESSION['token_data']);
@@ -308,7 +320,7 @@ function tokenTool($mode = 'set')
     } elseif ($mode == 'set') {
 
         $_SESSION['token_data'] = randString(32);
-        $addition_events .= 'var token_data = "' . $_SESSION['token_data'] . '";';
+        $content_js .= '<script type="text/javascript">var token_data = "' . $_SESSION['token_data'] . '";</script>';
         return true;
     } elseif ($mode == 'setinput') {
 

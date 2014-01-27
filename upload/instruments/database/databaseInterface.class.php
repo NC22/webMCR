@@ -1,7 +1,7 @@
 <?php
 interface DataBaseInterface
 {
-    public function connect($host, $port, $login, $pwd, $dbName);
+    public function connect($data);
 
     /**
      * Close connection to database
@@ -9,7 +9,21 @@ interface DataBaseInterface
     
     public function close();
 
-    // public function query($query);
+    /**
+     * Make query directly, without prepared statement
+     * @param string $query MySQL query
+     * @return mixed <b>StatementInterface</b> or <b>false</b> on query fail
+    */
+    
+    public function query($query);    
+    
+    /**
+     * Make variable safe for include to sql query and put variable into single queotes 
+     * @param string $var unsafe input
+     * @return string or <b>false</b> on fail
+     */   
+     
+    public function safe($var);
     
     /**
      * Make query to database and return result statement
@@ -36,6 +50,4 @@ interface DataBaseInterface
     public function isColumnExist($table, $column);
 
     public function getColumnType($table, $column);
-    
-    public function safe($var);
 }

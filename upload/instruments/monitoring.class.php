@@ -122,7 +122,7 @@ class Server extends Item
         $sql = "UPDATE `" . $this->db . "` SET "
                 . "`method`=:method,"
                 . "`rcon`=:rcon,"
-                . "`service_user`=:suser WHERE `id`={$this->id}";
+                . "`service_user`=:suser WHERE `id`='{$this->id}'";
 
         getDB()->ask($sql, array(
             'method' => $method,
@@ -149,7 +149,7 @@ class Server extends Item
 
         $sql = "UPDATE `" . $this->db . "` SET "
                 . "`address`=:address,"
-                . "`port`=:rcon WHERE `id`={$this->id}";
+                . "`port`=:rcon WHERE `id`='{$this->id}'";
 
         getDB()->ask($sql, array(
             'address' => $address,
@@ -599,5 +599,3 @@ Class ServerManager extends View
     }
 
 }
-
-?>

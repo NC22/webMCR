@@ -1,6 +1,6 @@
 /* WEB-APP : WebMCR (С) 2013-2014 NC22 */
 
-var iframe; var mcr_pass_init = false
+var mcr_pass_init = false
 
 /* Base init on page load */
 
@@ -90,34 +90,25 @@ function SendByXmlHttp(script, post_data, onload) {
 
 function sendFormByIFrame(formname, onload){
 	
-    iframe = document.createElement('iframe')
-    iframe.name = 'ajax-frame-' + Math.random(1000000)
-    iframe.style.display = 'none'
-	
-    var element = document.createElement('input')
+    var iframe = document.createElement('iframe')
+        iframe.name = 'ajax-frame-' + Math.random(1000000)
+        iframe.style.display = 'none'
 
-        element.type = 'hidden'
-        element.name = 'json_iframe'
-        element.value = '1'   
-	
     GetBody().appendChild(iframe)
 
     var form = GetById(formname)	
-	form.appendChild(element)
+	addHiddenInput('json_iframe', '1', form)  
         
     var token_elem = GetById('token_data');
     if (token_elem) {
         form.appendChild(token_elem)
-    } else if (typeof token_data !== 'undefined') {
-        element.name = 'token_data'
-        element.value = token_data 
-        form.appendChild(element)
+    } else if (typeof token_data !== 'undefined') {        
+        addHiddenInput('token_data', token_data, form)  
     }	 
     
     if (form == null) {
-
-            alert('Form ' + formname + 'not found')
-            return false	
+        alert('Form ' + formname + 'not found')
+        return false	
     }	
 
     form.target = iframe.name
@@ -139,7 +130,7 @@ function sendFormByIFrame(formname, onload){
         onload(response)
     }
 	
-    IframeOnLoadEvent(iframe,event)	
+    iFrameOnLoadEvent(iframe,event)	
     form.submit()	
 }
 
@@ -207,6 +198,16 @@ function GetScrollTop() {
     return (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop
 }
 
+function addHiddenInput(name, value, to) {
+    var element = document.createElement('input')
+
+    element.type = 'hidden'
+    element.name = name
+    element.value = value
+
+    to.appendChild(element)
+}
+
 function GetParent(elem, type){ 
     var parent = elem.parentNode
 
@@ -238,10 +239,9 @@ function addSubmitEvent(buttonId,formId) {
 function BlockVisible(itemID,state) {
 
     var item = GetById(itemID)
-    if (item == null) return false
+    if (!item) return false
 
-    if (state == null) {
-
+    if (typeof state !== 'boolean') {
             if (item.style.display == 'block') item.style.display = 'none'
             else item.style.display = 'block'
 
@@ -297,11 +297,11 @@ function getIframeDocument(iframeNode) {
     return iframeNode.document
 }
 
-function IframeOnLoadEvent(iframeNode, event) {
+function iFrameOnLoadEvent(iframeNode, event) {
 
     if (iframeNode.attachEvent)
         iframeNode.attachEvent('onload', event)
-    else if (iframe.addEventListener)
+    else if (iframeNode.addEventListener)
         iframeNode.addEventListener('load', event, false)
     else
         iframeNode.onload = event

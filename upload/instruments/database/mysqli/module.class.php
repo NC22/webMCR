@@ -1,16 +1,18 @@
 <?php
-class MySqliDriver implements DataBaseInterface
+class MySqliDriver  extends PDOEmulator implements DataBaseInterface
 {
     public $link = false;
     private $lastError = '';
     
-    public function connect($host, $port, $login, $pwd, $dbName)
+    public function connect($data)
     {
-        $this->link = new mysqli($host . ':' . $port, $login, $pwd, $dbName);
+        $this->link = new mysqli($data['host'] . ':' . $data['port'], $data['login'], $data['password'], $data['db']);
 
         if (mysqli_connect_error()) {
+        
             $this->lastError = 'SQLError: ' . mysqli_connect_error() . ' (' . mysqli_connect_errno() . ') ';
             throw new Exception($this->lastError);
+            
             return false;
         }
 
@@ -30,6 +32,26 @@ class MySqliDriver implements DataBaseInterface
         $this->link = false;
     }
 
+    public function query($query) 
+    {
+        $result = $this->link->query($query, MYSQLI_STORE_RESULT);
+
+        if ($result === false) {
+            
+            $this->lastError = 'SQLError: [' . $query . ']'; 
+            
+            if (function_exists('vtxtlog')) {
+                vtxtlog($this->lastError);
+            }
+
+            return false;
+        }
+
+        $result = new MySqliStatement($result, $this->link->affected_rows);
+
+        return $result;
+    }
+    
     public function safe($str, $isColName = false)
     {
         if (!$this->link) {
@@ -39,10 +61,6 @@ class MySqliDriver implements DataBaseInterface
         $quotes = ($isColName) ? "`" : "'";
 
         return $quotes . $this->link->real_escape_string($str) . $quotes;
-    }
-    
-    private function replaceVar($key, &$data){
-        
     }
     
     public function ask($queryTpl, $data = array())
@@ -55,34 +73,20 @@ class MySqliDriver implements DataBaseInterface
         $i = 0;
 
         if (is_array($data)) {
-            foreach ($data as $k => &$v) {
+            
+            if (!isset($data[0])) {
+               $query = self::parse($queryTpl, $data, $this); 
+            } else {
                 
-                $v = $this->safe($v);
-                
-                if ($asoc === null) {
-                    $asoc = is_numeric($k) ? false : true;
+                foreach ($data as $k => &$v) {
+                    
+                    $v = $this->safe($v);
+                    $query = str_replace("?", $v, $queryTpl, $count = 1);
                 }
-                
-                $queryTpl = str_replace(($asoc) ? ":" . $k : "?", $v, $queryTpl, $count = 1);
             }
-        }
+        } else $query = $queryTpl;
 
-        $result = $this->link->query($queryTpl, MYSQLI_STORE_RESULT);
-
-        if ($result === false) {
-            
-            $this->lastError = 'SQLError: [' . $queryTpl . ']'; 
-            
-            if (function_exists('vtxtlog')) {
-                vtxtlog($this->lastError);
-            }
-
-            return false;
-        }
-
-        $result = new MySqliStatement($result, $this->affectedRows());
-
-        return $result;
+        return $this->query($query);
     }
 
     public function fetchRow($queryTpl, $data = array(), $fetchMode = 'assoc')
@@ -98,15 +102,7 @@ class MySqliDriver implements DataBaseInterface
         
         return $lines;
     }
-
-    public function affectedRows()
-    {
-        if (!$this->link)
-            return false;
-
-        return $this->link->affected_rows;
-    }
-
+    
     public function getLastId()
     {
         if (!$this->link)
