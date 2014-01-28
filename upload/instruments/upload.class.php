@@ -151,7 +151,7 @@ Class File extends View
         
         if ($result) {
 
-            $this->id = getDB()->getLastId();
+            $this->id = getDB()->lastInsertId();
             $this->user_id = $user_id;
             $this->id_word = ($id_word) ? $id_word : '';
             $this->way = $way;

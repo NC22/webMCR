@@ -88,7 +88,7 @@ class Server extends Item
         ));
 
         if ($result)
-            $this->id = getDB()->getLastId();
+            $this->id = getDB()->lastInsertId();
         else
             return 4;
 
@@ -599,3 +599,5 @@ Class ServerManager extends View
     }
 
 }
+
+?>

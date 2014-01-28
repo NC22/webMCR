@@ -42,7 +42,7 @@ class PDODriver implements DataBaseInterface
         $this->link = null;
     }
 
-    public function safe($str)
+    public function quote($str)
     {
         if (!$this->link) {
             return false;
@@ -117,7 +117,7 @@ class PDODriver implements DataBaseInterface
         return $lines;
     }
     
-    public function getLastId()
+    public function lastInsertId()
     {
         if (!$this->link)
             return false;

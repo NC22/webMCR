@@ -208,7 +208,7 @@ class Comments_Item extends Item {
         $result = getDB()->ask($sql, array('message' => $message));
         if ($result) {
         
-            $this->id = getDB()->getLastId();
+            $this->id = getDB()->lastInsertId();
             $this->parent_obj->OnComment();
 
             return 1;

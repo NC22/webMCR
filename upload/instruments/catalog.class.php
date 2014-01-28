@@ -66,7 +66,7 @@ Class Category
         ));
         
         if ($result and $result->rowCount())
-            $this->id = getDB()->getLastId();
+            $this->id = getDB()->lastInsertId();
         else
             return false;
 
@@ -263,7 +263,7 @@ Class News_Item extends Item
 
         if (!$result) return false;
         
-        $this->id = getDB()->getLastId();
+        $this->id = getDB()->lastInsertId();
 
         $this->category_id = $cat_id;
         $this->title = $title;

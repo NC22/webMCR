@@ -52,7 +52,7 @@ class MySqliDriver  extends PDOEmulator implements DataBaseInterface
         return $result;
     }
     
-    public function safe($str, $isColName = false)
+    public function quote($str, $isColName = false)
     {
         if (!$this->link) {
             return false;
@@ -80,7 +80,7 @@ class MySqliDriver  extends PDOEmulator implements DataBaseInterface
                 
                 foreach ($data as $k => &$v) {
                     
-                    $v = $this->safe($v);
+                    $v = $this->quote($v);
                     $query = str_replace("?", $v, $queryTpl, $count = 1);
                 }
             }
@@ -103,7 +103,7 @@ class MySqliDriver  extends PDOEmulator implements DataBaseInterface
         return $lines;
     }
     
-    public function getLastId()
+    public function lastInsertId()
     {
         if (!$this->link)
             return false;

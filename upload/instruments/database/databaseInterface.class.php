@@ -1,4 +1,12 @@
 <?php
+ /** 
+ * @category  MySQL Database Tools
+ * @package   Kelly\DataBase
+ * @author    Rubchuk Vladimir <torrenttvi@gmail.com>
+ * @copyright 2014 Rubchuk Vladimir
+ * @license   GPLv3
+ */
+
 interface DataBaseInterface
 {
     public function connect($data);
@@ -23,7 +31,7 @@ interface DataBaseInterface
      * @return string or <b>false</b> on fail
      */   
      
-    public function safe($var);
+    public function quote($var);
     
     /**
      * Make query to database and return result statement
@@ -35,7 +43,7 @@ interface DataBaseInterface
     public function ask($queryTpl, $data = array());
     
     /**
-     * Make query to database and return one row from query result
+     * Make query to database and fetch one row
      * @param string $queryTpl prepared statement (in order of rules PDO)
      * @param array  $data Pairs of pseudo parameters and their values
      * @param array  $fetchMode return data format
@@ -44,10 +52,10 @@ interface DataBaseInterface
     
     public function fetchRow($queryTpl, $data = array(), $fetchMode = 'assoc');
 
-    public function getLastId();
-    public function getLastError();
+    public function lastInsertId();    
     
     public function isColumnExist($table, $column);
-
-    public function getColumnType($table, $column);
+    
+    public function getColumnType($table, $column);    
+    public function getLastError();
 }

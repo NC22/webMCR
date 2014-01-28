@@ -28,7 +28,7 @@ class PDOEmulator
                     continue;
 
                 $posStack[$next] = $k;
-                $data[$k] = $dbInterface->safe($v);
+                $data[$k] = $dbInterface->quote($v);
             }
         }
         

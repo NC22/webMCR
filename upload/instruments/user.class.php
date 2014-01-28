@@ -1083,7 +1083,7 @@ class Group extends TextBase
         $result = getDB()->ask("INSERT INTO `{$this->db}` (`name`,$sql_names) "
                              . "VALUES (?,$sql_vars)", $sql_data);
         if ($result and $result->rowCount())
-            $this->id = getDB()->getLastId();
+            $this->id = getDB()->lastInsertId();
         else
             return false;
 
