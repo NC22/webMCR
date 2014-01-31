@@ -221,7 +221,7 @@ function DBinit()
     require($dir . 'databaseInterface.class.php');
     require($dir . 'statementInterface.class.php'); 
     
-    if ( $config['db_driver'] != 'pdo') require($dir . 'PDOEmulator.class.php');    
+    if ( $config['db_driver'] != 'pdo') require($dir . 'mysqlDriverBase.class.php');    
     
     require($dir . $config['db_driver'] . '/module.class.php');
     require($dir . $config['db_driver'] . '/statement.class.php');

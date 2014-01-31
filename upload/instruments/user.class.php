@@ -52,15 +52,14 @@ Class User {
             return false;
         }
 
-        $sql = "SELECT  `{$bd_users['login']}`,
-                        `{$bd_users['id']}`,
-                        `{$bd_users['tmp']}`,
-                        `{$bd_users['ip']}`,
-                        `{$bd_users['email']}`,
-                        `{$bd_users['deadtry']}`,
-                        `{$bd_users['female']}`,
-                        `{$bd_users['group']}` FROM `{$this->db}` "
-                . "WHERE `$method`=:input";
+        $sql = "SELECT `{$bd_users['login']}`,"
+                        . "`{$bd_users['id']}`,"
+                        . "`{$bd_users['tmp']}`,"
+                        . "`{$bd_users['ip']}`,"
+                        . "`{$bd_users['email']}`,"
+                        . "`{$bd_users['deadtry']}`,"
+                        . "`{$bd_users['female']}`,"
+                        . "`{$bd_users['group']}` FROM `{$this->db}` " . "WHERE `$method`=:input";
 
         $line = getDB()->fetchRow($sql, array('input' => $input));
         if (!$line) {
@@ -404,16 +403,10 @@ Class User {
 
     public function getGroupName()
     {
-        global $bd_names;
         if (!$this->id)
             return false;
 
-        $line = getDB()->fetchRow("SELECT `name` FROM `{$bd_names['groups']}` WHERE `id`='{$this->group}'", false, 'num');
-
-        if (!$line)
-            return 'unnamed';
-
-        return $line[0];
+        return GroupManager::GetNameByID($this->group);
     }
 
     public function deleteSkin()
@@ -962,55 +955,43 @@ Class User {
 }
 
 class Group extends TextBase
-{
+{   
+    public static $permissions = array(
+        "change_skin" => 'bool',
+        "change_pass" => 'bool',
+        "lvl" => 'int',
+        "change_cloak" => 'bool',
+        "change_login" => 'bool',
+        "max_fsize" => 'int',
+        "max_ratio" => 'int',
+        "add_news" => 'bool',
+        "adm_comm" => 'bool',
+        "add_comm" => 'bool'
+    );
+    
     private $db;
     private $id;
-    private $pavailable;
 
-    public function Group($id = false, $addon = false)
+    public function Group($id = false)
     {
         global $bd_names;
 
         $this->db = $bd_names['groups'];
         $this->id = (int) $id;
-        $this->pavailable = array(
-            "change_skin",
-            "change_pass",
-            "lvl",
-            "change_cloak",
-            "change_login",
-            "max_fsize",
-            "max_ratio",
-            "add_news",
-            "adm_comm",
-            "add_comm"
-        );
-
-        if (isset($bd_names['sp_skins'])) {
-
-            $this->pavailable[] = "sp_upload";
-            $this->pavailable[] = "sp_change";
-        }
-        if (is_array($addon))
-            $this->pavailable = array_merge($this->pavailable, $addon);
     }
 
     public function GetPermission($param)
     {
-        if (!$this->id)
+        if (!$this->id or !isset(self::$permissions[$param]))
             return -1;
-        if (!in_array($param, $this->pavailable))
-            return -1;
-
+        
         $line = getDB()->fetchRow("SELECT `$param` FROM `{$this->db}` WHERE `id`='" . $this->id . "'", false, 'num');
 
         if ($line) {
 
             $value = (int) $line[0];
 
-            if ($param != 'max_fsize' and
-                $param != 'max_ratio' and
-                $param != 'lvl'){
+            if (self::$permissions[$param] == 'bool'){
                 $value = ($line[0]) ? true : false;
             }
             
@@ -1021,13 +1002,11 @@ class Group extends TextBase
 
     public function GetAllPermissions()
     {
-        $sql_names = null;
-
-        for ($i = 0; $i < sizeof($this->pavailable); $i++)
+        $sql_names = '';        
+        foreach (self::$permissions as $key => $value) {
+             $sql_names .= ($sql_names) ? ",`$key`" : "`$key`";
+        }
         
-            $sql_names .= ($sql_names) ? ",`{$this->pavailable[$i]}`" : "`{$this->pavailable[$i]}`";
-
-
         $line = getDB()->fetchRow("SELECT $sql_names FROM `{$this->db}` WHERE `id`='" . $this->id . "'");
         return $line;
     }
@@ -1060,28 +1039,25 @@ class Group extends TextBase
         if ((int)$line[0])
             return false;
 
-        $sql_names = null;
-        $sql_vars = null;
-        $sql_data = array($name);
+        $sqlNames = '`name`,';
+        $sqlVars = '?';
+        $sqlData = array($name);
         
         foreach ($permissions as $key => $value) {
-            
-            $key = array_search($key, $this->pavailable);
-            if (!$key) continue;
 
-            if ($key != 'max_fsize' and
-                $key != 'max_ratio' and
-                $key != 'lvl')
-                $sql_perm[] = ($value) ? 1 : 0;
+            if (!isset(self::$permissions[$key])) continue;
+
+            if (self::$permissions[$key] == 'bool')
+                $sqlData[] = ($value) ? 1 : 0;
             else
-                $sql_perm[] = (int) $value;
+                $sqlData[] = (int) $value;
 
-                $sql_names .= ",`$key`";
-                $sql_vars .= ",?";
+                $sqlNames .= ",`$key`";
+                $sqlVars .= ",?";
         }
 
-        $result = getDB()->ask("INSERT INTO `{$this->db}` (`name`,$sql_names) "
-                             . "VALUES (?,$sql_vars)", $sql_data);
+        $result = getDB()->ask("INSERT INTO `{$this->db}` ($sqlNames) "
+                             . "VALUES ($sqlVars)", $sqlData);
         if ($result and $result->rowCount())
             $this->id = getDB()->lastInsertId();
         else
@@ -1103,7 +1079,6 @@ class Group extends TextBase
 
     public function IsSystem()
     {
-
         $line = getDB()->fetchRow("SELECT `system` FROM `{$this->db}` WHERE `id`='" . $this->id . "'", false, 'num');
 
         if (!$line)
@@ -1114,7 +1089,6 @@ class Group extends TextBase
 
     public function Edit($name, &$permissions)
     {
-
         if (!$this->id)
             return false;
         if (!$name or !TextBase::StringLen($name))
@@ -1126,35 +1100,24 @@ class Group extends TextBase
         if ((int)$line[0])
             return false;
 
-        $sql = null;
-        $sql_data = array($name);
-        
-        for ($i = 0; $i < sizeof($this->pavailable); $i++) {
+        $sql = '`name`=?';
+        $sqlData = array($name);
 
-            $key = $this->pavailable[$i];
-
-            if (isset($permissions[$key])) {
-
-                if ($key != 'max_fsize' and
-                        $key != 'max_ratio' and
-                        $key != 'lvl')
-                    $sql_data[] = ($permissions[$key]) ? 1 : 0;
-                else
-                    $sql_data[] = (int) $permissions[$key];
-            } else
-                $sql_data[] = 0;
+        foreach (self::$permissions as $key => $value) {
+            if ($value == 'bool')
+                $sqlData[] = (isset($permissions[$key]) and $permissions[$key]) ? 1 : 0;
+            elseif (isset($permissions[$key]))
+                $sqlData[] = (int) $permissions[$key];
+            else continue;
 
             $sql .= ",`$key`=?";
         }
-
-        if (!$sql)
-            $sql = '';
-
-        $result = getDB()->ask("UPDATE `{$this->db}` SET `name`=?$sql WHERE `id`='{$this->id}'", $sql_data);
+        
+        $result = getDB()->ask("UPDATE `{$this->db}` SET $sql WHERE `id`='{$this->id}'", $sqlData);
         if ($result and $result->rowCount())
             return true;
 
-        return true;
+        return false;
     }
 
     public function Delete()
@@ -1211,8 +1174,6 @@ class GroupManager
 
         $grp_item = new Group($id);
         $grp_name = $grp_item->GetName();
-
-        unset($grp_item);
 
         if (!$grp_name)
             return 'Удаленный';

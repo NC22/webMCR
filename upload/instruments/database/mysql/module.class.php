@@ -1,5 +1,5 @@
 <?php
-class MySqlDriver extends PDOEmulator implements DataBaseInterface
+class MySqlDriver extends mysqlDriverBase implements DataBaseInterface
 {  
     public $link = false;
     private $lastError = '';
@@ -79,46 +79,6 @@ class MySqlDriver extends PDOEmulator implements DataBaseInterface
         $result = new MySqlStatement($result, mysql_affected_rows($this->link));
 
         return $result;
-    }
-    
-    public function ask($queryTpl, $data = array())
-    {
-        if (!$this->link) {
-            return false;
-        }
-
-        $asoc = null;
-        $i = 0;
-
-        if (is_array($data)) {
-            
-            if (!isset($data[0])) {
-               $query =  self::parse($queryTpl, $data, $this); 
-            } else {
-                
-                foreach ($data as $k => &$v) {
-                    
-                    $v = $this->quote($v);
-                    $query = str_replace("?", $v, $queryTpl, $count = 1);
-                }
-            }
-        } else $query = $queryTpl;
-  
-        return $this->query($query);
-    }
-
-    public function fetchRow($queryTpl, $data = array(), $fetchMode = 'assoc')
-    {
-        $result = $this->ask($queryTpl, $data);
-
-        if ($result === false) {
-            return false;
-        }
-        
-        $result->setFetchMode($fetchMode);
-        $lines = $result->fetch();
-        
-        return $lines;
     }
     
     public function lastInsertId()

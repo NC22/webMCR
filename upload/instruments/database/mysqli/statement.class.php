@@ -41,5 +41,4 @@ class MySqliStatement
     {
         return $this->affectedRows;
     }
-
 }

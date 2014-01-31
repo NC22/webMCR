@@ -66,7 +66,7 @@ function DBinit($log_script = 'default')
     loadTool('databaseInterface.class.php', 'database/');
     loadTool('statementInterface.class.php', 'database/');
     
-    if ( $config['db_driver'] != 'pdo') loadTool('PDOEmulator.class.php', 'database/' );
+    if ( $config['db_driver'] != 'pdo') loadTool('mysqlDriverBase.class.php', 'database/' );
     
     loadTool('module.class.php', 'database/' . $config['db_driver'] . '/');
     loadTool('statement.class.php', 'database/' . $config['db_driver'] . '/' );

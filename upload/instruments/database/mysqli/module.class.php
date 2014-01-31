@@ -1,5 +1,5 @@
 <?php
-class MySqliDriver  extends PDOEmulator implements DataBaseInterface
+class MySqliDriver  extends mysqlDriverBase implements DataBaseInterface
 {
     public $link = false;
     private $lastError = '';
@@ -35,7 +35,7 @@ class MySqliDriver  extends PDOEmulator implements DataBaseInterface
     public function query($query) 
     {
         $result = $this->link->query($query, MYSQLI_STORE_RESULT);
-
+       // vtxtlog($query);
         if ($result === false) {
             
             $this->lastError = 'SQLError: [' . $query . ']'; 
@@ -61,46 +61,6 @@ class MySqliDriver  extends PDOEmulator implements DataBaseInterface
         $quotes = ($isColName) ? "`" : "'";
 
         return $quotes . $this->link->real_escape_string($str) . $quotes;
-    }
-    
-    public function ask($queryTpl, $data = array())
-    {
-        if (!$this->link) {
-            return false;
-        }
-
-        $asoc = null;
-        $i = 0;
-
-        if (is_array($data)) {
-            
-            if (!isset($data[0])) {
-               $query = self::parse($queryTpl, $data, $this); 
-            } else {
-                
-                foreach ($data as $k => &$v) {
-                    
-                    $v = $this->quote($v);
-                    $query = str_replace("?", $v, $queryTpl, $count = 1);
-                }
-            }
-        } else $query = $queryTpl;
-
-        return $this->query($query);
-    }
-
-    public function fetchRow($queryTpl, $data = array(), $fetchMode = 'assoc')
-    {
-        $result = $this->ask($queryTpl, $data);
-
-        if ($result === false) {
-            return false;
-        }
-        
-        $result->setFetchMode($fetchMode);
-        $lines = $result->fetch();
-        
-        return $lines;
     }
     
     public function lastInsertId()

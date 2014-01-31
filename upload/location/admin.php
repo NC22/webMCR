@@ -351,7 +351,6 @@ if ($do) {
 	
 		$new_group = new Group($id);
 		if ($new_group->Edit($_POST['name'], $_POST)) $info .= lng('GROUP_UPDATED');
-		else  $info .= lng('GROUP_EXIST');
 		
 	} elseif ($id and isset($_POST['delete'])) {  
 	
