@@ -70,28 +70,4 @@ class MySqliDriver  extends mysqlDriverBase implements DataBaseInterface
 
         return $this->link->insert_id;
     }
-
-    public function getLastError()
-    {
-        return $this->lastError;
-    }
-    
-    public function isColumnExist($table, $column)
-    {
-        if (!$this->link)
-            return false;
-
-        return (@$this->ask("SELECT `$column` FROM `$table` LIMIT 0, 1")) ? true : false;
-    }
-
-    public function getColumnType($table, $column)
-    {
-        if (!$this->link) {
-            return false;
-        }
-
-        $result = $this->fetchRow("SHOW FIELDS FROM `$table` WHERE Field =$column");
-
-        return $result['Type'];
-    }
 }
