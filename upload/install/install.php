@@ -187,11 +187,6 @@ function getDB() {
     return $link;
 }
 
-function BD_ColumnExist($table, $column)
-{
-    return (getDB()->ask("SELECT `$column` FROM `$table` LIMIT 0, 1")) ? true : false;
-}
-
 function Root_url(){
     $root_url = str_replace('\\', '/', $_SERVER['PHP_SELF']); 
     $root_url = explode("install/install.php", $root_url, -1);
@@ -221,8 +216,10 @@ function DBinit()
     require($dir . 'databaseInterface.class.php');
     require($dir . 'statementInterface.class.php'); 
     
-    if ( $config['db_driver'] != 'pdo') require($dir . 'mysqlDriverBase.class.php');    
-    
+    if ( $config['db_driver'] != 'pdo') {
+        require($dir . 'mysqlDriverBase.class.php');  
+        require($dir . 'mysqlDriverStm.class.php');  
+    }
     require($dir . $config['db_driver'] . '/module.class.php');
     require($dir . $config['db_driver'] . '/statement.class.php');
     

@@ -1,9 +1,6 @@
 <?php
 class MySqlDriver extends mysqlDriverBase implements DataBaseInterface
-{  
-    public $link = false;
-    private $lastError = '';
-    
+{    
     public function connect($data)
     {
         $this->link = mysql_connect($data['host'] . ':' . $data['port'], $data['login'], $data['password']);
@@ -28,15 +25,6 @@ class MySqlDriver extends mysqlDriverBase implements DataBaseInterface
         return true;
     }
     
-    private function log($error)
-    {
-        $this->lastError = $error;
-
-        if (function_exists('vtxtlog')) {
-            vtxtlog($this->lastError);
-        }
-    }
-    
     public function close()
     {
         mysql_close($this->link);
@@ -56,35 +44,39 @@ class MySqlDriver extends mysqlDriverBase implements DataBaseInterface
         
         return $quotes . $str . $quotes;
     }
-    
-    public function getLink() 
+  
+    public function prepare($queryTpl)
     {
-        return $this->link;
+        if (!$this->link) {
+            return false;
+        }
+        
+        return new MySqlStatement($this, $queryTpl);        
+    }
+    
+    public function queryResource($query) 
+    {
+            $result = mysql_query($query, $this->link);
+        if ($result === false) {
+            $this->log('SQLError: [' . $query . ']');
+        }
+        
+        return $result;
     }
     
     public function query($query) 
     {        
-        $result = mysql_query($query, $this->link);
-        if ($result === false) {
-            
-            $this->lastError = 'SQLError: [' . $query . ']'; 
-            
-            if (function_exists('vtxtlog')) {
-                vtxtlog($this->lastError);
-            }
-
-            return false;
-        }
-
-        $result = new MySqlStatement($result, mysql_affected_rows($this->link));
-
-        return $result;
+        $statement = new MySqlStatement($this, $query);
+        $statement->execute();
+        
+        return $statement;
     }
     
     public function lastInsertId()
     {
-        if (!$this->link)
+        if (!$this->link) {
             return false;
+        }
 
         return mysql_insert_id($this->link);
     }

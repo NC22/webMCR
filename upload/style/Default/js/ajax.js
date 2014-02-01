@@ -95,9 +95,9 @@ function PostComment(script) {
         toggleButton('comment-button')
 
         if (response['code'] == 0) {
-
+  
             var new_comment = document.createElement("div")
-            new_comment.innerHTML += response['comment_html']
+            new_comment.innerHTML = StringWithSmiles(response['comment_html'])
 
             if (response['comment_revers'])
                 GetById('comments-main').appendChild(new_comment)

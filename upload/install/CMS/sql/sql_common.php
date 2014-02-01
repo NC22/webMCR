@@ -135,9 +135,11 @@ getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['data']}` (
 
 /* DEFAULT INFO ADD */
 
-getDB()->ask("INSERT INTO `{$bd_names['news_categorys']}` (`id`,`name`) VALUES (1,'Без категории');");
+$count = getDB()->fetchRow("SELECT COUNT(*) FROM `{$bd_names['news_categorys']}` WHERE `name`='Без категории'", false, 'num');
+if (!(int)$count[0])
+    getDB()->ask("INSERT INTO `{$bd_names['news_categorys']}` (`name`) VALUES ('Без категории');");
 
-getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+getDB()->ask("INSERT IGNORE INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('latest-game-build', '10746'),
 ('launcher-version', '13'),
 ('next-reg-time', '2'),
@@ -146,7 +148,7 @@ getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('rcon-pass', '0'),
 ('rcon-serv', '0');");
 
-getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+getDB()->ask("INSERT IGNORE INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('smtp-user', ''),
 ('smtp-pass', ''),
 ('smtp-host', 'localhost'),
@@ -156,21 +158,21 @@ getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('game-link-osx', ''),
 ('game-link-lin', '');");
 
-getDB()->ask("INSERT INTO `{$bd_names['data']}` (`property`, `value`) VALUES
+getDB()->ask("INSERT IGNORE INTO `{$bd_names['data']}` (`property`, `value`) VALUES
 ('email-name', 'Info'),
 ('email-mail', 'noreplay@noreplay.ru');");
 
 /* 2.05 UPDATE */
 
-if (!BD_ColumnExist($bd_names['ip_banning'], 'ban_type'))
+if (!getDB()->isColumnExist($bd_names['ip_banning'], 'ban_type'))
     getDB()->ask("ALTER TABLE `{$bd_names['ip_banning']}` ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1;");
 
-if (!BD_ColumnExist($bd_names['ip_banning'], 'reason'))
+if (!getDB()->isColumnExist($bd_names['ip_banning'], 'reason'))
     getDB()->ask("ALTER TABLE `{$bd_names['ip_banning']}` ADD `reason` varchar(255) DEFAULT NULL;");
 
 /* 2.1 UPDATE */
 
-if (!BD_ColumnExist($bd_names['news'], 'user_id')) {
+if (!getDB()->isColumnExist($bd_names['news'], 'user_id')) {
 
     getDB()->ask("ALTER TABLE `{$bd_names['news']}` 
 	ADD `user_id` bigint(20) NOT NULL,
@@ -187,29 +189,29 @@ if (!BD_ColumnExist($bd_names['news'], 'user_id')) {
 }
 
 /* 2.15 UPDATE */
-if (!BD_ColumnExist($bd_names['users'], $bd_users['deadtry'])) {
+if (!getDB()->isColumnExist($bd_names['users'], $bd_users['deadtry'])) {
 
     getDB()->ask("ALTER TABLE `{$bd_names['users']}` ADD `{$bd_users['deadtry']}` tinyint(1) DEFAULT 0;");
 }
 
 /* 2.25b UPDATE */
-if (!BD_ColumnExist($bd_names['users'], $bd_users['clientToken'])) {
+if (!getDB()->isColumnExist($bd_names['users'], $bd_users['clientToken'])) {
 
     getDB()->ask("ALTER TABLE `{$bd_names['users']}` ADD `{$bd_users['clientToken']}` varchar(255) DEFAULT NULL;");
 }
 
 /* 2.3 UPDATE */
-if (!BD_ColumnExist($bd_names['servers'], 'service_user')) {
+if (!getDB()->isColumnExist($bd_names['servers'], 'service_user')) {
 
     getDB()->ask("ALTER TABLE `{$bd_names['servers']}` ADD `service_user` char(64) default NULL;");
     getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `hits` int(10) DEFAULT 0;");
 }
 
-if (!BD_ColumnExist($bd_names['news'], 'hide_vote'))
+if (!getDB()->isColumnExist($bd_names['news'], 'hide_vote'))
     getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `hide_vote` tinyint(1) NOT NULL DEFAULT 0;");
 
 /* 2.31 UPDATE */
-if (!BD_ColumnExist($bd_names['comments'], 'item_type')) {
+if (!getDB()->isColumnExist($bd_names['comments'], 'item_type')) {
 
     getDB()->ask("ALTER TABLE `{$bd_names['comments']}` ADD `item_type` smallint(3) DEFAULT " . ItemType::News . ";");
     getDB()->ask("ALTER TABLE `{$bd_names['comments']}` DROP KEY `item_id`");

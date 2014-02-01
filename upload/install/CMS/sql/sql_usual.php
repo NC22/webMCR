@@ -28,7 +28,7 @@ getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['users']}` (
   KEY `group_id` (`{$bd_users['group']}`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;");
 
-getDB()->ask("INSERT INTO `{$bd_names['groups']}` 
+getDB()->ask("INSERT IGNORE INTO `{$bd_names['groups']}` 
 (`id`,`name`,`lvl`,`system`,`change_skin`,`change_pass`,`change_login`,`change_cloak`,`add_news`,`add_comm`,`adm_comm`) VALUES 
 (1,'Пользователь',2,1,1,1,0,0,0,1,0), 
 (2,'Заблокированный',0,1,0,0,0,0,0,0,0), 

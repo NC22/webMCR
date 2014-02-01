@@ -1,9 +1,6 @@
 <?php
-class MySqliDriver  extends mysqlDriverBase implements DataBaseInterface
+class MySqliDriver extends mysqlDriverBase implements DataBaseInterface
 {
-    public $link = false;
-    private $lastError = '';
-    
     public function connect($data)
     {
         $this->link = new mysqli($data['host'] . ':' . $data['port'], $data['login'], $data['password'], $data['db']);
@@ -31,25 +28,35 @@ class MySqliDriver  extends mysqlDriverBase implements DataBaseInterface
         }
         $this->link = false;
     }
-
-    public function query($query) 
+  
+    public function prepare($queryTpl, $data = false)
     {
-        $result = $this->link->query($query, MYSQLI_STORE_RESULT);
-       // vtxtlog($query);
-        if ($result === false) {
-            
-            $this->lastError = 'SQLError: [' . $query . ']'; 
-            
-            if (function_exists('vtxtlog')) {
-                vtxtlog($this->lastError);
-            }
-
+        if (!$this->link) {
             return false;
         }
-
-        $result = new MySqliStatement($result, $this->link->affected_rows);
-
+        
+        $statement = new MySqliStatement($this, $queryTpl);
+        $statement->bindData($data);
+        
+        return $statement;        
+    }
+    
+    public function queryResource($query) 
+    {
+            $result = $this->link->query($query, MYSQLI_STORE_RESULT);
+        if ($result === false) {
+            $this->log('SQLError: [' . $query . ']');
+        }
+        
         return $result;
+    }
+    
+    public function query($query) 
+    {        
+        $statement = new MySqliStatement($this, $query);
+        $statement->execute();
+        
+        return $statement;
     }
     
     public function quote($str, $isColName = false)

@@ -1,6 +1,10 @@
 <?php
 class PDODriver implements DataBaseInterface
 {
+    /**
+     *
+     * @var PDO
+     */
     public $link = false;
     private $lastError = '';
 
@@ -31,9 +35,7 @@ class PDODriver implements DataBaseInterface
             $this->log('SQLError: ' . $e->getMessage());
             return false;
         }
-
-
-
+        
         return true;
     }
 
@@ -51,7 +53,7 @@ class PDODriver implements DataBaseInterface
         return $this->link->quote($str);
     }
     
-    private function log($error)
+    public function log($error)
     {
         $this->lastError = $error;
 
@@ -62,44 +64,46 @@ class PDODriver implements DataBaseInterface
 
     public function query($query) 
     {
-        $statement = $this->link->query($query); 
-        if ($statement === false) {
+        try {                
             
-            $this->log('SQLError: [' . $query . ']');
+            $statement = $this->link->query($query); 
+            return new PDODriverStatement($this, $statement);
+            
+        } catch (PDOException $e) {
+
+            $this->log('SQLError: [' . $e->getMessage() . '] ');
             return false;
         }
-
-        $result = new PDODriverStatement($statement);  
-        return $result;
     }
     
-    public function ask($queryTpl, $data = array())
+    public function ask($queryTpl, $data = null) 
+    {
+        $statement = $this->prepare($queryTpl);
+        if (!$statement) return false;
+        
+        if ($data) {
+            $statement->bindData($data);
+        }
+        if (!$statement->execute()) return false;
+        
+        return $statement;
+    }
+    
+    public function prepare($queryTpl)
     {
         if (!$this->link) {
             return false;
         }
 
-        if (is_array($data)) {
+        try {                
             
-            try {
-                $statement = $this->link->prepare($queryTpl);
-                $statement->execute($data);
-                
-            } catch (PDOException $e) {
-                
-                $this->log('SQLError: [' . $e->getMessage() . '] ' . $queryTpl);
-                return false;
-            }
-   
-            if ($statement === false) {
-                return false;
-            }
+            $pdoStatement = $this->link->prepare($queryTpl);  
+            return new PDODriverStatement($this, $pdoStatement);
+            
+        } catch (PDOException $e) {
 
-            $result = new PDODriverStatement($statement);
-            return $result;   
-            
-        } else {            
-            return $this->query($queryTpl);             
+            $this->log('SQLError: [' . $e->getMessage() . '] ' . $queryTpl);
+            return false;
         }
     }
 
@@ -135,7 +139,7 @@ class PDODriver implements DataBaseInterface
         if (!$this->link)
             return false;
 
-        return (@$this->ask("SELECT `$column` FROM `$table` LIMIT 0, 1")) ? true : false;
+        return (@$this->query("SELECT `$column` FROM `$table` LIMIT 0, 1")) ? true : false;
     }
 
     public function getColumnType($table, $column)

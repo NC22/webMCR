@@ -32,7 +32,7 @@ getDB()->ask($bd_alter_users."ADD `play_times` int(10) NOT NULL DEFAULT 0;");
 getDB()->ask($bd_alter_users."ADD `undress_times` int(10) NOT NULL DEFAULT 0;");
 getDB()->ask($bd_alter_users."ADD `default_skin` tinyint(1) NOT NULL DEFAULT '1';");
 
-getDB()->ask("INSERT INTO `{$bd_names['groups']}` 
+getDB()->ask("INSERT IGNORE INTO `{$bd_names['groups']}` 
 (`id`,`name`,`lvl`,`system`,`change_skin`,`change_pass`,`change_login`,`change_cloak`,`add_news`,`add_comm`,`adm_comm`) VALUES 
 (1,'Пользователь',2,1,1,1,0,0,0,1,0), 
 (2,'Заблокированный',0,1,0,0,0,0,0,0,0), 

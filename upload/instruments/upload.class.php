@@ -357,7 +357,7 @@ Class FileManager extends View
         if (!$result)
             return $html_files;
 
-        while ($line = $result->fetch()) {
+        while ($line = $result->fetch('num')) {
 
             $file = new File($line[0], $this->st_subdir);
             $html_files .= $file->Show();

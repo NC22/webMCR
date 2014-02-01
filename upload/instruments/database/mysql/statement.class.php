@@ -1,43 +1,40 @@
 <?php
 
-class MySqlStatement
+class MySqlStatement extends mysqlDriverStm implements StatementInterface
 {    
-    private static $modes = array (
-         'assoc' => MYSQL_ASSOC,
-         'num' =>  MYSQL_NUM,
-         'both' => MYSQL_BOTH   
+    protected static $modes = array (
+        'assoc' => MYSQL_ASSOC,
+        'num' =>  MYSQL_NUM,
+        'both' => MYSQL_BOTH   
     );
     
-    private $result = false;
-    private $fetchMode = 'assoc';      
-    private $affectedRows = 0;
+    protected $result = false;
 
-    public function __construct($result, $affectedRows = 0)
+    /**
+     *
+     * @var MySqlDriver 
+     */
+    protected $db;
+    
+    /**
+     * @param MySqlDriver $dbHandler current database driver
+     * @param string $queryTpl query string for MySQL database
+     */
+    public function __construct($dbHandler, $queryTpl)
     {
-        $this->result = $result;
-        $this->affectedRows = $affectedRows;
+        $this->queryTpl = $queryTpl;
+        $this->db = $dbHandler;
     }
-
-    public function setFetchMode($mode = 'assoc')
-    {
-        if (array_key_exists($mode, self::$modes)) {
-            $this->fetchMode = $mode;
-            return true;
-        }
-
-        return false;
-    }
-
-    public function getResult() 
-    {
-        return $this->result;        
-    }    
     
     public function fetch($mode = false)
     {
         if ($mode and $mode !== $this->fetchMode) {
             $this->setFetchMode($mode);
         }
+        
+        if ($this->result === false and !$this->execute()) {
+            return false;
+        } 
         
         $result = mysql_fetch_array($this->result, self::$modes[$this->fetchMode]);
         if ($result === false) return null;
@@ -46,7 +43,6 @@ class MySqlStatement
 
     public function rowCount()
     {
-        return $this->affectedRows;
+        return mysql_affected_rows($this->db->getLink());
     }
-
 }

@@ -24,18 +24,6 @@
 	
     <span class="help-block">Дополнительные права для группы:</span>
 	
-	<?php if (isset($bd_names['sp_skins'])) { ?>
-	
-		<label class="checkbox">
-		  <input type="checkbox" name="sp_upload" value="1" <?php echo ($group['sp_upload'])?'checked="checked"':'' ?>> Добавление изображений в галерею
-		</label>
-		
-		<label class="checkbox">
-		  <input type="checkbox" name="sp_change" value="1" <?php echo ($group['sp_change'])?'checked="checked"':'' ?>> Смена образа через галерею
-		</label>
-	
-	<?php } ?>
-	
 	<label class="checkbox">
 	  <input type="checkbox" name="change_skin" value="1" <?php echo ($group['change_skin'])?'checked="checked"':'' ?>> Смена образа через меню настроек
 	</label>

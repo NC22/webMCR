@@ -1,21 +1,33 @@
 <?php
 
-class PDODriverStatement
+class PDODriverStatement implements StatementInterface
 {    
     private static $modes = array (
-         'assoc' => PDO::FETCH_ASSOC,
-         'num' => PDO::FETCH_NUM,
-         'both' => PDO::FETCH_BOTH   
-    );
+        'assoc' => PDO::FETCH_ASSOC,
+        'num' => PDO::FETCH_NUM,
+        'both' => PDO::FETCH_BOTH   
+    ); 
     
-    private $result = false;
-    private $fetchMode = 'assoc';      
+    private $fetchMode = 'assoc';     
+    private $dataPool = null; 
+    private $statement = false;
 
-    public function __construct($result)
+    /**
+     * @var PDODriver 
+     */
+    protected $db;
+    
+    /**
+     * @param PDODriver $dbHandler current database driver
+     * @param resource $statement prepared statement
+    */
+    
+    public function __construct($dbHandler, $statement)
     {
-        $this->result = $result;
+        $this->statement = $statement;
+        $this->db = $dbHandler;
     }
-
+    
     public function setFetchMode($mode = 'assoc')
     {
         if (array_key_exists($mode, self::$modes)) {
@@ -25,23 +37,66 @@ class PDODriverStatement
 
         return false;
     }
-
+    
     public function fetch($mode = false)
     {
         if ($mode and $mode !== $this->fetchMode) {
             $this->setFetchMode($mode);
         }
         
-        $result = $this->result->fetch(self::$modes[$this->fetchMode]);
+        $result = $this->statement->fetch(self::$modes[$this->fetchMode]);
         if (!$result) {
-            $this->result->closeCursor();
+            $this->statement->closeCursor();
         }
+        
+        if ($result === false) $result = null;
         
         return $result;
     }
-
+    
+    public function bindValue($index, $data, $type = 'string') 
+    {        
+        if (is_int($index)) {
+            $index = ($index <= 0) ? 1 : $index-1; 
+        }
+        
+        if ($this->dataPool === false) {
+            $this->dataPool = array();
+        }
+        
+        settype($data, $type);
+        $this->dataPool[$index] = $data;
+        
+        return true;
+    } 
+    
+    public function bindData($data = false) 
+    {
+        $this->dataPool = $data;
+    }
+    
     public function rowCount()
     {
-        return $this->result->rowCount();
+        return $this->statement->rowCount();
+    }
+    
+    public function execute($data = null)
+    {   
+        if ($this->statement === false) {
+            return false;
+        }
+        
+        try {
+            if ($data) {
+                return $this->statement->execute($data);
+            }
+
+            return $this->statement->execute($this->dataPool);
+         }
+         catch( PDOException $e )
+         {
+             $this->db->log('SQLError: [' . $e->getMessage() . ']');
+             return false;
+         }
     }
 }
