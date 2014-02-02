@@ -7,14 +7,8 @@ loadTool('monitoring.class.php');
 if (empty($_POST['id'])) exit;
 $id = (int)$_POST['id'];
 
-$now = false;
-
-if (isset($_POST['now']) and !empty($user) and $user->lvl() >= 15) 
-
-$now = true;
-
 DBinit('monitoring');
 
 $server = new Server($id, 'serverstate/');
-$server->UpdateState($now);
+$server->UpdateState();
 $server->ShowInfo();
