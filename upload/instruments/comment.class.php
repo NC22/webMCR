@@ -1,15 +1,16 @@
 <?php 
 if (!defined('MCR')) exit; 
 
-class CommentList extends View {
-    
+class CommentList extends View 
+{    
     private $work_script;
     private $parent_obj;
     private $per_page;
     private $revers;
     private $db;
 
-    public function __construct($parent, $work_script, $style_sd = false) { 
+    public function __construct($parent, $work_script, $style_sd = false) 
+    { 
     global $bd_names, $config;
 
         $this->parent_obj = false;
@@ -28,7 +29,8 @@ class CommentList extends View {
         $this->db = $bd_names['comments'];
     }
 	
-    public function ShowAddForm() {
+    public function ShowAddForm() 
+    {
     global $user;
 
         if ( $this->parent_obj === false ) return '';
@@ -44,7 +46,8 @@ class CommentList extends View {
         return ob_get_clean();
     }
     
-    public function Show($list = false) {
+    public function Show($list = false) 
+    {
     global $user;
 	
 	if ( $this->parent_obj === false ) return '';
@@ -142,7 +145,7 @@ class Comments_Item extends Item {
         return true;
     }
 
-    public function aCreate($message, $fUser, $item_id, $item_type, $antibot = 'antibot')
+    public function aCreate($message, $fUser, $item_id, $item_type)
     {
         global $ajax_message, $config;
 
@@ -161,9 +164,6 @@ class Comments_Item extends Item {
             aExit(1, lng('MESS_FAIL'));
         if (!$fUser->canPostComment())
             aExit(1, lng('MESS_TIMEOUT'));
-
-        if ($antibot)
-            CaptchaCheck(3, true, $antibot);
 
         $rcode = $this->Create($message, $fUser->id(), $item_id, $item_type);
 

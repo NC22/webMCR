@@ -94,7 +94,7 @@ class ItemType {  // stock types
 
 /* Base class for objects with Show method */
 
-Class View {
+class View {
     const def_theme = 'Default';
 
     protected $st_subdir;
@@ -259,7 +259,7 @@ Class View {
 
 }
 
-Class TextBase
+class TextBase
 {
     /**
      * @deprecated since v2.35 
@@ -303,7 +303,7 @@ Class TextBase
 
 }
 
-Class EMail {
+class EMail {
 const ENCODE = 'utf-8';
 	
     public static function Send($mail_to, $subject, $message)
@@ -396,7 +396,7 @@ const ENCODE = 'utf-8';
 
 }
 
-Class Message
+class Message
 {
     /* 	 
       Comment - Валидация короткого сообщения, для хранения в БД и вывода на странице
@@ -524,7 +524,7 @@ class ItemLike
 
 }
 
-Class Menu extends View
+class Menu extends View
 {
     private $menu_items;
     private $menu_fname;
@@ -759,7 +759,7 @@ Class Menu extends View
 
 }
 
-Class Rewrite
+class Rewrite
 {
     private static function IsOn()
     {
@@ -803,5 +803,178 @@ Class Rewrite
         }
 
         return $str;
+    }
+}
+
+class Filter 
+{
+    private static $methods = array(
+        'post' => INPUT_POST, 
+        'get' => INPUT_GET, 
+        'cookie' => INPUT_COOKIE        
+    );
+    
+    private static $rules = array(
+        'bool' => array(
+            'default' => false,
+            'sanitize' => FILTER_SANITIZE_STRING,
+            'validate' => FILTER_VALIDATE_BOOLEAN,            
+        ),
+        'int' => array(
+            'default' => 0,
+            'sanitize' => FILTER_SANITIZE_NUMBER_INT,
+            'validate' => FILTER_VALIDATE_FLOAT,            
+        ),
+        'float' => array(
+            'default' => 0,
+            'sanitize' => FILTER_SANITIZE_NUMBER_FLOAT,
+            'validate' => FILTER_VALIDATE_INT,            
+        ),
+        'mail' => array(
+            'default' => '',
+            'sanitize' => FILTER_SANITIZE_STRING,
+            'validate' => FILTER_VALIDATE_EMAIL,            
+        ),
+        'html' => array(
+            'default' => '',
+            'sanitize' => null,
+            'validate' => null,            
+        ),
+        'string' => array(
+            'default' => '',
+            'sanitize' => FILTER_SANITIZE_STRING,
+            'validate' => null, 
+        ),
+    );
+
+    /*
+     *   Notice : 
+     *       Internet Explorer [version] <= 7 (browser is deprecated - last update 2006 year) 
+     *       support CSS expressions, this filter ignore that fact.
+     *   
+     *   @param string $html input html string
+     *   @return string html string safe from xss attack
+     */
+   
+    public static function html(&$html)
+    {
+        /**
+         * Used for find control symbols in implementation of some protocol
+         * UTF-8 chartable can be found here http://www.utf8-chartable.de/unicode-utf8-table.pl?utf8=dec
+         * @var $u range of control symbols + space and '/'
+         */
+        $u = '[\x00-\x20\/]*';
+
+        /**
+         * @var $fTags list of forbitten tags
+         */
+        $fTags = array(
+            'applet',
+            'meta',
+            'xml',
+            'blink',
+            'link',
+            'style',
+            'script',
+            'embed',
+            'object',
+            'iframe',
+            'frame',
+            'frameset',
+            'ilayer',
+            'layer',
+            'bgsound',
+            'title',
+            'base'
+        );
+
+        $html = str_replace(array("&amp;", "&lt;", "&gt;"), array("&amp;amp;", "&amp;lt;", "&amp;gt;"), $html);
+
+        // fix &entitiy\n;
+        $html = preg_replace('#(&\#*\w+)[\x00-\x20]+;#u', "$1;", $html);
+        $html = preg_replace('#(&\#x*)([0-9A-F]+);*#iu', "$1$2;", $html);
+
+        $html = html_entity_decode($html, ENT_COMPAT, "UTF-8");
+
+        // remove any attribute starting with "on" or xmlns
+        $html = preg_replace('#(<[^>]+[\x00-\x20\"\'\/])(on|xmlns)[^>]*>#iUu', "$1>", $html);
+
+        // remove scripts protocol (js, vb, mozilla binding ...)
+        $html = preg_replace('#([a-z]*)' . $u . '=' . $u . '([\`\'\"]*)' . $u . 'j' . $u . 'a' . $u . 'v' . $u . 'a' . $u . 's' . $u . 'c' . $u . 'r' . $u . 'i' . $u . 'p' . $u . 't' . $u . ':#iUu', '$1=$2default...', $html);
+        $html = preg_replace('#([a-z]*)' . $u . '=' . $u . '([\`\'\"]*)' . $u . 'v' . $u . 'b' . $u . 's' . $u . 'c' . $u . 'r' . $u . 'i' . $u . 'p' . $u . 't' . $u . ':#iUu', '$1=$2default...', $html);
+        $html = preg_replace('#([a-z]*)' . $u . '=' . $u . '([\`\'\"]*)' . $u . '-moz-binding' . $u . ':#Uu', '$1=$2default...', $html);
+        $html = preg_replace('#([a-z]*)' . $u . '=' . $u . '([\`\'\"]*)' . $u . 'data' . $u . ':#Uu', '$1=$2default...', $html);
+
+        // remove namespaced elements
+        $html = preg_replace('#</*\w+:\w[^>]*>#i', "", $html);
+
+        // remove forbitten tags
+        do {
+            $compare = $html;
+            $html = preg_replace('#</*(' . implode('|', $fTags) . ')[^>]*>#i', "", $html);
+        } while ($compare != $html);
+    }
+    
+    public static function sanitize($key, $method, $type) 
+    { 
+        // get var if setted and sanitize it
+        
+        $filter = self::$rules[$type]['sanitize'];
+        
+        if ($filter) {
+            $var = filter_input($method, $key, $filter);
+        } else {
+            $var = filter_input($method, $key);
+        }
+
+        return $var;
+    }
+    
+    /**
+     * Get variable after applay 'validation' and 'sanitize' filter
+     * 
+     * @param string $key name of variable to get
+     * @param string $method One of <b>post</b>, <b>get</b>, <b>cookie</b>
+     * @param string $type type of filter in order self::$rules
+     * @param bool $falseOnFail
+     * @return mixed return default value for <i>$type</i> on fail (if variable isnt setted  or empty; 'validation' or 'sanitize' filter return fail result) <br>
+     * return <b>false</b> on fail if variable $falseOnFail = true<br>
+     * return validated variable in order of self::$rules
+     */
+    
+    public static function input($key, $method = 'post', $type = 'string', $falseOnFail = false)
+    {
+        $var = self::sanitize($key, self::$methods[$method], $type, true);
+        
+         // input is not set or filter fail or variable is empty - exit with default or optional value
+
+        if ($var === null or $var === false or !strlen($var)) { 
+            return ($falseOnFail) ? false : self::$rules[$type]['default'];
+        }
+        
+        $filter = self::$rules[$type]['validate'];
+        if ($filter) {
+            $var = filter_var($var, $filter);
+            
+            if ($var === false) { // validation fail
+                return ($falseOnFail) ? false : self::$rules[$type]['default'];
+            }
+        }
+
+        switch ($type) {
+            case 'int':
+            case 'float':
+            case 'bool':
+                settype($var, $type);
+                break;
+            case 'html' :
+                self::html($var);
+                break;
+            default:
+                $var = trim($var);
+                break;
+        }
+
+        return $var;
     }
 }

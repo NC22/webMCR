@@ -3,8 +3,8 @@ if (!defined('MCR')) exit;
 
 $page = 'Страница не найдена';
 $sub_dir = '';
-
-if (isset($_GET['route']) and strpos($_GET['route'], $site_ways['mcraft']) !== false) 
+$route = Filter::input('route', 'get', 'string', true);
+if ($route and strpos($route, $site_ways['mcraft']) !== false) 
 
 	$sub_dir = 'launcher/';
 

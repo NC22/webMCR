@@ -151,25 +151,6 @@ function tmp_name($folder, $pre = '', $ext = 'tmp')
     return (file_exists($folder . $name)) ? tmp_name($folder, $pre, $ext) : $name;
 }
 
-function InputGet($key, $method = 'POST', $type = 'str')
-{
-    $blank_result = array('str' => '', 'int' => 0, 'float' => 0, 'bool' => false);
-
-    if (($method == 'POST' and !isset($_POST[$key])) or
-            ($method != 'POST' and !isset($_GET[$key])))
-        return $blank_result[$type];
-
-    $var = ($method == 'POST') ? $_POST[$key] : $_GET[$key];
-
-    switch ($type) {
-        case 'str': return TextBase::HTMLDestruct($var);
-            break;
-        default: settype($var, $type);
-            return $var;
-            break;
-    }
-}
-
 function POSTGood($post_name, $format = array('png'))
 {
     if (empty($_FILES[$post_name]['tmp_name']) or
@@ -250,6 +231,10 @@ function sqlConfigSet($type, $value)
     return true;
 }
 
+function InputGet($key, $method = 'post', $type = 'string') {
+    return Filter::input($key, $method, $type);
+}
+
 function GetRealIp()
 {
 
@@ -308,8 +293,7 @@ function tokenTool($mode = 'set')
     if ($mode == 'check') {
 
         if (empty($_SESSION['token_data']) or
-                empty($_POST['token_data']) or
-                $_SESSION['token_data'] !== $_POST['token_data']) {
+            $_SESSION['token_data'] !== Filter::input('token_data')) {
 
             if (isset($_SESSION['token_data']))
                 unset($_SESSION['token_data']);
@@ -329,6 +313,9 @@ function tokenTool($mode = 'set')
 
         $_SESSION['token_data'] = randString(32);
         return '<input type="hidden" name="token_data" id="token_data" value="' . $_SESSION['token_data'] . '" />';
+    } else { 
+        $_SESSION['token_data'] = randString(32);
+        return $_SESSION['token_data'];
     }
 }
 

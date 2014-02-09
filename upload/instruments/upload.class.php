@@ -51,14 +51,14 @@ Class File extends View
             $this->id = (int) $id;
             if (!$this->id)
                 return false;
-        } else {
+        } elseif ($id) {
 
             if (!preg_match("/^[a-zA-Z0-9._-]+$/", $id))
                 return false;
 
             $search_var = $id;
             $search_by = 'id_word';
-        }
+        } else return false;
 
         $line = getDB()->fetchRow("SELECT `id`, `user_id`, `id_word`, `way`, `name`, `size`, `hash`, `downloads`  "
                    . "FROM `{$this->db}` WHERE `$search_by`=:var", array('var' => $search_var), 'num');
@@ -79,7 +79,7 @@ Class File extends View
         $this->downloads = $line[7];
     }
 
-    public function Create($post_name, $user_id, $id_word = false, $id_rewrite = false)
+    public function Create($post_name, $user_id, $id_word = null, $id_rewrite = false)
     {
 
         $user_id = (int) $user_id;

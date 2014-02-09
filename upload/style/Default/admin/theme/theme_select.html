@@ -1,64 +1,65 @@
 <script language="JavaScript" type="text/javascript">
-var T_current_select = '<?php echo $theme_cur ?>'
+    var T_current_select = '<?php echo $theme_cur ?>'
 
-function TSelectTo(id) {
-	BlockVisible('theme-item-' + T_current_select, false)
-	
-	T_current_select = id
-	BlockVisible('theme-item-' + T_current_select, true)
-	
-	return false
-}
+    function TSelectTo(id) {
+        BlockVisible('theme-item-' + T_current_select, false)
 
-function TDownloadTheme() {
+        T_current_select = id
+        BlockVisible('theme-item-' + T_current_select, true)
 
-	window.location = 'index.php?mode=control&do=gettheme&sid=' + T_current_select
+        return false
+    }
 
-	return false
-}
+    function TDownloadTheme() {
 
-function TDelete() {
+        window.location = 'index.php?mode=control&do=gettheme&sid=' + T_current_select
 
-	if (!confirm("Уверены, что хотите удалить тему оформления ?")) return false
-	
-	var del_item = GetById('theme-item-delete')
-		del_item.value = T_current_select
+        return false
+    }
 
-	GetParentForm(del_item).submit()
-	
-	return false
-}
+    function TDelete() {
+
+        if (!confirm("Уверены, что хотите удалить тему оформления ?"))
+            return false
+
+        var del_item = GetById('theme-item-delete')
+        del_item.value = T_current_select
+
+        GetParentForm(del_item).submit()
+
+        return false
+    }
 </script>
 
 <label>Стиль страниц:</label>
-	
-	<select name="theme_name" size="1" onchange="return TSelectTo(this.value)">
-	
-		<?php echo $html_theme_list ?>
-	
-	</select> 
-	
-	<!--<button type="button" class="btn" onclick="BlockVisible('theme-extended-info')" style="position: relative; bottom : 6px;">Описание</button>-->
-	<button type="button" class="btn" onclick="TDownloadTheme()" style="position: relative; bottom : 6px;">Скачать</button>
-	<button type="button" class="btn" onclick="BlockVisible('theme-install-info')" style="position: relative; bottom : 6px;">Добавить</button>
-	<button type="button" class="btn" onclick="TDelete()" style="position: relative; bottom : 6px;">Удалить</button>
-	
-	<input type="hidden" name="theme_delete" id="theme-item-delete" value="">
-	
+
+<select name="theme_name" size="1" onchange="return TSelectTo(this.value)">
+
+    <?php echo $html_theme_list ?>
+
+</select> 
+
+<!--<button type="button" class="btn" onclick="BlockVisible('theme-extended-info')" style="position: relative; bottom : 6px;">Описание</button>-->
+<button type="button" class="btn" onclick="TDownloadTheme()" style="position: relative; bottom : 6px;">Скачать</button>
+<!--<button type="button" class="btn" onclick="BlockVisible('theme-install-info')" style="position: relative; bottom : 6px;">Добавить</button>-->
+<button type="button" class="btn" onclick="TDelete()" style="position: relative; bottom : 6px;">Удалить</button>
+
+<input type="hidden" name="theme_delete" id="theme-item-delete" value="">
+
 <div id="theme-install-info" style="display : none; margin-bottom: 12px;">
 
-	<div class="block-line"></div>
-	
-		<input type="file" name="new_theme" size="30" onchange="GetParentForm(this).submit(); return false" data-bfi-disabled />
+    <div class="block-line"></div>
+
+    <input type="file" name="new_theme" size="30" onchange="GetParentForm(this).submit(); return false" />
 
 </div>
-	
+
 <div id="theme-extended-info" style="display : block;">
 
-<div class="block-line"></div>
+    <div class="block-line"></div>
 
-	<?php echo $theme_items_info ?>
-	
-<div class="block-line"></div>
+    <?php echo $theme_items_info ?>
+
+    <div class="block-line"></div>
 
 </div>

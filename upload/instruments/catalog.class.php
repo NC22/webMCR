@@ -551,38 +551,39 @@ Class NewsManager extends View
         $editorTitle = 'Добавить новость';
         $editorButton = 'Добавить';
 
-        $editInfo = array('vote' => isset($_POST['hide_vote']) ? false : true, 'discus' => isset($_POST['hide_discus']) ? false : true);
-        $editCategory = 0;
-        $editMode = 0;
-        $editTitle = InputGet('title');
-        $editMessage = InputGet('message');
-        $editMessage_Full = InputGet('message_full');
+        $editInfo = array(
+            'vote' => !Filter::input('hide_vote', 'post', 'bool'),
+            'discus' => !Filter::input('hide_discus', 'post', 'bool')
+        );
+        $editCategory = Filter::input('cid', 'post', 'int', true);
+        $editMode = Filter::input('editMode', 'post', 'int');
+        $editTitle = Filter::input('title', 'post', 'string', true);
+        $editMessage = Filter::input('message', 'post', 'html', true);
+        $editMessage_Full = Filter::input('message_full', 'post', 'html', true);
         $error = '';
-
-        if (isset($_POST['title']) and isset($_POST['message']) and isset($_POST['cid'])) {
+        
+        if ($editCategory !== false and $editTitle !== false and $editMessage !== false) {
 
             ob_start();
             $state = 'error';
 
-            if (empty($_POST['title']) or empty($_POST['message']) or empty($_POST['cid']))
+            if (!$editCategory or !$editMessage or !$editTitle)
                 $text_str = 'Заполните необходимые поля.';
 
             else {
-
-                $mesFull = (!empty($_POST['message_full'])) ? $_POST['message_full'] : false;
-
-                $title = $_POST['title'];
-                $mes = $_POST['message'];
-
-                $editMode = (int) $_POST['editMode'];
-                $editCategory = (int) $_POST['cid'];
-
+                
                 if ($editMode > 0) {
 
                     $news_item = new News_Item($editMode, $this->st_subdir);
 
-                    if ($news_item->Edit($editCategory, $title, $mes, $mesFull, $editInfo['vote'], $editInfo['discus'])) {
-
+                    if ($news_item->Edit(
+                            $editCategory, 
+                            $editTitle, 
+                            $editMessage, 
+                            $editMessage_Full, 
+                            $editInfo['vote'], 
+                            $editInfo['discus']
+                    )) {
                         $state = 'success';
                         $text_str = 'Новость обновлена';
                     } else
@@ -592,7 +593,14 @@ Class NewsManager extends View
                 } else {
 
                     $news_item = new News_Item();
-                    $news_item->Create($editCategory, $title, $mes, $mesFull, $editInfo['vote'], $editInfo['discus']);
+                    $news_item->Create(
+                            $editCategory, 
+                            $editTitle, 
+                            $editMessage, 
+                            $editMessage_Full, 
+                            $editInfo['vote'], 
+                            $editInfo['discus']
+                    );
 
                     $state = 'success';
                     $text_str = 'Новость добавлена';
@@ -601,18 +609,18 @@ Class NewsManager extends View
 
             include $this->GetView('news_admin_mess.html');
             $error = ob_get_clean();
-        } elseif (isset($_GET['delete'])) {
+        } elseif (Filter::input('delete', 'get', 'bool')) {
 
-            $news_item = new News_Item((int) $_GET['delete']);
+            $news_item = new News_Item(Filter::input('delete', 'get', 'int'));
             $news_item->Delete();
 
             header("Location: " . $this->work_link . "ok");
-        } elseif (isset($_GET['edit'])) {
+        } elseif (Filter::input('edit', 'get', 'bool')) {
 
             $editorTitle = 'Обновить новость';
             $editorButton = 'Изменить';
 
-            $news_item = new News_Item((int) $_GET['edit']);
+            $news_item = new News_Item(Filter::input('edit', 'get', 'int'));
 
             if (!$news_item->Exist())
                 return '';

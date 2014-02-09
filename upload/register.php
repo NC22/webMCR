@@ -1,27 +1,35 @@
 <?php
 
+require('./system.php');
+
 function CheckPostComplect()
 {
+    $input = array(
+        'login' => Filter::input('login'),
+        'pass' => Filter::input('pass'),
+        'repass' => Filter::input('repass'),
+        'email' => Filter::input('email', 'post', 'mail'),
+        'female' => Filter::input('female', 'post', 'bool'),
+        'verificate' => Filter::input('verificate'),
+        'id' => Filter::input('id', 'post', 'int'),
+        'method' => false
+    );
 
-    if (isset($_POST['login']) and
-            isset($_POST['pass']) and
-            isset($_POST['repass']) and
-            isset($_POST['email']) and
-            isset($_POST['female']))
-        return 1;
+    if ($input['login'] and
+        $input['pass'] and
+        $input['repass'])
+        $input['method'] = 1;
 
-    if (isset($_GET['verificate']) and
-            isset($_GET['id']))
-        return 2;
+    if ($input['verificate'] and
+        $input['id'])
+        $input['method'] = 2;
 
-    return false;
+    return $input;
 }
 
-$method = CheckPostComplect();
-if (!$method)
+$input = CheckPostComplect();
+if (!$input['method'])
     exit;
-
-require('./system.php');
 
 loadTool('ajax.php');
 
@@ -76,67 +84,61 @@ function tryExit()
     aExit(2, $message);
 }
 
-if ($method == 2) {
+if ($input['method'] == 2) {
 
-    $tmp_user = new User((int) $_GET['id']);
+    $tmp_user = new User($input['id']);
 
-    if ($tmp_user->id() and !strcmp($tmp_user->getVerificationStr(), $_GET['verificate']))
+    if ($tmp_user->id() and !strcmp($tmp_user->getVerificationStr(), $input['verificate']))
         $tmp_user->changeGroup(1);
 
     exit(View::ShowStaticPage('mail_verification_ok.html', 'other/'));
 }
 
 RefreshBans();
-
-$login = $_POST['login'];
-$pass = $_POST['pass'];
-$repass = $_POST['repass'];
-
-$female = (!(int) $_POST['female']) ? 0 : 1;
-$email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+$female = ($input['female']) ? 1 : 0;
 
 if (!CanAccess())
     aExit(11, lng('IP_BANNED'));
 
-if (empty($login) || empty($pass) || empty($repass) || empty($_POST['email']))
+if (empty($input['login']) || empty($input['pass']) || empty($input['repass']))
     aExit(1, lng('INCOMPLETE_FORM'));
 
-if (!preg_match("/^[a-zA-Z0-9_-]+$/", $login))
+if (!preg_match("/^[a-zA-Z0-9_-]+$/", $input['login']))
     $rcodes[] = 2;
-if (!preg_match("/^[a-zA-Z0-9_-]+$/", $pass))
+if (!preg_match("/^[a-zA-Z0-9_-]+$/", $input['pass']))
     $rcodes[] = 3;
-if (!preg_match("/^[a-zA-Z0-9_-]+$/", $repass))
+if (!preg_match("/^[a-zA-Z0-9_-]+$/", $input['repass']))
     $rcodes[] = 4;
-if (!$email)
+if (!$input['email'])
     $rcodes[] = 12;
 
 tryExit();
 
 $sql = "SELECT COUNT(*) FROM `{$bd_names['users']}` "
-     . "WHERE `{$bd_users['login']}`=:login";
-     
-$line = getDB()->fetchRow($sql, array('login' => $login), 'num');
+        . "WHERE `{$bd_users['login']}`=:login";
+
+$line = getDB()->fetchRow($sql, array('login' => $input['login']), 'num');
 
 if ($line[0])
     aExit(5, lng('AUTH_EXIST_LOGIN'));
 
 $sql = "SELECT COUNT(*) FROM `{$bd_names['users']}` "
-     . "WHERE `{$bd_users['email']}`=:email";
-     
-$line = getDB()->fetchRow($sql, array('email' => $email), 'num');
+        . "WHERE `{$bd_users['email']}`=:email";
+
+$line = getDB()->fetchRow($sql, array('email' => $input['email']), 'num');
 
 if ($line[0])
     aExit(15, lng('AUTH_EXIST_EMAIL'));
 
-if ((strlen($login) < 4) or (strlen($login) > 15))
+if ((strlen($input['login']) < 4) or (strlen($input['login']) > 15))
     $rcodes[] = 6;
-if ((strlen($pass) < 4) or (strlen($pass) > 15))
+if ((strlen($input['pass']) < 4) or (strlen($input['pass']) > 15))
     $rcodes[] = 7;
-if ((strlen($repass) < 4) or (strlen($repass) > 15))
+if ((strlen($input['repass']) < 4) or (strlen($input['repass']) > 15))
     $rcodes[] = 8;
-if (strlen($email) > 50)
+if (strlen($input['email']) > 50)
     $rcodes[] = 13;
-if (strcmp($pass, $repass))
+if (strcmp($input['pass'], $input['repass']))
     $rcodes[] = 9;
 
 tryExit();
@@ -155,14 +157,14 @@ $sql = "INSERT INTO `{$bd_names['users']}` ("
         . "`{$bd_users['female']}`,"
         . "`{$bd_users['ctime']}`,"
         . "`{$bd_users['group']}`) VALUES(:login, :pass, :ip, '$female', NOW(),'$group')";
-        
- $result = getDB()->ask($sql, array(
-     'login' => $login, 
-     'pass' => MCRAuth::createPass($pass), 
-     'ip' => GetRealIp()
- ));
- 
- if (!$result)
+
+$result = getDB()->ask($sql, array(
+    'login' => $input['login'],
+    'pass' => MCRAuth::createPass($input['pass']),
+    'ip' => GetRealIp()
+        ));
+
+if (!$result)
     aExit(14);
 
 $tmp_user = new User(getDB()->lastInsertId());
@@ -172,13 +174,13 @@ $next_reg = (int) sqlConfigGet('next-reg-time');
 
 if ($next_reg > 0)
     getDB()->ask("INSERT INTO `{$bd_names['ip_banning']}` (`IP`,`time_start`,`ban_until`) "
-               . "VALUES (:ip, NOW(), NOW()+INTERVAL $next_reg HOUR)", array('ip' => $_SERVER['REMOTE_ADDR']));
+            . "VALUES (:ip, NOW(), NOW()+INTERVAL $next_reg HOUR)", array('ip' => $_SERVER['REMOTE_ADDR']));
 
 if (!$verification)
     aExit(0, lng('REG_COMPLETE') . '. <a href="#" class="btn" onclick="Login();">' . lng('ENTER') . '</a>');
 else {
 
-    if ($tmp_user->changeEmail($email, true) > 1)
+    if ($tmp_user->changeEmail($input['email'], true) > 1)
         aExit(14, lng('MAIL_FAIL'));
 
     aExit(0, lng('REG_COMPLETE') . '. ' . lng('REG_CONFIRM_INFO'));

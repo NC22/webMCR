@@ -6,8 +6,7 @@ Options -Indexes
 php_flag register_globals off
 
 <IfModule mod_rewrite.c>
-
-    SetEnv HTTP_MOD_REWRITE On
+SetEnv HTTP_MOD_REWRITE On
 
 RewriteEngine on
 
@@ -29,5 +28,4 @@ RewriteRule  ^game/joinserver.jsp MineCraft/joinserver.php [L,NE]
 RewriteCond %{SCRIPT_FILENAME} !-f
 RewriteCond %{SCRIPT_FILENAME} !-d
 RewriteRule ^(.*)$ index.php?mode=404&route=%{REQUEST_URI}
-
 </IfModule>

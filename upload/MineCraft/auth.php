@@ -15,15 +15,15 @@ function logExit($text, $output = "Bad login")
     exit($output);
 }
 
-if (empty($_POST['user']) or empty($_POST['password']) or empty($_POST['version']))
-    logExit("[auth.php] login process [Empty input] [ " . ((empty($_POST['user'])) ? 'LOGIN ' : '') . ((empty($_POST['password'])) ? 'PASSWORD ' : '') . ((empty($_POST['version'])) ? 'VER ' : '') . "]");
+$login = Filter::input('user');
+$password = Filter::input('password');
+$ver = Filter::input('version');
+
+if (empty($password) or empty($ver) or empty($login))
+    logExit("[auth.php] login process [Empty input] [ " . ((empty($login)) ? 'LOGIN ' : '') . ((empty($password)) ? 'PASSWORD ' : '') . ((empty($ver)) ? 'VER ' : '') . "]");
 
 loadTool('user.class.php');
 DBinit('auth');
-
-$login = $_POST['user'];
-$password = $_POST['password'];
-$ver = $_POST['version'];
 
 if (!preg_match("/^[a-zA-Z0-9_-]+$/", $login) or
     !preg_match("/^[a-zA-Z0-9_-]+$/", $password) or

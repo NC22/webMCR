@@ -1,8 +1,11 @@
 <?php
 /* WEB-APP : WebMCR (С) 2013-2014 NC22 | License : GPLv3 */
+require('./system.php');
 
-if (empty($_POST['method']) and empty($_GET['method'])) exit;
-$method = (isset($_POST['method']))? $_POST['method'] : $_GET['method'];
+$method = Filter::input('method', 'post', 'string', true);
+if ($method === false) $method = Filter::input('method', 'get', 'string', true);
+
+if (!$method) exit;
 
 switch ($method) {
     case 'comment':
@@ -13,8 +16,7 @@ switch ($method) {
     case 'upload':
     case 'like':
     case 'delete_file':
-
-        require('./system.php');
+        
         loadTool('ajax.php');
         loadTool('user.class.php');
 
@@ -51,8 +53,8 @@ switch ($method)
         if (empty($user) or $user->lvl() < 15) break; 
 
         $file 	= new File(false, 'other/');
-        $id_rewrite = (isset($_POST['nf_delete']))? true : false;
-        $id_word 	= (!empty($_POST['nf_id_word']))? $_POST['nf_id_word'] : false;
+        $id_rewrite = Filter::input('nf_delete', 'post', 'bool'); 
+        $id_word  = Filter::input('nf_id_word', 'post', 'string', true);
 
         $result = $file->Create('new_file', $user->id(), $id_word, $id_rewrite);
         $error  = '';
@@ -74,62 +76,56 @@ switch ($method)
         $ajax_message['file_id'] = $file_info['id'];	
         $ajax_message['file_name'] = $file_info['name'];
         $ajax_message['file_size'] = $file_info['size'];
-
         $ajax_message['file_html'] = $file->Show();
 
         aExit($result, $error);
     break;
     case 'like':
+        $id = Filter::input('id', 'post', 'int');
+        $type = Filter::input('type', 'post', 'int');
+        $dislike = Filter::input('dislike', 'post', 'bool');
 
-            if (empty($_POST['type']) or empty($_POST['id']) or !isset($_POST['dislike'])) break;
-            if (empty($user)) { 
-
-            aExit(3, 'Like not authed'); 
+        if (!$type or !$id)
             break;
-            }
+        if (empty($user)) {
 
-            $id			= (int)$_POST['id'];
-            $type		= (int)$_POST['type'];
-            $dislike	= ((int)$_POST['dislike'])? true : false;		
-            $item		= null;
+            aExit(3, 'Like not authed');
+            break;
+        }
 
-            if ($type == ItemType::News) {
+        $item = null;
+        if ($type == ItemType::News) {
+            loadTool('catalog.class.php');
+            $item = new News_Item($id);
+            
+        } elseif ($type == ItemType::Skin and isset($bd_names['sp_skins'])) {
+            loadTool('skinposer.class.php');
+            $item = new SPItem($id);
+        }
 
-                    loadTool('catalog.class.php');
-
-                    $item = new News_Item($id);
-
-            } elseif ($type == ItemType::Skin and isset($bd_names['sp_skins'])) {
-
-                    loadTool('skinposer.class.php');
-
-                    $item = new SPItem($id);
-            }
-
-            if ($item) aExit((int)$item->Like($dislike), 'Like');	
+        if ($item) aExit((int) $item->Like($dislike), 'Like');
     break;
     case 'download': 
+        $file = Filter::input('file', 'get');
+        if (empty($file)) break;
 
-            if (empty($_GET['file'])) break;
-
-            $file = new File($_GET['file']);
-            if (!$file->Download())	header("Location: ".BASE_URL."index.php?mode=404");
+        $file = new File($file);
+        if (!$file->Download()) header("Location: ".BASE_URL."index.php?mode=404");
     break;
     case 'delete_file':
+        $file = Filter::input('file', 'post');
+        if (!$file) break;
+        if (empty($user) or $user->lvl() < 15) break;
 
-            if (empty($_POST['file'])) break;
-            if (empty($user) or $user->lvl() < 15) break;
-
-            $file = new File((int)$_POST['file']);
-            if ($file->Delete()) aExit(0); else aExit(1);		
+        $file = new File($file);
+        if ($file->Delete()) aExit(0); else aExit(1);		
     break;
-    case 'restore':   
-
-        if (empty($_POST['email'])) aExit(1, lng('INCOMPLETE_FORM')); 
+    case 'restore':
+        
+        $email = Filter::input('email', 'post', 'mail', true);  
+        if (!$email) aExit(1, lng('INCOMPLETE_FORM')); 
 
         CaptchaCheck(2); 
-
-        $email = $_POST['email'];  
 
         $sql = "SELECT `{$bd_users['id']}` FROM `{$bd_names['users']}` "
              . "WHERE `{$bd_users['email']}`=:email";
@@ -153,107 +149,127 @@ switch ($method)
 
     break;
     case 'comment': 
+        
+        $comment = Filter::input('comment');
+        $item_type = Filter::input('item_type', 'post', 'int');
+        $item_id   = Filter::input('item_id', 'post', 'int');
 
-    if (empty($user) or empty($_POST['comment']) or empty($_POST['item_id']) or empty($_POST['item_type']) or empty($_POST['antibot'])) aExit(1, lng('MESS_FAIL')); 
+        CaptchaCheck(3);
 
-            loadTool('comment.class.php');
+        if (empty($user) or !$comment or !$item_type or !$item_id) aExit(1, lng('MESS_FAIL')); 
 
-            $comments_item = new Comments_Item(false, 'news/comments/');	
+        loadTool('comment.class.php');
 
-            $item_type = (int) $_POST['item_type'] ;
-            $item_id   = (int) $_POST['item_id']   ;		
-
-            $comments_item->aCreate($_POST['comment'], $user, $item_id, $item_type ); 
-            
+        $comments_item = new Comments_Item(false, 'news/comments/');
+        $comments_item->aCreate($comment, $user, $item_id, $item_type );
     break;
     case 'del_com':
+        $id = Filter::input('item_id', 'post', 'int');
+        if (empty($user) or !$id) aExit(1);		
 
-                if (empty($user) or empty($_POST['item_id'])) aExit(1);		
+        loadTool('comment.class.php');
 
-                loadTool('comment.class.php');
+        $comments_item = new Comments_Item($id);
 
-                $comments_item = new Comments_Item((int)$_POST['item_id']);
+        if (!$user->getPermission('adm_comm') and $comments_item->GetAuthorID() != $user->id()) aExit(1); 
 
-                if (!$user->getPermission('adm_comm') and $comments_item->GetAuthorID() != $user->id()) aExit(1); 
-
-                if ($comments_item->Delete()) aExit(0);	else aExit(1);  
+        if ($comments_item->Delete()) aExit(0);	else aExit(1);  
 
     break;
     case 'load_info':
+        
+        $id = Filter::input('id', 'post', 'int');
+        if (!$id) aExit(1, 'Empty POST param ID'); 
 
-        if (empty($_POST['id'])) aExit(1, 'Empty POST param ID'); 
+        loadTool('profile.class.php');
 
-                loadTool('profile.class.php');
+        $user_profile = new Profile($id, 'other/');
+        $ajax_message['player_info'] = $user_profile->Show();
 
-                $user_profile = new Profile((int) $_POST['id'], 'other/');
-                $ajax_message['player_info'] = $user_profile->Show();
-
-                aExit(0);
+        aExit(0);
 
     break;
     case 'profile': 
 
-        $ajax_message = array('code' => 0, 'message' => 'profile', 'name' => '', 'group' => '', 'id' => '', 'skin' => 0, 'cloak' => 0, 'skin_link' => '?none');
+        $ajax_message = array(
+            'code' => 0, 
+            'message' => 'profile', 
+            'name' => '', 
+            'group' => '', 
+            'id' => '', 
+            'skin' => 0, 
+            'cloak' => 0, 
+            'skin_link' => '?none',
+        );
 
         $rcodes = null;        
 
         if (empty($user) or $user->lvl() <= 0) aExit(1); 
 
         $mod_user = $user;
-
-        if ($user->lvl() >= 15 and !empty($_POST['user_id'])) 
-        $mod_user = new User((int) $_POST['user_id']);
-
-        if (!$mod_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
-
-        if (isset($_POST['profile_update_admin']) and $user->lvl() >= 15) {
-            
-            tokenTool('check');
-
-            if (isset($_POST['new_group'])) {
-
-                if ($mod_user->changeGroup((int) $_POST['new_group']))
-                    $rcodes[] = 1;
-            }
-            if (!empty($_POST['new_money'])) {
-
-                if ($mod_user->addMoney($_POST['new_money']))
-                    $rcodes[] = 1;
-            }
-            if (isset($_POST['new_gender'])) {
-
-                $newgender = (!(int) $_POST['new_gender']) ? 0 : 1;
-                if ($mod_user->changeGender($newgender))
-                    $rcodes[] = 1;
-            }
-            if (!empty($_POST['new_email']))
-                $rcodes[] = $mod_user->changeEmail($_POST['new_email']);
-        }
-
-        if (!empty($_POST['new_login']))
-            $rcodes[] = $mod_user->changeName($_POST['new_login']);
+        $user_id = Filter::input('user_id', 'post', 'int');
         
-        if (!empty($_POST['new_password'])) {
+        if ($user_id and $user->lvl() >= 15) {            
+            tokenTool('check');
+            
+            $mod_user = new User($user_id);
+            if (!$mod_user->id()) aExit(2, lng('USER_NOT_EXIST')); 
+            
+            $group = Filter::input('new_group', 'post', 'int', true);
+            $money = Filter::input('new_money', 'post', 'int');       
+            $gender = Filter::input('new_gender', 'post', 'int', true);
+            $mail = Filter::input('new_email', 'post', 'mail');
+                    
+            if ($group !== false) {
 
-            $oldpass = (!empty($_POST['old_password'])) ? $_POST['old_password'] : '';
-            $newpass = $_POST['new_password'];
-            $newrepass = (!empty($_POST['new_repassword'])) ? $_POST['new_repassword'] : '';
+                if ($mod_user->changeGroup($group))
+                    $rcodes[] = 1;
+            }
+            if ($money) {
 
-            if ($user->lvl() >= 15 and !empty($_POST['user_id']))
+                if ($mod_user->addMoney($money))
+                    $rcodes[] = 1;
+            }
+            if ($gender !== false) {
+
+                $gender = (!$gender) ? 0 : 1;
+                if ($mod_user->changeGender($gender))
+                    $rcodes[] = 1;
+            }
+            if ($mail)
+                $rcodes[] = $mod_user->changeEmail($mail);
+            
+            $ajax_message['token_data'] = tokenTool('get');
+        }
+        
+        $newlogin = Filter::input('new_login');
+        $newpass = Filter::input('new_password');
+        $delete_skin = Filter::input('new_delete_skin', 'post', 'bool');
+        $delete_cloak = Filter::input('new_delete_cloak', 'post', 'bool');
+        
+        if ($newlogin)
+            $rcodes[] = $mod_user->changeName($newlogin);
+        
+        if ($newpass) {
+
+            $oldpass = Filter::input('old_password');
+            $newrepass = Filter::input('new_repassword');
+
+            if ($user->lvl() >= 15 and $user_id)
                 $rcodes[] = $mod_user->changePassword($newpass);
             else
                 $rcodes[] = $mod_user->changePassword($newpass, $newrepass, $oldpass);
         }
 
         if (empty($_FILES['new_skin']['tmp_name']) and
-            !empty($_POST['new_delete_skin']) and 
+            $delete_skin and 
             !$mod_user->defaultSkinTrigger() and 
             $user->getPermission('change_skin'))
            
             $rcodes[] = $mod_user->setDefaultSkin();
 
         if (empty($_FILES['new_cloak']['tmp_name']) and 
-            !empty($_POST['new_delete_cloak']) and 
+            $delete_cloak and 
             $user->getPermission('change_cloak')) {
             $mod_user->deleteCloak();
             $rcodes[] = 1;
@@ -266,7 +282,7 @@ switch ($method)
             $rcodes[] = (int) $mod_user->changeVisual('new_cloak', 'cloak') . '1';
 
         $message = ''; 
-        $rnum    = sizeof($rcodes);
+        $rnum = sizeof($rcodes);
 
         for ($i=0; $i < $rnum; $i++) {
 

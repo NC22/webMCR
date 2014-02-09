@@ -70,17 +70,13 @@ if (!empty($user)) {
         $content_main .= View::ShowStaticPage('profile_verification.html', 'profile/', $player_email);
 }
 
-$mode = $config['s_dpage'];
-
-if (isset($_GET['id']))
+if (Filter::input('id', 'get', 'int')){
     $mode = 'news_full';
-elseif (isset($_GET['mode']))
-    $mode = $_GET['mode'];
-elseif (isset($_POST['mode']))
-    $mode = $_POST['mode'];
-
-if ($mode == 'side')
-    $mode = $config['s_dpage'];
+} else {
+    $mode = Filter::input('mode', 'post', 'string', true);
+    if ($mode === false) $mode = Filter::input('mode', 'get', 'string', true);
+    if (!$mode) $mode = $config['s_dpage'];
+}
 
 switch ($mode) {
     case 'start': $page = 'Начать игру';

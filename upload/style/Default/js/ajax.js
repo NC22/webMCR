@@ -312,13 +312,17 @@ function UpdateProfile(admTrg) {
         clearFileInputField('profile-cloak-file')
 
         GetById('profile-update').reset()
-
         GetById('main-error-text').className = 'alert alert-error'
 
         if (response != null) {
 
             if (response['code'] == 0)
                 GetById('main-error-text').className = 'alert alert-success'
+            
+            if (typeof response['token_data'] !== 'undefined') {
+                token_data = response['token_data']
+            }
+            
             if (response['code'] == 100) {
                 toggleButton('profile-button')
                 BlockVisible('main-error', false)
@@ -366,9 +370,7 @@ function UpdateProfile(admTrg) {
                     GetById('profile-mini').src = Mini.src
                 }
         }
-    }
-    
-    if (admTrg) addHiddenInput('profile_update_admin', '1', GetById('profile-update'))  
+    }    
     sendFormByIFrame('profile-update', event)
     return false
 }

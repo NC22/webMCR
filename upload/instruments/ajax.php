@@ -18,47 +18,48 @@ function escapeJsonString($value) { // экранирование строки J
     return $result;
   }
   
-function CaptchaCheck($exit_mess = 2, $ajaxExit = true, $post_name = 'antibot') { 
+function CaptchaCheck($exit_mess = 2, $ajaxExit = true, $post_name = 'antibot')
+{
+    if (!isset($_SESSION))
+        session_start();
+    
+    $input = Filter::input($post_name, 'post', 'int', true);
+    
+    if (empty($_SESSION['code']) or
+        $input === false or
+        $_SESSION['code'] != $input) {
 
-	if (!isset($_SESSION)) session_start();
-	
-	if ( empty($_SESSION['code']) or 
-         empty($_POST[$post_name]) or 
-         $_SESSION['code'] != (int)$_POST[$post_name] ) {
-       
-            if (isset($_SESSION['code'])) unset($_SESSION['code']);
-            if ($ajaxExit) 
-				
-				aExit($exit_mess, lng('CAPTCHA_FAIL'));
-				
-		
-		return false;
+        if (isset($_SESSION['code']))
+            unset($_SESSION['code']);
+        if ($ajaxExit)
+            aExit($exit_mess, lng('CAPTCHA_FAIL'));
+
+
+        return false;
     }
-	unset($_SESSION['code']);
-	return true;
+    unset($_SESSION['code']);
+    return true;
 }
 
-function aExit($code, $mess = 'error') {
-global $ajax_message;
+function aExit($code, $mess = 'error')
+{
+    global $ajax_message;
 
-	$iframe = isset($_POST['json_iframe']) ? true : false;
-	
-	$ajax_message['code']    = $code;
-	$ajax_message['message'] = ($mess == 'error')? $mess.' code: '.$code : $mess;
+    $iframe = Filter::input('json_iframe', 'post', 'bool');
 
-	if (defined('JSON_HEX_QUOT')) 
-  
-		$result = json_encode($ajax_message, JSON_HEX_QUOT | JSON_HEX_APOS | JSON_HEX_TAG);
-	
-	else
-  
-		$result =  json_encode($ajax_message);  
+    $ajax_message['code'] = $code;
+    $ajax_message['message'] = ($mess == 'error') ? $mess . ' code: ' . $code : $mess;
 
-   if ($iframe) {
+    if (defined('JSON_HEX_QUOT'))
+        $result = json_encode($ajax_message, JSON_HEX_QUOT | JSON_HEX_APOS | JSON_HEX_TAG);
+    else
+        $result = json_encode($ajax_message);
 
-   $result =  escapeJsonString($result);  
-   $result = '<html><head><title>jnone</title> <script type="text/javascript"> var json_response = "'. $result .'"</script></head><body></body></html>';
-   }
+    if ($iframe) {
 
-exit($result);
+        $result = escapeJsonString($result);
+        $result = '<html><head><title>jnone</title><script type="text/javascript"> var json_response = "' . $result . '"</script></head><body></body></html>';
+    }
+
+    exit($result);
 }

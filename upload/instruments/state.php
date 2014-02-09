@@ -4,8 +4,7 @@ require('../system.php');
 loadTool('ajax.php');
 loadTool('monitoring.class.php');
 
-if (empty($_POST['id'])) exit;
-$id = (int)$_POST['id'];
+$id = Filter::input('id', 'post', 'int', true) or exit;
 
 DBinit('monitoring');
 

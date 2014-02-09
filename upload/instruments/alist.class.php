@@ -80,7 +80,6 @@ class ThemeManager extends View
 
     private static function GetThemeDir($theme_id)
     {
-
         return MCR_STYLE . $theme_id . '/';
     }
 
@@ -123,14 +122,12 @@ class ThemeManager extends View
 
     private static function EndZipWorkAndDel($zipArchive, $fname)
     {
-
         $zipArchive->close();
         unlink($fname);
     }
 
     private static function GenerateTIDbyName($name)
     {
-
         if (!preg_match("/^[a-zA-Z0-9_-\s]+$/Usi", $name))
             return false;
         return str_replace(' ', '', $name);
@@ -138,7 +135,6 @@ class ThemeManager extends View
 
     public static function TInstall($post_name)
     {
-
         if (!POSTGood($post_name, array('zip')))
             return 1;
 
@@ -219,7 +215,6 @@ class ThemeManager extends View
 
     public static function DownloadTInstaller($theme_id)
     {
-
         $theme_info = self::GetThemeInfo($theme_id);
         if ($theme_info === false)
             return false;
