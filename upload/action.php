@@ -35,10 +35,7 @@ switch ($method) {
 
         break;
     case 'download':
-
-        require('./system.php');
         loadTool('upload.class.php');
-
         DBinit('action_download');
 
         break;
