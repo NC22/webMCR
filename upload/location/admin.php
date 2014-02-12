@@ -158,7 +158,7 @@ if ($do) {
 
             loadTool('skin.class.php');
 
-            if ($new_file_info and skinGenerator2D::isValidSkin($tmp_dir . $new_file_info['tmp_name']) and rename($tmp_dir . $new_file_info['tmp_name'], $default_skin)) {
+            if ($new_file_info and SkinViewer2D::isValidSkin($tmp_dir . $new_file_info['tmp_name']) and rename($tmp_dir . $new_file_info['tmp_name'], $default_skin)) {
 
                 chmod($default_skin, 0777);
                 $info .= lng('SKIN_CHANGED') . ' (' . ((!$female) ? lng('MALE') : lng('FEMALE')) . ') <br/>';

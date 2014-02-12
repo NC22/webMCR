@@ -798,8 +798,8 @@ Class User {
 
         loadTool('skin.class.php');
 
-        $new_file_ratio = ($type == 'skin') ? skinGenerator2D::isValidSkin($way) : skinGenerator2D::isValidCloak($way);
-        if (!$new_file_ratio or $new_file_ratio > (int) $this->getPermission('max_ratio')) {
+        $newImgInfo = ($type == 'skin') ? SkinViewer2D::isValidSkin($way) : SkinViewer2D::isValidCloak($way);
+        if (!$newImgInfo['scale'] or $newImgInfo['scale'] > (int) $this->getPermission('max_ratio')) {
 
             unlink($way);
             return 1602;

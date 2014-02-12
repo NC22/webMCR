@@ -1,180 +1,301 @@
 <?php
-/* WEB-APP : WebMCR (С) 2013-2014 NC22 | License : GPLv3 */
+ /** 
+ * @category  MineCraft tools
+ * @package   webMCR
+ * @author    Rubchuk Vladimir <torrenttvi@gmail.com>
+ * @copyright 2013-2014 Rubchuk Vladimir
+ * @version 1.0
+ * @license   GPLv3
+ */
 
-if (!defined('MCR')) exit;
+class SkinViewer2D
+{
+    /* Допустимые пропорции образа */
 
-class skinGenerator2D {
+    const SKIN_BASE = 64;
+    const SKIN_PROP = 2; // 64 / 32 
 
-/* Valid Skin proportions */
+    /*
+     * Массив допустимых пропорций плаща (для плаща в MC нет четкой привязки к размеру) 
+     * Некоторые плащи используют соотношение 22x17, тогда как обычно используется 
+     * соотношение 64x32 с незаполненным пространством
+     */
 
-const SKIN_BASE = 64;
-const SKIN_PROP = 2; // 64 / 2 
+    private static $cloakProps = array(
+        0 => array('base' => 64, 'ratio' => 2),
+        1 => array('base' => 22, 'ratio' => 1.29),
+    );
 
-/* Valid Cloak proportions */
+    /**
+     * Создает изображение головы; вид спереди
+     * @param string $way_skin полный путь до файла изображения скина
+     * @param int $size размер возвращаемого изображения в пикселях
+     * @return resource Возвращает идентификатор GD image при успешном результате и <b>false</b> при ошибке 
+     */
+    
+    public static function createHead($way_skin, $size = 151)
+    {
+        if (!$info = self::isValidSkin($way_skin))
+            return false;
 
-const CLOAK_BASE = 22;
-const CLOAK_PROP = 1.29; // 22 / 17
+        $im = @imagecreatefrompng($way_skin);
+        if (!$im)
+            return false;
 
-	private static function ratio($file, $baze = 64, $prop = 2) {
+        $av = imagecreatetruecolor($size, $size);
+        $mp = $info['scale'];
 
-	$input_size = @getimagesize($file);
+        imagecopyresized($av, $im, 0, 0, 8 * $mp, 8 * $mp, $size, $size, 8 * $mp, 8 * $mp);
+        imagecopyresized($av, $im, 0, 0, 40 * $mp, 8 * $mp, $size, $size, 8 * $mp, 8 * $mp);
+        imagedestroy($im);
 
-	if (empty($input_size)) return false;
+        return $av;
+    }
 
-	if (round($input_size[0] / $input_size[1], 2) != round($prop,2)) return false;
-	else if ($input_size[0] < $baze) return false;
+    /**
+     * Создать видовое изображение из скина; фронтальный \ задний вид  
+     * @param string $way_skin полный путь до файла изображения скина
+     * @param string $way_cloak полный путь до файла изображения плаща ( при необходимости )
+     * @param string $side вид спереди - front \ вид сзади - back \ по умолчанию оба вида на одном изображении последовательно
+     * @param int $size высота возвращаемого изображения в пикселях (ширина пропорцианальна задаваемой высоте и завист так же от параметра $side)
+     * @return resource Возвращает идентификатор GD image при успешном результате и <b>false</b> при ошибке
+     */
+    
+    public static function createPreview($way_skin, $way_cloak = false, $side = false, $size = 224)
+    {
+        if (!$info = self::isValidSkin($way_skin))
+            return false;
 
-	$mp = $input_size[0] / $baze;
+        $skin = @imagecreatefrompng($way_skin);
+        if (!$skin)
+            return false;
 
-	return $mp;
-	}
+        $mp = $info['scale'];
+        $size_x = (($side) ? 16 : 32);
+        $preview = imagecreatetruecolor($size_x * $mp, 32 * $mp);
+        $mp_x_h = ($side) ? 0 : imagesx($preview) / 2;
 
-	private static function imageflip(&$result, &$img, $rx = 0, $ry = 0, $x = 0, $y = 0, $size_x = null, $size_y = null) {
-	
-	if ($size_x  < 1) $size_x = imagesx($img);
-	if ($size_y  < 1) $size_y = imagesy($img);
-	 
-		imagecopyresampled($result, $img, $rx, $ry, ($x + $size_x-1), $y, $size_x, $size_y, 0-$size_x, $size_y);
-	}
-	
-	private static function half_x_image( $image, $side = 1 ) {
+        $transparent = imagecolorallocatealpha($preview, 255, 255, 255, 127);
+        imagefill($preview, 0, 0, $transparent);
 
-	 $size_x = round( imagesx( $image ) / 2 ); $size_y = imagesy( $image );
-	 
-	 $x_add = 0; if ( $side == 2 ) $x_add = $size_x;
-	 
-	 $new_image = imagecreatetruecolor($size_x, $size_y);
-	 imagesavealpha($new_image, true);
-	 imagefill($new_image, 0, 0, imagecolorallocatealpha($new_image, 255, 255, 255, 127)); 
-	 imagecopy($new_image, $image, 0, 0, 0 + $x_add, 0, $size_x, $size_y);
+        if (!$side or $side === 'front') {
 
-	 return $new_image;
-	}
-	
-	public static function createHead($way_skin, $size = 151) {
+            imagecopy($preview, $skin, 4 * $mp, 0 * $mp, 8 * $mp, 8 * $mp, 8 * $mp, 8 * $mp);
+            imagecopy($preview, $skin, 0 * $mp, 8 * $mp, 44 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            self::imageflip($preview, $skin, 12 * $mp, 8 * $mp, 44 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            imagecopy($preview, $skin, 4 * $mp, 8 * $mp, 20 * $mp, 20 * $mp, 8 * $mp, 12 * $mp);
+            imagecopy($preview, $skin, 4 * $mp, 20 * $mp, 4 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            self::imageflip($preview, $skin, 8 * $mp, 20 * $mp, 4 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            imagecopy($preview, $skin, 4 * $mp, 0 * $mp, 40 * $mp, 8 * $mp, 8 * $mp, 8 * $mp);
+        }
+        if (!$side or $side === 'back') {
 
-	if (!file_exists($way_skin) or !$mp = self::ratio($way_skin, self::SKIN_BASE, self::SKIN_PROP)) return false;
+            imagecopy($preview, $skin, $mp_x_h + 4 * $mp, 8 * $mp, 32 * $mp, 20 * $mp, 8 * $mp, 12 * $mp);
+            imagecopy($preview, $skin, $mp_x_h + 4 * $mp, 0 * $mp, 24 * $mp, 8 * $mp, 8 * $mp, 8 * $mp);
+            self::imageflip($preview, $skin, $mp_x_h + 0 * $mp, 8 * $mp, 52 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            imagecopy($preview, $skin, $mp_x_h + 12 * $mp, 8 * $mp, 52 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            self::imageflip($preview, $skin, $mp_x_h + 4 * $mp, 20 * $mp, 12 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            imagecopy($preview, $skin, $mp_x_h + 8 * $mp, 20 * $mp, 12 * $mp, 20 * $mp, 4 * $mp, 12 * $mp);
+            imagecopy($preview, $skin, $mp_x_h + 4 * $mp, 0 * $mp, 56 * $mp, 8 * $mp, 8 * $mp, 8 * $mp);
+        }
 
-		 $im = @imagecreatefrompng($way_skin);
-	if (!$im)  return false; 
+        if ($way_cloak and !$info = self::isValidCloak($way_cloak)) {
+            $way_cloak = null;
+        } else {
+            $mp_cloak = $info['scale'];
+        }
 
-	$av = imagecreatetruecolor($size, $size);
+        $cloak = @imagecreatefrompng($way_cloak);
+        if (!$cloak)
+            $way_cloak = null;
 
-	imagecopyresized($av, $im, 0, 0, 8 *$mp, 8 *$mp, $size, $size, 8 *$mp, 8 *$mp); 
-	imagecopyresized($av, $im, 0, 0, 40*$mp, 8 *$mp, $size, $size, 8 *$mp, 8 *$mp);  
+        if ($way_cloak) {
 
-	imagedestroy($im);
+            if ($mp_cloak > $mp) { // cloak bigger              
+                $mp_x_h = ($side) ? 0 : ($size_x * $mp_cloak) / 2;
+                $mp_result = $mp_cloak;
+            } else {
+                $mp_x_h = ($side) ? 0 : ($size_x * $mp) / 2;
+                $mp_result = $mp;
+            }
 
-	return $av;
-	}
-	
-	public static function createPreview($way_skin, $way_cloak = false, $size = 224) {
-	
-	if (!file_exists($way_skin) or !$mp = self::ratio($way_skin, self::SKIN_BASE, self::SKIN_PROP) ) 
-	
-	return false;
-	
-	if (!$way_cloak or !file_exists($way_cloak) or !$mp_cloak = self::ratio($way_cloak, self::CLOAK_BASE, self::CLOAK_PROP)) 
-	
-	$way_cloak = false;
-	
-	else {
-			  $cloak = @imagecreatefrompng($way_cloak);
-		 if (!$cloak) $way_cloak = false;
-	}
+            $preview_cloak = imagecreatetruecolor($size_x * $mp_result, 32 * $mp_result);
+            $transparent = imagecolorallocatealpha($preview_cloak, 255, 255, 255, 127);
+            imagefill($preview_cloak, 0, 0, $transparent);
 
-		 $skin = @imagecreatefrompng($way_skin);
-	if (!$skin)  return false; 
+            // ex. copy front side of cloak to new image
 
-	$mp_x = 32 *$mp; $mp_y = 32 *$mp; $mp_x_h = $mp_x / 2;
+            if (!$side or $side === 'front')
+                imagecopyresized(
+                    $preview_cloak, // result image
+                    $cloak, // source image
+                    round(3 * $mp_result), // start x point of result
+                    round(8 * $mp_result), // start y point of result
+                    round(12 * $mp_cloak), // start x point of source img
+                    round(1 * $mp_cloak), // start y point of source img
+                    round(10 * $mp_result), // result <- width ->
+                    round(16 * $mp_result), // result /|\ height \|/
+                    round(10 * $mp_cloak), // width of cloak img (from start x \ y) 
+                    round(16 * $mp_cloak) // height of cloak img (from start x \ y) 
+                );
 
-	$preview = imagecreatetruecolor($mp_x, $mp_y);
+            imagecopyresized($preview_cloak, $preview, 0, 0, 0, 0, imagesx($preview_cloak), imagesy($preview_cloak), imagesx($preview), imagesy($preview));
 
-	$transparent = imagecolorallocatealpha($preview, 255, 255, 255, 127);
-	imagefill($preview, 0, 0, $transparent);
+            if (!$side or $side === 'back')
+                imagecopyresized(
+                    $preview_cloak, 
+                    $cloak, 
+                    $mp_x_h + 3 * $mp_result, 
+                    round(8 * $mp_result), 
+                    round(1 * $mp_cloak), 
+                    round(1 * $mp_cloak), 
+                    round(10 * $mp_result), 
+                    round(16 * $mp_result), 
+                    round(10 * $mp_cloak), 
+                    round(16 * $mp_cloak)
+                );
 
-	if ($way_cloak)
-	
-	imagecopyresized($preview, $cloak, 3 *$mp, 8 *$mp, 12 *$mp_cloak, 1 *$mp_cloak, 10 *$mp, 16 *$mp, 10 *$mp_cloak, 16 *$mp_cloak);
+            $preview = $preview_cloak;
+        }
 
-	imagecopy($preview, $skin, 4 *$mp, 0  *$mp, 8  *$mp, 8  *$mp, 8 *$mp, 8  *$mp);
-	imagecopy($preview, $skin, 0 *$mp, 8  *$mp, 44 *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	self::imageflip($preview, $skin, 12*$mp, 8  *$mp, 44 *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	imagecopy($preview, $skin, 4 *$mp, 8  *$mp, 20 *$mp, 20 *$mp, 8 *$mp, 12 *$mp);
-	imagecopy($preview, $skin, 4 *$mp, 20 *$mp, 4  *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	self::imageflip($preview, $skin, 8 *$mp, 20 *$mp, 4  *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	imagecopy($preview, $skin, 4 *$mp, 0  *$mp, 40 *$mp, 8  *$mp, 8 *$mp, 8  *$mp);
+        $size_x = ($side) ? $size / 2 : $size;
+        $fullsize = imagecreatetruecolor($size_x, $size);
 
-	imagecopy($preview, $skin, $mp_x_h + 4  *$mp, 8  *$mp, 32 *$mp, 20 *$mp, 8 *$mp, 12 *$mp);
-	imagecopy($preview, $skin, $mp_x_h + 4  *$mp, 0  *$mp, 24 *$mp, 8  *$mp, 8 *$mp, 8  *$mp);
-	self::imageflip($preview, $skin, $mp_x_h + 0  *$mp, 8  *$mp, 52 *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	imagecopy($preview, $skin, $mp_x_h + 12 *$mp, 8  *$mp, 52 *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	self::imageflip($preview, $skin, $mp_x_h + 4  *$mp, 20 *$mp, 12 *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	imagecopy($preview, $skin, $mp_x_h + 8  *$mp, 20 *$mp, 12 *$mp, 20 *$mp, 4 *$mp, 12 *$mp);
-	imagecopy($preview, $skin, $mp_x_h + 4  *$mp, 0  *$mp, 56 *$mp, 8  *$mp, 8 *$mp, 8  *$mp);
+        imagesavealpha($fullsize, true);
+        $transparent = imagecolorallocatealpha($fullsize, 255, 255, 255, 127);
+        imagefill($fullsize, 0, 0, $transparent);
 
-	if ($way_cloak)
-	imagecopyresized($preview, $cloak, $mp_x_h + 3*$mp, 8 *$mp, 1 *$mp_cloak, 1 *$mp_cloak, 10 *$mp, 16 *$mp, 10 *$mp_cloak, 16 *$mp_cloak);
+        imagecopyresized($fullsize, $preview, 0, 0, 0, 0, imagesx($fullsize), imagesy($fullsize), imagesx($preview), imagesy($preview));
 
-	$fullsize = imagecreatetruecolor($size, $size);
+        imagedestroy($preview);
+        imagedestroy($skin);
+        if ($way_cloak)
+            imagedestroy($cloak);
 
-	imagesavealpha($fullsize, true);
-	$transparent = imagecolorallocatealpha($fullsize, 255, 255, 255, 127);
-	imagefill($fullsize, 0, 0, $transparent);
+        return $fullsize;
+    }
 
-	imagecopyresized($fullsize, $preview, 0, 0, 0, 0, imagesx($fullsize), imagesy($fullsize), imagesx($preview), imagesy($preview));
+    /**
+     * Сохранить изображение в формате png; отрисованое по правилам createPreview
+     * @param string $way_save путь до сохраняемого файла
+     * @param string $way_skin полный путь до файла изображения скина
+     * @param string $way_cloak полный путь до файла изображения плаща ( при необходимости )
+     * @param string $side вид спереди - front \ вид сзади - back \ по умолчанию обе стороны
+     * @param int $size высота возвращаемого изображения в пикселях (ширина пропорцианальна задаваемой высоте и завист так же от параметра $side)
+     * @return resource Возвращает идентификатор GD image при успешном результате и <b>false</b> при ошибке
+     */
+    
+    public static function savePreview($way_save, $way_skin, $way_cloak = false, $side = false, $size = 224)
+    {
+        if (file_exists($way_save))
+            unlink($way_save);
 
-	imagedestroy($preview);
-	imagedestroy($skin);
-	if ($way_cloak) imagedestroy($cloak);
+        $new_skin = self::createPreview($way_skin, $way_cloak, $side, $size);
+        if (!$new_skin)
+            return false;
 
-	return $fullsize;
-	}
-	
-	public static function savePreview($way_save, $way_skin, $way_cloak = false, $side = false, $size = 224) {
-	
-	if (file_exists($way_save)) unlink($way_save); 
-	
-	$new_skin = self::createPreview($way_skin, $way_cloak, $size);
-	if (!$new_skin) return false;
-	
-	if ($side) $new_skin = half_x_image( $new_skin, $side);
-		
-	if (!$new_skin) return false;
-		
-	imagepng($new_skin, $way_save); 
-	return $new_skin; 	
-	}	
-	
-	public static function saveHead($way_save, $way_skin, $size = 151) {
-	
-	if (file_exists($way_save)) unlink($way_save); 
-	
-	$new_head = self::createHead($way_skin, $size);
-	if (!$new_head) return false;
-		
-	imagepng($new_head, $way_save); 
-	return $new_head; 	
-	}
+        imagepng($new_skin, $way_save);
+        return $new_skin;
+    }
 
-	public static function isValidSkin($way_skin) {
+    /**
+     * Сохранить изображение в формате png; отрисованое по правилам createHead
+     * @param int $size размер возвращаемого изображения в пикселях для одной стороны
+     * @param string $way_save путь до сохраняемого файла
+     * @param string $way_skin полный путь до файла изображения скина
+     * @return resource Возвращает идентификатор GD image при успешном результате и <b>false</b> при ошибке
+     */
+    
+    public static function saveHead($way_save, $way_skin, $size = 151)
+    {
+        if (file_exists($way_save))
+            unlink($way_save);
 
-	if (!file_exists($way_skin)) return false; 
-	
-	$ratio = self::ratio($way_skin, self::SKIN_BASE, self::SKIN_PROP);
+        $new_head = self::createHead($way_skin, $size);
+        if (!$new_head)
+            return false;
 
-	if (!$ratio) return false;
+        imagepng($new_head, $way_save);
+        return $new_head;
+    }
 
-	return $ratio; 	
-	}	
-	
-	public static function isValidCloak($way_cloak) {
-	
-	if (!file_exists($way_cloak)) return false; 
-	
-	$ratio = self::ratio($way_cloak, self::CLOAK_BASE, self::CLOAK_PROP);
-	if (!$ratio) return false;
+    /**
+     * Проверить, является ли файл изображением, с соответствующими для скина пропорциями
+     * @param string $way_skin полный путь до файла изображения скина
+     * @return array Если файл не проходит проверку возвращает <b>false</b>, иначе возвращает массив пропорций изображения 
+     */
+    
+    public static function isValidSkin($way_skin)
+    {
+        if (!file_exists($way_skin))
+            return false;
 
-	return $ratio; 	
-	}	
+        if (!$imageSize = self::getImageSize($way_skin))
+            return false;
+        if (round(self::SKIN_PROP, 2) != self::getRatio($imageSize))
+            return false;
+
+        return array(
+            'ratio' => self::getRatio($imageSize),
+            'scale' => self::getScale($imageSize, self::SKIN_BASE),
+        );
+    }
+
+    /**
+     * Проверить, является ли файл изображением, с соответствующими для плащя пропорциями
+     * @param string $way_cloak полный путь до файла изображения плаща
+     * @return array Если файл не проходит проверку возвращает <b>false</b>, иначе возвращает массив пропорций изображения
+     */
+    
+    public static function isValidCloak($way_cloak)
+    {
+        if (!file_exists($way_cloak))
+            return false;
+        if (!$imageSize = self::getImageSize($way_cloak))
+            return false;
+
+        for ($i = 0; $i < sizeof(self::$cloakProps); $i++) {
+            if (round(self::$cloakProps[$i]['ratio'], 2) != self::getRatio($imageSize))
+                continue;
+
+            return array(
+                'ratio' => self::$cloakProps[$i]['ratio'],
+                'scale' => self::getScale($imageSize, self::$cloakProps[$i]['base']),
+            );
+        }
+        return false;
+    }
+
+    private static function getScale($inputImg, $size)
+    {
+        if (!is_array($inputImg) and !$inputImg = self::getImageSize($inputImg))
+            return false;
+        return $inputImg[0] / $size;
+    }
+
+    private static function getRatio($inputImg)
+    {
+        if (!is_array($inputImg) and !$inputImg = self::getImageSize($inputImg))
+            return false;
+        return round($inputImg[0] / $inputImg[1], 2);
+    }
+
+    private static function getImageSize($file)
+    {
+        $imageSize = @getimagesize($file);
+
+        if (empty($imageSize))
+            return false;
+        return $imageSize;
+    }
+
+    private static function imageflip(&$result, &$img, $rx = 0, $ry = 0, $x = 0, $y = 0, $size_x = null, $size_y = null)
+    {
+        if ($size_x < 1)
+            $size_x = imagesx($img);
+        if ($size_y < 1)
+            $size_y = imagesy($img);
+
+        imagecopyresampled($result, $img, $rx, $ry, ($x + $size_x - 1), $y, $size_x, $size_y, 0 - $size_x, $size_y);
+    }
 }

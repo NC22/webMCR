@@ -259,7 +259,7 @@ function ConfigPostInt($postKey){
 
 function CreateAdmin($site_user)
 {
-    global $config, $bd_names, $bd_users, $info;
+    global $config, $bd_names, $bd_users, $info, $site_ways;
 
     $site_password = ConfigPostStr('site_password');
     $site_repassword = ConfigPostStr('site_repassword');
@@ -283,6 +283,12 @@ function CreateAdmin($site_user)
                 . "`{$bd_users['group']}`) "
                 . "VALUES('$site_user','$pass','127.0.0.1',3) "
                 . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass'");
+        
+        require MCR_ROOT.'instruments/user.class.php';
+        define('MCRAFT', MCR_ROOT . $site_ways['mcraft']);
+        $user = new User($site_user, $bd_users['login']);
+        $user->setDefaultSkin();
+        
         $result = true;
     }
 

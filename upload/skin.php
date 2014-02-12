@@ -1,6 +1,6 @@
 <?php
 
-header("Content-type: image/png");
+// header("Content-type: image/png");
 require('./system.php');
 
 function ShowSkinWithBuff()
@@ -10,7 +10,8 @@ function ShowSkinWithBuff()
     $skin = GetVisual('skin');
     if ($skin === false and $uInfo['name'] !== false)
         return; // user not exists - all users have default skin in skins dir
-
+    
+    
     loadTool('skin.class.php');
     $dir = MCRAFT . ( ($uInfo['female'] === false and $uInfo['name']) ? 'tmp/skin_buffer/' : 'tmp/skin_buffer/default/' );
     $buffer = $dir . ($uInfo['name'] ? $uInfo['name'] : 'Char') . ($uInfo['mini'] ? '_Mini' : '') . ($uInfo['female'] ? '_female' : '') . '.png';
@@ -19,9 +20,9 @@ function ShowSkinWithBuff()
         readfile($buffer);
         return;
     } elseif ($config['sbuffer'])
-        $image = ($uInfo['mini']) ? skinGenerator2D::saveHead($buffer, $skin) : skinGenerator2D::savePreview($buffer, $skin, GetVisual('cloak'));
+        $image = ($uInfo['mini']) ? SkinViewer2D::saveHead($buffer, $skin) : SkinViewer2D::savePreview($buffer, $skin, GetVisual('cloak'));
     else
-        $image = ($uInfo['mini']) ? skinGenerator2D::createHead($skin) : skinGenerator2D::createPreview($skin, GetVisual('cloak'));
+        $image = ($uInfo['mini']) ? SkinViewer2D::createHead($skin) : SkinViewer2D::createPreview($skin, GetVisual('cloak'));
 
     if ($image) {
         imagepng($image);
