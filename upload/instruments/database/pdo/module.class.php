@@ -18,21 +18,22 @@ class PDODriver implements DataBaseInterface
             if (isset($data['file'])) {
                 
                 $this->link = new PDO("sqlite:" . $data['file']);
-                $this->ask('PRAGMA encoding = "UTF-8";');
+                $this->query('PRAGMA encoding = "UTF-8";');
                 
             } else {
 
                 $this->link = new PDO("mysql:host={$data['host']};dbname={$data['db']}", $data['login'], $data['password']);
 
-                $this->ask("SET time_zone = '" . date('P') . "'");
-                $this->ask("SET character_set_client='utf8'");
-                $this->ask("SET character_set_results='utf8'");
-                $this->ask("SET collation_connection='utf8_general_ci'");
+                $this->query("SET time_zone = '" . date('P') . "'");
+                $this->query("SET character_set_client='utf8'");
+                $this->query("SET character_set_results='utf8'");
+                $this->query("SET collation_connection='utf8_general_ci'");
             }
 
             $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             $this->log('SQLError: ' . $e->getMessage());
+            throw new Exception($this->lastError);
             return false;
         }
         

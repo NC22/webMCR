@@ -17,10 +17,10 @@ class MySqlDriver extends mysqlDriverBase implements DataBaseInterface
             return false;            
         }
 
-        $this->ask("SET time_zone = '" . date('P') . "'");
-        $this->ask("SET character_set_client='utf8'");
-        $this->ask("SET character_set_results='utf8'");
-        $this->ask("SET collation_connection='utf8_general_ci'");
+        $this->query("SET time_zone = '" . date('P') . "'");
+        $this->query("SET character_set_client='utf8'");
+        $this->query("SET character_set_results='utf8'");
+        $this->query("SET collation_connection='utf8_general_ci'");
 
         return true;
     }
