@@ -48,7 +48,9 @@ getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['news']}` (
   `user_id` bigint(20) NOT NULL,
   `dislikes` int(10) DEFAULT 0,
   `likes` int(10) DEFAULT 0,
-  `hide_vote` tinyint(1) NOT NULL DEFAULT 0,
+  `vote` tinyint(1) NOT NULL DEFAULT 0,
+  `comments` int(10) NOT NULL DEFAULT 0,
+  `discus` tinyint(1) NOT NULL DEFAULT 1,
   `hits` int(10) DEFAULT 0,
   `title` char(255) NOT NULL,
   `message` TEXT NOT NULL,
@@ -207,17 +209,16 @@ if (!getDB()->isColumnExist($bd_names['servers'], 'service_user')) {
     getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `hits` int(10) DEFAULT 0;");
 }
 
-if (!getDB()->isColumnExist($bd_names['news'], 'hide_vote'))
-    getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `hide_vote` tinyint(1) NOT NULL DEFAULT 0;");
-
 /* 2.31 UPDATE */
 if (!getDB()->isColumnExist($bd_names['comments'], 'item_type')) {
 
     getDB()->ask("ALTER TABLE `{$bd_names['comments']}` ADD `item_type` smallint(3) DEFAULT " . ItemType::News . ";");
     getDB()->ask("ALTER TABLE `{$bd_names['comments']}` DROP KEY `item_id`");
     getDB()->ask("ALTER TABLE `{$bd_names['comments']}` ADD KEY `uniq_item` (`item_id`, `item_type`);");
-
+    
+    if (getDB()->isColumnExist($bd_names['news'], 'hide_vote')) // change deprecated field name
     getDB()->ask("ALTER TABLE `{$bd_names['news']}` CHANGE COLUMN `hide_vote` `vote` tinyint(1) NOT NULL DEFAULT 1;");
+    
     getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `discus` tinyint(1) NOT NULL DEFAULT 1;");
     getDB()->ask("ALTER TABLE `{$bd_names['news']}` ADD `comments` int(10) NOT NULL DEFAULT 0;");
 }

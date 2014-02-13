@@ -609,13 +609,13 @@ Class NewsManager extends View
 
             include $this->GetView('news_admin_mess.html');
             $error = ob_get_clean();
-        } elseif (Filter::input('delete', 'get', 'bool')) {
+        } elseif (Filter::input('delete', 'get', 'int')) {
 
             $news_item = new News_Item(Filter::input('delete', 'get', 'int'));
             $news_item->Delete();
 
             header("Location: " . $this->work_link . "ok");
-        } elseif (Filter::input('edit', 'get', 'bool')) {
+        } elseif (Filter::input('edit', 'get', 'int')) {
 
             $editorTitle = 'Обновить новость';
             $editorButton = 'Изменить';

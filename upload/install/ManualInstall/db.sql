@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `likes` int(10) DEFAULT 0,
   `title` char(255) NOT NULL,
   `vote` tinyint(1) NOT NULL DEFAULT 0,
+  `hits` int(10) DEFAULT 0,
   `discus` tinyint(1) NOT NULL DEFAULT 1,
   `comments` int(10) NOT NULL DEFAULT 0,
   `message` text NOT NULL,
@@ -136,7 +137,7 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 
 -- Игровая сессия --
 	
-  `clientToken` varchar(255) default NULL
+  `clientToken` varchar(255) default NULL,
   `session` varchar(255) default NULL,
   `server` varchar(255) default NULL,  
 
@@ -185,7 +186,7 @@ INSERT INTO `data` (`property`, `value`) VALUES
 ('rcon-pass', '0'),
 ('rcon-serv', '0');
 
-INSERT INTO `property` (`property`, `value`) VALUES
+INSERT INTO `data` (`property`, `value`) VALUES
 ('smtp-user', ''),
 ('smtp-pass', ''),
 ('smtp-host', 'localhost'),

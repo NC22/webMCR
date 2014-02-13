@@ -143,7 +143,7 @@ if (strcmp($input['pass'], $input['repass']))
 
 tryExit();
 
-$verification = ((int) sqlConfigGet('email-verification')) ? true : false;
+$verification = (bool) sqlConfigGet('email-verification');
 
 if ($verification)
     $group = 4;
@@ -176,12 +176,11 @@ if ($next_reg > 0)
     getDB()->ask("INSERT INTO `{$bd_names['ip_banning']}` (`IP`,`time_start`,`ban_until`) "
             . "VALUES (:ip, NOW(), NOW()+INTERVAL $next_reg HOUR)", array('ip' => $_SERVER['REMOTE_ADDR']));
 
+    
+if ($tmp_user->changeEmail($input['email'], $verification) > 1)
+    aExit(14, lng('MAIL_FAIL'));
+
 if (!$verification)
     aExit(0, lng('REG_COMPLETE') . '. <a href="#" class="btn" onclick="Login();">' . lng('ENTER') . '</a>');
-else {
-
-    if ($tmp_user->changeEmail($input['email'], true) > 1)
-        aExit(14, lng('MAIL_FAIL'));
-
+else 
     aExit(0, lng('REG_COMPLETE') . '. ' . lng('REG_CONFIRM_INFO'));
-}
