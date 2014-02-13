@@ -115,6 +115,7 @@ getDB()->ask("CREATE TABLE IF NOT EXISTS `{$bd_names['comments']}` (
   `item_id` bigint(20) NOT NULL,
   `message` varchar(255) NOT NULL,
   `time` datetime DEFAULT NULL,
+  `item_type` smallint(3) DEFAULT " . ItemType::News . ",
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `item_id` (`item_id`)

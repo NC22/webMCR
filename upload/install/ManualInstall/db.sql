@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `message` varchar(255) NOT NULL,
   `item_type` smallint(3) DEFAULT 1,
   `time` datetime DEFAULT NULL,
+  `item_type` smallint(3) DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `uniq_item` (`item_id`, `item_type`)

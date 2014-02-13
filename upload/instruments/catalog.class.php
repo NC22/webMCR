@@ -1,15 +1,7 @@
 <?php
 if (!defined('MCR')) exit;
 
-/* Классы
- 
- - Менеджер каталогизатора новостей
- - Новость
- - Категории новостей 
-
-*/
-
-Class Category
+class Category
 {
     private $db;
     private $id = false;
@@ -198,7 +190,7 @@ class CategoryManager
 
 /* Класс записи в каталоге */
 
-Class News_Item extends Item
+class News_Item extends Item
 {
     private $category_id;
     private $discus;
@@ -509,7 +501,7 @@ Class News_Item extends Item
 
 /* Менеджер вывода записей из каталога */
 
-Class NewsManager extends View
+class NewsManager extends View
 {
 
     private $work_link;
@@ -693,5 +685,4 @@ Class NewsManager extends View
 
         return $html_news;
     }
-
 }

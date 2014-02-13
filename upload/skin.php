@@ -1,6 +1,6 @@
 <?php
 
-// header("Content-type: image/png");
+header("Content-type: image/png");
 require('./system.php');
 
 function ShowSkinWithBuff()

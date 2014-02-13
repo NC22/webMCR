@@ -1,11 +1,14 @@
 SET FOREIGN_KEY_CHECKS=0;
 
+ALTER TABLE `comments` ADD `item_type` smallint(3) DEFAULT 1;
+
 ALTER TABLE `news` ADD `category_id` int(10) NOT NULL DEFAULT 1;
 ALTER TABLE `news` ADD `user_id` bigint(20) NOT NULL;
 ALTER TABLE `news` ADD `dislikes` int(10) DEFAULT 0;
 ALTER TABLE `news` ADD `likes` int(10) DEFAULT 0;
 ALTER TABLE `news` ADD `hits` int(10) DEFAULT 0;
-ALTER TABLE `news` ADD `hide_vote` tinyint(1) NOT NULL DEFAULT 0;
+ALTER TABLE `news` ADD `vote` tinyint(1) NOT NULL DEFAULT 0;
+ALTER TABLE `news` ADD `discus` tinyint(1) NOT NULL DEFAULT 1;
 
 ALTER TABLE `accounts` ADD `female` tinyint(1) NOT NULL DEFAULT '2';
 ALTER TABLE `accounts` ADD `deadtry` tinyint(1) NOT NULL DEFAULT 0;
@@ -16,7 +19,6 @@ ALTER TABLE `accounts` ADD `active_last` datetime NOT NULL DEFAULT '0000-00-00 0
 ALTER TABLE `accounts` ADD `play_times` int(10) NOT NULL;
 ALTER TABLE `accounts` ADD `undress_times` int(10) NOT NULL;
 ALTER TABLE `accounts` ADD `default_skin` tinyint(1) NOT NULL DEFAULT '2';
-
 ALTER TABLE `accounts` ADD `clientToken` varchar(255) default NULL;
 
 ALTER TABLE `accounts` DROP `lvl`;
@@ -24,13 +26,13 @@ ALTER TABLE `accounts` DROP `lvl`;
 ALTER TABLE `ip_banning` ADD `ban_type` tinyint(1) NOT NULL DEFAULT 1;
 ALTER TABLE `ip_banning` ADD `reason` varchar(255) DEFAULT NULL;
 
-ALTER TABLE `news`	ADD KEY `category_id` (`category_id`),
-					ADD KEY `user_id` (`user_id`);
+ALTER TABLE `news` ADD KEY `category_id` (`category_id`), 
+                   ADD KEY `user_id` (`user_id`);
 					
-ALTER TABLE `comments`	ADD	KEY `user_id` (`user_id`),
-						ADD	KEY `item_id` (`item_id`);
+ALTER TABLE `comments`	ADD KEY `user_id` (`user_id`),
+                        ADD KEY `item_id` (`item_id`);
 
-ALTER TABLE `accounts`	ADD	KEY `group_id` (`group`);
+ALTER TABLE `accounts`  ADD KEY `group_id` (`group`);
 
 INSERT INTO `data` (`property`, `value`) VALUES
 ('next-reg-time', '2'),
