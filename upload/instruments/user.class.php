@@ -475,8 +475,7 @@ Class User {
             return false;
         }
     }
-    
-    /* is player use unique skin */
+
     public function defaultSkinTrigger($new_value = -1)
     { 
         global $bd_users;
@@ -489,21 +488,20 @@ Class User {
             $line = getDB()->fetchRow("SELECT `default_skin` FROM `{$this->db}` "
                     . "WHERE `{$bd_users['id']}`='{$this->id()}'", false, 'num');
 
-            $trigger = (int) $line[0];
+            $isDefault = (int) $line[0];
+        
+            if (!file_exists($this->getSkinFName())) {
+                $this->setDefaultSkin(); 
+                return true;
+            } elseif ($isDefault == 2) { 
+                $isDefault = false;            
+                if (!strcmp($this->defaultSkinMD5(), md5_file($this->getSkinFName())))
+                    $isDefault = true;   
 
-            if ($trigger == 2) {
-
-                if (!file_exists($this->getSkinFName()))
-                    $trigger = 1;
-                elseif (!strcmp($this->defaultSkinMD5(), md5_file($this->getSkinFName())))
-                    $trigger = 1;
-                else
-                    $trigger = 0;
-
-                getDB()->ask("UPDATE `{$this->db}` SET `default_skin`='$trigger' "
+                getDB()->ask("UPDATE `{$this->db}` SET `default_skin`='$isDefault' "
                         . "WHERE `{$bd_users['id']}`='{$this->id()}'");
             }
-            return ($trigger) ? true : false;
+            return ($isDefault) ? true : false;
         }
 
         $new_value = ($new_value) ? 1 : 0;
@@ -515,7 +513,6 @@ Class User {
 
     public function deleteBuffer()
     {
-
         $mini = MCRAFT . 'tmp/skin_buffer/' . $this->name . '_Mini.png';
         $skin = MCRAFT . 'tmp/skin_buffer/' . $this->name . '.png';
 
@@ -742,29 +739,18 @@ Class User {
     public function getSkinLink($mini = false, $amp = '&amp;', $refresh = false)
     {
         global $config;
-
-        $use_def_skin = $this->defaultSkinTrigger();
-        $name = $this->name();
-
-        $female = ($this->isFemale()) ? true : false;
-
+        
+        if ($this->exist() === false) return '';
+        
+        $female = ($this->isFemale()) ? '1' : '0';
         $get_p = '?';
 
-        if ($mini == true)
-            $get_p .= 'm=1';
-
-        if ($this->id() === false)
-            return $get_p;
-
-        if ($get_p !== '?')
-            $get_p .= $amp;
-        $way_skin = $this->getSkinFName();
-        $way_cloak = $this->getCloakFName();
-
-        if (($mini and $use_def_skin) or (!file_exists($way_cloak) and $use_def_skin))
-            $get_p .= 'female=' . (($female) ? '1' : '0');
+        if ($mini == true) $get_p .= 'm=1' . $amp;
+        
+        if ($this->defaultSkinTrigger() and ($mini or !file_exists($this->getCloakFName())))
+            $get_p .= 'female=' . $female;
         else
-            $get_p .= 'user_name=' . $name;
+            $get_p .= 'user_name=' . $this->name();
 
         if ($refresh)
             $get_p .= $amp . 'refresh=' . rand(1000, 9999);

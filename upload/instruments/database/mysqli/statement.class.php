@@ -1,11 +1,11 @@
 <?php
 
-class MySqliStatement extends mysqlDriverStm implements StatementInterface
+class MySqliStatement extends MysqlDriverStm implements StatementInterface
 {    
     protected static $modes = array (
-         'assoc' => MYSQLI_ASSOC,
-         'num' => MYSQLI_NUM,
-         'both' => MYSQLI_BOTH   
+        'assoc' => MYSQLI_ASSOC,
+        'num' => MYSQLI_NUM,
+        'both' => MYSQLI_BOTH   
     );
     
     protected $result = false;
@@ -24,6 +24,7 @@ class MySqliStatement extends mysqlDriverStm implements StatementInterface
     {
         $this->queryTpl = $queryTpl;
         $this->db = $dbHandler;
+        $this->modeList = self::$modes;
     }
     
     public function fetch($mode = null)
@@ -36,7 +37,7 @@ class MySqliStatement extends mysqlDriverStm implements StatementInterface
             return false;
         } 
         
-        return $this->result->fetch_array(self::$modes[$this->fetchMode]);
+        return $this->result->fetch_array($this->modeList[$this->fetchMode]);
     }
 
     public function rowCount()

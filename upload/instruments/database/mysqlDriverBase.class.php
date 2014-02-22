@@ -3,7 +3,7 @@
  * abstract class for mysql / mysqli module
  */
 
-abstract class mysqlDriverBase
+abstract class MysqlDriverBase
 {  
     protected $lastError = '';       
     protected $link = false;
@@ -60,7 +60,7 @@ abstract class mysqlDriverBase
             return false;
         }
 
-        $result = $this->fetchRow("SHOW FIELDS FROM `$table` WHERE Field =$column");
+        $result = $this->fetchRow("SHOW FIELDS FROM `$table` WHERE Field = '$column'");
 
         return $result['Type'];
     }

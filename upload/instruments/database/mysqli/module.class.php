@@ -1,5 +1,5 @@
 <?php
-class MySqliDriver extends mysqlDriverBase implements DataBaseInterface
+class MySqliDriver extends MysqlDriverBase implements DataBaseInterface
 {
     public function connect($data)
     {

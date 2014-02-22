@@ -1,6 +1,6 @@
 <?php
 
-class MySqlStatement extends mysqlDriverStm implements StatementInterface
+class MySqlStatement extends MysqlDriverStm implements StatementInterface
 {    
     protected static $modes = array (
         'assoc' => MYSQL_ASSOC,
@@ -24,6 +24,7 @@ class MySqlStatement extends mysqlDriverStm implements StatementInterface
     {
         $this->queryTpl = $queryTpl;
         $this->db = $dbHandler;
+        $this->modeList = self::$modes;
     }
     
     public function fetch($mode = false)
@@ -36,7 +37,7 @@ class MySqlStatement extends mysqlDriverStm implements StatementInterface
             return false;
         } 
         
-        $result = mysql_fetch_array($this->result, self::$modes[$this->fetchMode]);
+        $result = mysql_fetch_array($this->result, $this->modeList[$this->fetchMode]);
         if ($result === false) return null;
         else return $result;
     }

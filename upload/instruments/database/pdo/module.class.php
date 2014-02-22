@@ -15,21 +15,13 @@ class PDODriver implements DataBaseInterface
         }
 
         try {
-            if (isset($data['file'])) {
-                
-                $this->link = new PDO("sqlite:" . $data['file']);
-                $this->query('PRAGMA encoding = "UTF-8";');
-                
-            } else {
+            $this->link = new PDO("mysql:host={$data['host']};dbname={$data['db']}", $data['login'], $data['password']);
 
-                $this->link = new PDO("mysql:host={$data['host']};dbname={$data['db']}", $data['login'], $data['password']);
-
-                $this->query("SET time_zone = '" . date('P') . "'");
-                $this->query("SET character_set_client='utf8'");
-                $this->query("SET character_set_results='utf8'");
-                $this->query("SET collation_connection='utf8_general_ci'");
-            }
-
+            $this->query("SET time_zone = '" . date('P') . "'");
+            $this->query("SET character_set_client='utf8'");
+            $this->query("SET character_set_results='utf8'");
+            $this->query("SET collation_connection='utf8_general_ci'");
+            
             $this->link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             $this->log('SQLError: ' . $e->getMessage());
@@ -149,7 +141,7 @@ class PDODriver implements DataBaseInterface
             return false;
         }
 
-        $result = $this->fetchRow("SHOW FIELDS FROM `$table` WHERE Field =$column");
+        $result = $this->fetchRow("SHOW FIELDS FROM `$table` WHERE Field = '$column'");
 
         return $result['Type'];
     }

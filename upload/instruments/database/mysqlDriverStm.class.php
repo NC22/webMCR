@@ -3,7 +3,7 @@
  * abstract class for mysql / mysqli statement
  */
 
-abstract class mysqlDriverStm
+abstract class MysqlDriverStm
 {     
     protected $queryTpl = null;
     protected $dataPool = null;
@@ -88,7 +88,9 @@ abstract class mysqlDriverStm
      
     public function setFetchMode($mode = 'assoc')
     {
-        if (array_key_exists($mode, static::$modes)) {
+        // static::$modes not work with old php module, do dynamic
+        
+        if (array_key_exists($mode, $this->modeList)) { 
             $this->fetchMode = $mode;
             return true;
         }

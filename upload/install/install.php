@@ -366,8 +366,6 @@ switch ($step) {
                     include './CMS/sql/sql_common.php';
                     if (!$main_cms)
                         include './CMS/sql/sql_usual.php';
-
-                    include './18_fix.php';
                 }
             }
             break;
