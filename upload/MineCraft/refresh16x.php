@@ -42,7 +42,7 @@ $result = getDB()->fetchRow($sql, array(
 
 if (!$result) logExit("[refresh16x.php] refresh process, wrong accessToken/clientToken pair [$sessionid] [$clientToken]");
 
-$auth_user = new User($line[0]);
+$auth_user = new User($result[0]);
 
 $sessid = generateSessionId();
 getDB()->ask("UPDATE `{$bd_names['users']}` SET `{$bd_users['session']}`='$sessid' WHERE `{$bd_users['id']}`='" . $auth_user->id() . "'");
