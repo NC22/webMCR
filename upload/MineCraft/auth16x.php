@@ -49,7 +49,7 @@ $sessid = generateSessionId();
 
 getDB()->ask("UPDATE `{$bd_names['users']}` SET "
         . "`{$bd_users['session']}`=:session , "
-        . "`{$bd_users['clientToken']}`=:token"
+        . "`{$bd_users['clientToken']}`=:token "
         . "WHERE `{$BD_Field}`=:login", array(
     'session' => $sessid,
     'login' => $login,
