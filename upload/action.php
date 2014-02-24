@@ -110,7 +110,7 @@ switch ($method)
         if (!$file->Download()) header("Location: ".BASE_URL."index.php?mode=404");
     break;
     case 'delete_file':
-        $file = Filter::input('file', 'post');
+        $file = Filter::input('file', 'post', 'stringLow');
         if (!$file) break;
         if (empty($user) or $user->lvl() < 15) break;
 

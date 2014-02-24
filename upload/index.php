@@ -73,8 +73,8 @@ if (!empty($user)) {
 if (Filter::input('id', 'get', 'int')){
     $mode = 'news_full';
 } else {
-    $mode = Filter::input('mode', 'post', 'string', true);
-    if ($mode === false) $mode = Filter::input('mode', 'get', 'string', true);
+    $mode = Filter::input('mode', 'post', 'stringLow', true);
+    if ($mode === false) $mode = Filter::input('mode', 'get', 'stringLow', true);
     if (!$mode) $mode = $config['s_dpage'];
 }
 

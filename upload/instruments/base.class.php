@@ -433,15 +433,17 @@ class Message
 
     public static function BBDecode($text)
     {
+        $quote = '&#039;|&quot;|&#34;';
+        
         $text = preg_replace("/\[b\](.*)\[\/b\]/Usi", "<b>\\1</b>", $text);
         $text = preg_replace("/\[u\](.*)\[\/u\]/Usi", "<u>\\1</u>", $text);
         $text = preg_replace("/\[i\](.*)\[\/i\]/Usi", "<i>\\1</i>", $text);
         $text = preg_replace("/\[color=(\#[0-9A-F]{6}|[a-z]+)\](.*)\[\/color\]/Usi", "<span style=\"color:\\1\">\\2</span>", $text);
-        $text = preg_replace("/\[url=(?:&#039;|&quot;)http:\/\/([^<]+)(?:&#039;|&quot;)](.*)\[\/url]/Usi", "<a href=\"http://\\1\">\\2</a>", $text, 3);
+        $text = preg_replace("/\[url=(?:$quote)http:\/\/([^<]+)(?:$quote)](.*)\[\/url]/Usi", "<a href=\"http://\\1\">\\2</a>", $text, 3);
 
         $tmp = $text;
 
-        while (strcmp($text = preg_replace("/\[quote=(?:&#039;|&quot;)(.*)(?:&#039;|&quot;)\](.+?)\[\/quote\]/Uis", "<div class=\"comment-quote\"><div class=\"comment-quote-a\">\\1 сказал(a):</div><div class=\"comment-quote-c\">\\2</div></div>", $tmp), $tmp) != 0)
+        while (strcmp($text = preg_replace("/\[quote=(?:$quote)(.*)(?:$quote)\](.+?)\[\/quote\]/Uis", "<div class=\"comment-quote\"><div class=\"comment-quote-a\">\\1 сказал(a):</div><div class=\"comment-quote-c\">\\2</div></div>", $tmp), $tmp) != 0)
             $tmp = $text;
 
         return $text;
@@ -835,14 +837,36 @@ class Filter
             'sanitize' => FILTER_SANITIZE_STRING,
             'validate' => FILTER_VALIDATE_EMAIL,            
         ),
+        
         'html' => array(
             'default' => '',
             'sanitize' => null,
             'validate' => null,            
         ),
+        
+        'ip' => array(
+            'default' => '',
+            'sanitize' => FILTER_SANITIZE_STRING,
+            'sanitizeFlag' => FILTER_FLAG_STRIP_LOW,
+            'validate' => FILTER_VALIDATE_IP, 
+        ),
+        
+        'stringLow' => array(
+            'default' => '',
+            'sanitize' => FILTER_SANITIZE_STRING,
+            'sanitizeFlag' => FILTER_FLAG_STRIP_LOW,
+            'validate' => null,        
+        ),
+        
+        /**
+         * Used for plain UTF-8 text, if you want get html tags, use 'html' instead
+         * @todo strip low except new line and c carrage return
+         */ 
+        
         'string' => array(
             'default' => '',
             'sanitize' => FILTER_SANITIZE_STRING,
+            'sanitizeFlag' => FILTER_FLAG_NO_ENCODE_QUOTES,
             'validate' => null, 
         ),
     );
@@ -914,20 +938,11 @@ class Filter
             $html = preg_replace('#</*(' . implode('|', $fTags) . ')[^>]*>#i', "", $html);
         } while ($compare != $html);
     }
-    
-    public static function sanitize($key, $method, $type) 
-    { 
-        // get var if setted and sanitize it
         
-        $filter = self::$rules[$type]['sanitize'];
-        
-        if ($filter) {
-            $var = filter_input($method, $key, $filter);
-        } else {
-            $var = filter_input($method, $key);
-        }
-
-        return $var;
+    public static function str($var, $type = 'string', $falseOnFail = false) 
+    {
+        $var = self::sanitizeStr($var, $type);      
+        return self::validateStr($var, $type, $falseOnFail);
     }
     
     /**
@@ -944,17 +959,53 @@ class Filter
     
     public static function input($key, $method = 'post', $type = 'string', $falseOnFail = false)
     {
-        $var = self::sanitize($key, self::$methods[$method], $type, true);
+        $var = self::sanitizeInput($key, self::$methods[$method], $type, true);
+        return self::validateStr($var, $type, $falseOnFail);
+    }    
+
+    private static function sanitizeInput($key, $method, $type) 
+    { 
+        // get var if setted and sanitize it
         
-         // input is not set or filter fail or variable is empty - exit with default or optional value
+        $filter = self::$rules[$type]['sanitize'];
+        
+        if ($filter) {
+        
+            if (isset(self::$rules[$type]['sanitizeFlag'])) {
+                return filter_input($method, $key, $filter, self::$rules[$type]['sanitizeFlag']);
+            } else return filter_input($method, $key, $filter);
+            
+        } else {
+            return filter_input($method, $key);
+        }
+    }
+    
+    private static function sanitizeStr($var, $type) 
+    {
+        $filter = self::$rules[$type]['sanitize'];
+        
+        if ($filter) {            
+            
+            if (isset(self::$rules[$type]['sanitizeFlag'])) {
+                return filter_var($var, $filter, self::$rules[$type]['sanitizeFlag']);
+            } else return filter_var($var, $filter);
+            
+        } else {
+            return filter_var($var);
+        }
+    }
+    
+    private static function validateStr($var, $type, $falseOnFail)
+    {       
+        // input is not set or filter fail or variable is empty - exit with default or optional value
 
         if ($var === null or $var === false or !strlen($var)) { 
             return ($falseOnFail) ? false : self::$rules[$type]['default'];
         }
         
         $filter = self::$rules[$type]['validate'];
-        if ($filter) {
-            $var = filter_var($var, $filter);
+        if ($filter) {        
+            $var = filter_var($var, $filter);      
             
             if ($var === false) { // validation fail
                 return ($falseOnFail) ? false : self::$rules[$type]['default'];
@@ -970,11 +1021,13 @@ class Filter
             case 'html' :
                 self::html($var);
                 break;
+            case 'string':
+                preg_replace('/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/', '', $var); // remove all control symbols except new line and c return
             default:
                 $var = trim($var);
                 break;
-        }
-
+        } 
+        
         return $var;
     }
 }
