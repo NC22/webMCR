@@ -160,7 +160,7 @@ if ($do) {
 
             if ($new_file_info and SkinViewer2D::isValidSkin($tmp_dir . $new_file_info['tmp_name']) and rename($tmp_dir . $new_file_info['tmp_name'], $default_skin)) {
 
-                chmod($default_skin, 0777);
+                chmod($default_skin, 0644);
                 $info .= lng('SKIN_CHANGED') . ' (' . ((!$female) ? lng('MALE') : lng('FEMALE')) . ') <br/>';
 
                 if (file_exists($default_skin_md5))

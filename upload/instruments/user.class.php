@@ -478,10 +478,10 @@ Class User {
 
     public function defaultSkinTrigger($new_value = -1)
     { 
-        global $bd_users;
+        global $bd_users, $config;
 
-        if (!$this->id)
-            return false;
+        if (!$this->id) return false;
+        if (!$config['sbygender']) return !file_exists($this->getSkinFName()); 
 
         if ($new_value < 0) {
 
@@ -686,7 +686,7 @@ Class User {
         $this->gender = $female;
         $this->female = ($female) ? true : false;
 
-        $this->setDefaultSkin();
+        if ($config['sbygender']) $this->setDefaultSkin();
         return true;
     }
 
@@ -795,7 +795,7 @@ Class User {
         $new_way = ($type == 'skin') ? $this->getSkinFName() : $this->getCloakFName();
 
         if (rename($way, $new_way))
-            chmod($new_way, 0777);
+            chmod($new_way, 0644);
         else {
 
             unlink($way);

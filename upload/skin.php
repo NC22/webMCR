@@ -15,9 +15,17 @@ if ($showByName or $userId or $isFemale !== false) {
         DBinit('skin_viewer');
         loadTool('user.class.php');
         $tmp_user = new User($userId);
-        if (!$tmp_user->id()) exit;
-        if (!file_exists($tmp_user->getSkinFName())) $tmp_user->setDefaultSkin(); 
-        $showByName = $tmp_user->name();
+        if (!$tmp_user->id()) exit;        
+        $showByName = $tmp_user->name();     
+        
+        if (!file_exists($tmp_user->getSkinFName())) {
+        
+            if ($config['sbygender']) $tmp_user->setDefaultSkin(); 
+            else { 
+                $showByName = false; 
+                $isFemale = 1; 
+            }
+        }
     } 
     
     ShowSkin($showMini, $showByName, $isFemale, $config['sbuffer']);
@@ -25,11 +33,11 @@ if ($showByName or $userId or $isFemale !== false) {
 
 function ShowSkin($mini = false, $name = false, $isFemale = false, $saveBuffer = false)
 {   
-    global $site_ways;
-    
+    global $site_ways;    
     loadTool('skin.class.php');
-    
+
     if ($isFemale !== false) {
+    
         $cloak = false;
         $skin = MCRAFT . 'tmp/skin_buffer/default/Char' . (($isFemale) ? '_female' : '') . '.png';
         $buffer = MCRAFT . 'tmp/skin_buffer/default/Char' . ($mini ? '_Mini' : '') . ($isFemale ? '_female' : '') . '.png';
@@ -49,4 +57,3 @@ function ShowSkin($mini = false, $name = false, $isFemale = false, $saveBuffer =
 
     if ($image) imagepng($image);
 }
-

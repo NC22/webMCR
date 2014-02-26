@@ -170,7 +170,7 @@ if (!$result)
     aExit(14);
 
 $tmp_user = new User(getDB()->lastInsertId());
-$tmp_user->setDefaultSkin();
+if ($config['sbygender']) $tmp_user->setDefaultSkin();
 
 $next_reg = (int) sqlConfigGet('next-reg-time');
 

@@ -38,6 +38,7 @@ $config = array(
     'game_news' => 1,
     /* system */
     'timezone' => 'Asia/Vladivostok',
+    'sbygender' => true,
     'sbuffer' => true,
     'skinposer' => false,
     'rewrite' => true,
