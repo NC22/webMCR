@@ -1,8 +1,7 @@
 /*!
- * Bootstrap without jQuery v0.3.1
- * By Daniel Davis under MIT License
+ * Bootstrap jquery-free v1.0 (c) NC22
+ * This is fork of repository Bootstrap without jQuery v0.3.1
  * https://github.com/tagawa/bootstrap-without-jquery
- * addition methods By NC22
  */
 
 var setBootstrapEvents; // used for real-time events update
@@ -56,31 +55,64 @@ var setBootstrapEvents; // used for real-time events update
         return false;
     }
     
+    function getElementByMix(str) {
+    
+        if (!str) return false;
+        
+        var type = '.';
+        if (str.indexOf('#') > -1) var type = '#';
+        
+        var input = str.split(type)[1];
+        if (!input) return false;
+        
+        var elements;
+        
+        if (type == '.') { 
+        
+            elements = document.getElementsByClassName(input);
+            if (elements.length < 1) return false;
+            else return elements[0];
+            
+        } else if (type == '#') return GetById(input);
+        else return false;    
+    }
+    
     function toogleAccordion(event) {
 
         event = event || window.event;
         var target = event.currentTarget || event.srcElement;
-        var toogleId = target.href.split("#")
-        var element = GetById(toogleId[1])
+        
+        var element = getElementByMix(target.href);
+        if (!element) {
+            var element = getElementByMix(target.getAttribute('data-target')) // for single accordions prob.
+            if (!element) return false;
+        } 
         
         if (element.className.indexOf('in') > -1) {
             element.className = element.className.replace('in', '');
+            element.setAttribute("style", "height: 0px");
         } else {
             element.className += ' in';
+            element.setAttribute("style", "height: auto");
         }
         
-        var accordionGroup = target.getAttribute('data-parent')
-        
-        if (!accordionGroup) return false;
+        var accordionGroup = target.getAttribute('data-parent')        
+        if (!accordionGroup) return false; // so, this is single accord
             
         accordionGroup = accordionGroup.split("#")[1]
 
-    	var divList   = document.getElementsByTagName('DIV')
+    	var accordions = document.getElementsByClassName('accordion-group')
 
-        for (i=0; i<=divList.length-1; ++i){ 
-            if (divList[i].className.indexOf('accordion-body')  > -1 && divList[i].id !== element.id) {
-                divList[i].className = divList[i].className.replace('in', '');
-            }
+        for (var i=0; i<=accordions.length-1; ++i){ 
+        
+            var aBody = accordions[i].getElementsByClassName('accordion-body')
+            var aGroup = accordions[i].getElementsByClassName('accordion-toggle')
+            
+            if (!aBody.length || aBody[0].id !== element.id ) continue;
+            if (!aGroup.length || aGroup[0].getAttribute('data-parent') != accordionGroup ) continue;
+            
+            aBody[0].className = aBody[0].className.replace('in', '');
+            aBody[0].setAttribute("style", "height: 0px");
         }	    
         return false;
     }
@@ -89,10 +121,9 @@ var setBootstrapEvents; // used for real-time events update
 
         event = event || window.event;
         var target = event.currentTarget || event.srcElement;
-        var toogleId = target.href.split("#")
         var tabButton = target.parentElement
         var buttons = tabButton.parentElement.getElementsByTagName('li')
-        var element = GetById(toogleId[1])
+        var element = getElementByMix(target.href);
         
         if (tabButton.className.indexOf('active') > -1) {
             return false; 
@@ -111,8 +142,7 @@ var setBootstrapEvents; // used for real-time events update
             }
         } 
         
-        var tabGroup = element.parentElement
-        
+        var tabGroup = element.parentElement        
         if (!tabGroup) return false;
 
     	var divList   = document.getElementsByTagName('DIV')
@@ -160,7 +190,7 @@ var setBootstrapEvents; // used for real-time events update
             dropdown.onblur = closeDropdown;
         }
 
-        // Set event listeners for alert collapse
+        // Set event listeners for alert tabs
         var tabs = document.querySelectorAll('[data-toggle=tab]');
         for (var i = 0, len = tabs.length; i < len; i++) {
             tabs[i].onclick = toogleTab;
