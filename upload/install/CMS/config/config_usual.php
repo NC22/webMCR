@@ -18,6 +18,7 @@ $bd_names = array(
 );
 
 $config = array(
+
     /* MySQL connection */
 
     'db_host' => 'localhost',
@@ -25,7 +26,9 @@ $config = array(
     'db_login' => 'root',
     'db_passw' => '',
     'db_name' => 'mcraft',
+    
     /* site constants */
+    
     's_name' => 'MCR ' . MCR,
     's_about' => 'Личный кабинет для онлайн сервера игры Minecraft',
     's_keywords' => 'сервер игра онлайн NC22 Minecraft',
@@ -36,18 +39,21 @@ $config = array(
     'comm_by_page' => 5,
     'comm_revers' => false,
     'game_news' => 1,
+    
     /* system */
+    
     'timezone' => 'Asia/Vladivostok',
     'default_skin' => true,
     'sbuffer' => true,
-    'skinposer' => false,
     'rewrite' => true,
     'log' => false,
     'offline' => false,
     'install' => true,
     'p_logic' => 'usual',
     'smtp' => false,
+    
     /* action limiter */
+    
     'action_log' => false, // log connect with BD times and detect some fast users, possible bots
     'action_max' => 10, // maximum exec php script's times ( server monitorings, page refresh, profile edit and etc.)
     'action_time' => 1, // per seconds. 
