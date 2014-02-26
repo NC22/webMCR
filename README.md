@@ -1,7 +1,7 @@
 # webMCR
 
  - **Author** : NC22
- - **Version** : 2.35b
+ - **Version** : 2.4b
  - **Website** : [webMCR.com](http://webmcr.com)
  - **Wiki** : [github.com/NC22/webMCR/wiki](https://github.com/NC22/webMCR/wiki)
 
