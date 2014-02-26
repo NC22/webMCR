@@ -481,7 +481,7 @@ Class User {
         global $bd_users, $config;
 
         if (!$this->id) return false;
-        if (!$config['sbygender']) return !file_exists($this->getSkinFName()); 
+        if (!$config['default_skin']) return !file_exists($this->getSkinFName()); 
 
         if ($new_value < 0) {
 
@@ -491,7 +491,7 @@ Class User {
             $isDefault = (int) $line[0];
         
             if (!file_exists($this->getSkinFName())) {
-                $this->setDefaultSkin(); 
+                $this->setDefaultSkin();         
                 return true;
             } elseif ($isDefault == 2) { 
                 $isDefault = false;            
@@ -524,12 +524,18 @@ Class User {
 
     public function setDefaultSkin()
     {
-
-        if (!$this->id)
+        global $config;
+        
+        if (!$this->id) {
             return 0;
+        }
 
         $this->deleteSkin();
 
+        if (!$config['default_skin']) {
+            return 1;
+        }
+        
         $default_skin = MCRAFT . 'tmp/default_skins/Char' . (($this->isFemale()) ? '_female' : '') . '.png';
 
         if (!copy($default_skin, $this->getSkinFName()))
@@ -686,7 +692,7 @@ Class User {
         $this->gender = $female;
         $this->female = ($female) ? true : false;
 
-        if ($config['sbygender']) $this->setDefaultSkin();
+        $this->setDefaultSkin();
         return true;
     }
 

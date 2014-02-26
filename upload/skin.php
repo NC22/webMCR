@@ -20,7 +20,7 @@ if ($showByName or $userId or $isFemale !== false) {
         
         if (!file_exists($tmp_user->getSkinFName())) {
         
-            if ($config['sbygender']) $tmp_user->setDefaultSkin(); 
+            if ($config['default_skin']) $tmp_user->setDefaultSkin(); 
             else { 
                 $showByName = false; 
                 $isFemale = 1; 

@@ -303,7 +303,7 @@ function CreateAdmin($site_user)
         require MCR_ROOT.'instruments/user.class.php';
         define('MCRAFT', MCR_ROOT . $site_ways['mcraft']);
         $user = new User($site_user, $bd_users['login']);
-        if ($config['sbygender']) $user->setDefaultSkin();
+        $user->setDefaultSkin();
         
         $result = true;
     }
