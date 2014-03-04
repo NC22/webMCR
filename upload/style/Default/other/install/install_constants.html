@@ -26,7 +26,13 @@
             <label class="checkbox">
                 <input type="checkbox" name="sbuffer" value="1" <?php echo ($config['sbuffer'])?'checked="checked"':'' ?>> Буферизация генерируемых изображений
             </label>
+            
             <span class="help-block">Рекомендуется включить, если вы намерены разрешить использование HD скинов на вашем сайте.</span>
+            
+            <label class="checkbox">
+              <input type="checkbox" name="default_skin" value="1" <?php echo ($config['default_skin'])?'checked="checked"':'' ?>> Генерировать скин по умолчанию
+            </label>
+            <span class="help-block">Для пользователя в зависимости от пола, при регистрации будет устанавливаться скин, заданый в панели управления</span>            
 
             <button type="submit" class="btn">Продолжить</button>
 

@@ -427,15 +427,15 @@ if ($do) {
             /* POST data check */
             
             $serv_address = Filter::input('address');
-            $serv_port =  Filter::input('port', 'post', 'int');
-            $serv_method =  Filter::input('method', 'post', 'int');
+            $serv_port =  Filter::input('port', 'post', 'int');            
             
-            if ($serv_method and $serv_port and $serv_address) {
+            if ($serv_port and $serv_address) {
 
                 $serv_name = Filter::input('name');
                 $serv_info = Filter::input('info');
-                
+                $serv_method =  Filter::input('method', 'post', 'int');
                 $serv_rcon = Filter::input('rcon_pass');
+                
                 if ($serv_rcon and $serv_method != 2 and $serv_method != 3) $serv_rcon = false;
                 
                 $serv_s_user = Filter::input('json_user');
@@ -472,9 +472,10 @@ if ($do) {
                     if (!is_bool($serv_method))
                         $server->SetConnectMethod($serv_method, $serv_rcon, $serv_s_user);
 
-                    if ($serv_address and $serv_port)
+                    if ($serv_address and $serv_port) {
                         $server->SetConnectWay($serv_address, $serv_port);
-
+                    }
+                    
                     $info .= lng('SERVER_UPDATED');
                 } else {
 

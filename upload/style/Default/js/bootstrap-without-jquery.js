@@ -1,5 +1,5 @@
 /*!
- * Bootstrap jquery-free v1.0 (c) NC22
+ * Bootstrap jquery-free v1.05 (c) NC22
  * This is fork of repository Bootstrap without jQuery v0.3.1
  * https://github.com/tagawa/bootstrap-without-jquery
  */
@@ -99,7 +99,7 @@ var setBootstrapEvents; // used for real-time events update
         var accordionGroup = target.getAttribute('data-parent')        
         if (!accordionGroup) return false; // so, this is single accord
             
-        accordionGroup = accordionGroup.split("#")[1]
+        accordionGroup = accordionGroup.split("#")[1];
 
     	var accordions = document.getElementsByClassName('accordion-group')
 
@@ -107,9 +107,10 @@ var setBootstrapEvents; // used for real-time events update
         
             var aBody = accordions[i].getElementsByClassName('accordion-body')
             var aGroup = accordions[i].getElementsByClassName('accordion-toggle')
+
+            if (!aBody.length || aBody[0].id === element.id ) continue;
+            if (!aGroup.length || aGroup[0].getAttribute('data-parent').split("#")[1] != accordionGroup ) continue;
             
-            if (!aBody.length || aBody[0].id !== element.id ) continue;
-            if (!aGroup.length || aGroup[0].getAttribute('data-parent') != accordionGroup ) continue;
             
             aBody[0].className = aBody[0].className.replace('in', '');
             aBody[0].setAttribute("style", "height: 0px");
@@ -132,7 +133,7 @@ var setBootstrapEvents; // used for real-time events update
         if (element.className.indexOf('active') > -1) {
             element.className = element.className.replace('active', '');
         } else {
-            tabButton.className += 'active';
+            tabButton.className += ' active';
             element.className += ' active';
         }
         

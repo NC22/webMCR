@@ -442,7 +442,8 @@ switch ($step) {
             $timezone = IsValidTimeZone(ConfigPostStr('site_timezone'));
 
             $sbuffer = (!empty($_POST['sbuffer'])) ? true : false;
-
+            $default_skin = (!empty($_POST['default_skin'])) ? true : false;
+            
             if (TextBase::StringLen($keywords) > 200)
                 $info = 'Ключевые слова занимают больше 200 символов (' . TextBase::StringLen($keywords) . ').';
             elseif (!$timezone)
@@ -453,6 +454,7 @@ switch ($step) {
                 $config['s_about'] = $site_about;
                 $config['s_keywords'] = $keywords;
                 $config['sbuffer'] = $sbuffer;
+                $config['default_skin'] = $default_skin;
                 $config['timezone'] = $timezone;
 
                 $config['install'] = false;

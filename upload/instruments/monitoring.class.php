@@ -149,7 +149,7 @@ class Server extends Item
 
         $sql = "UPDATE `" . $this->db . "` SET "
                 . "`address`=:address,"
-                . "`port`=:rcon WHERE `id`='{$this->id}'";
+                . "`port`=:port WHERE `id`='{$this->id}'";
 
         getDB()->ask($sql, array(
             'address' => $address,
