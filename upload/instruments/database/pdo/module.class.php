@@ -15,7 +15,7 @@ class PDODriver implements DataBaseInterface
         }
 
         try {
-            $this->link = new PDO("mysql:host={$data['host']};dbname={$data['db']}", $data['login'], $data['password']);
+            $this->link = new PDO("mysql:host={$data['host']};port={$data['port']};dbname={$data['db']}", $data['login'], $data['password']);
 
             $this->query("SET time_zone = '" . date('P') . "'");
             $this->query("SET character_set_client='utf8'");

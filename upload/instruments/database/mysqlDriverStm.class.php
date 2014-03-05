@@ -6,7 +6,7 @@
 abstract class MysqlDriverStm
 {     
     protected $queryTpl = null;
-    protected $dataPool = null;
+    protected $dataPool = array();
     protected $fetchMode = 'assoc'; 
     
     private static $pVarCharset = "abcdefghijklmnopqrstuvwxyz0123456789_";
@@ -62,9 +62,12 @@ abstract class MysqlDriverStm
         return implode('', $utfSafeStack);
     }
     
-    public function bindData($data = null) 
+    public function bindData($data) 
     {
+        if (!is_array($data)) return false;
+        
         $this->dataPool = $data;
+        return true;
     }
     
     public function bindValue($index, $data, $type = 'string') 
@@ -75,11 +78,7 @@ abstract class MysqlDriverStm
         if (is_int($index)) {
             $index = ($index <= 0) ? 1 : $index-1; 
         }
-        
-        if ($this->dataPool === null) {
-            $this->dataPool = array();
-        }
-        
+                
         settype($data, $type);
         $this->dataPool[$index] = $data;
         

@@ -9,7 +9,7 @@ class PDODriverStatement implements StatementInterface
     ); 
     
     private $fetchMode = 'assoc';     
-    private $dataPool = null; 
+    private $dataPool = array(); 
     private $statement = false;
 
     /**
@@ -60,19 +60,18 @@ class PDODriverStatement implements StatementInterface
             $index = ($index <= 0) ? 1 : $index-1; 
         }
         
-        if ($this->dataPool === false) {
-            $this->dataPool = array();
-        }
-        
         settype($data, $type);
         $this->dataPool[$index] = $data;
         
         return true;
     } 
     
-    public function bindData($data = false) 
+    public function bindData($data) 
     {
+        if (!is_array($data)) return false;
+        
         $this->dataPool = $data;
+        return true;
     }
     
     public function rowCount()
