@@ -350,7 +350,7 @@ Class User {
 
 
             $line = getDB()->fetchRow("SELECT `{$bd_money['money']}` FROM `{$bd_names['iconomy']}` "
-                    . "WHERE `{$bd_money['login']}`=:login", array('login' => $this->name));
+                    . "WHERE `{$bd_money['login']}`=:login", array('login' => $this->name), 'num');
 
 
             if (!$line) {
