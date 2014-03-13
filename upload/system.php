@@ -179,12 +179,15 @@ function POSTSafeMove($post_name, $tmp_dir = false)
 
     $tmp_file = tmp_name($tmp_dir);
     if (!move_uploaded_file($_FILES[$post_name]['tmp_name'], $tmp_dir . $tmp_file)) {
-
         vtxtlog('[POSTSafeMove] --> "' . $tmp_dir . '" <-- ' . lng('WRITE_FAIL'));
         return false;
     }
 
-    return array('tmp_name' => $tmp_file, 'name' => $_FILES[$post_name]['name'], 'size_mb' => round($_FILES[$post_name]['size'] / 1024 / 1024, 2));
+    return array(
+        'tmp_name' => $tmp_file, 
+        'name' => $_FILES[$post_name]['name'], 
+        'size_mb' => round($_FILES[$post_name]['size'] / 1024 / 1024, 2)
+    );
 }
 
 function randString($pass_len = 50)

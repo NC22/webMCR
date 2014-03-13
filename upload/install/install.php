@@ -191,6 +191,12 @@ function findCMS($way)
     return false;
 }
 
+/**
+ * 
+ * @global DataBaseInterface $link
+ * @return DataBaseInterface
+ */
+
 function getDB() 
 {
     global $link;

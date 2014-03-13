@@ -6,7 +6,7 @@ define('FEEDBACK', '<a href="http://drop.catface.ru/index.php?nid=17">'.PROGNAME
 class Item extends View {
 
     protected $type;
-    protected $id;
+    protected $id = false;
 
     protected $db;
 

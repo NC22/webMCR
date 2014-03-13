@@ -94,7 +94,9 @@ class PDODriverStatement implements StatementInterface
          }
          catch( PDOException $e )
          {
-             $this->db->log('SQLError: [' . $e->getMessage() . ']');
+             ob_start();
+             $this->statement->debugDumpParams();
+             $this->db->log('[' . $e->getMessage() . '] PDOStatementDump : ' . ob_get_clean());
              return false;
          }
     }
