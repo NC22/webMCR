@@ -1,7 +1,7 @@
 # webMCR
 
  - **Автор** : NC22 
- - **Версия** : 2.4b
+ - **Версия** : 2.4
  - **Сайт** : [webMCR.com](http://webmcr.com)
  - **Wiki** : [github.com/NC22/webMCR/wiki](https://github.com/NC22/webMCR/wiki)
 

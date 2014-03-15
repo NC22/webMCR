@@ -1,6 +1,6 @@
 <?php
-define('MCR', '2.4b'); 
-define('PROGNAME', 'webMCR '.MCR);
+define('MCR', '2.4'); 
+define('PROGNAME', 'webMCR '. MCR);
 define('FEEDBACK', '<a href="http://drop.catface.ru/index.php?nid=17">'.PROGNAME.'</a> &copy; 2013-2014 NC22');  
 
 class Item extends View {
