@@ -228,7 +228,7 @@ class News_Item extends Item
 
         return true;
     }
-
+    
     public function Create($cat_id, $title, $message, $message_full = false, $vote = true, $discus = true)
     {
         global $user;
@@ -331,6 +331,33 @@ class News_Item extends Item
             'category_id' => $this->category_id,);
     }
 
+    private function countView() 
+    {      
+        if (!isset($_COOKIE['PRTViews'])) {
+            $data = array($this->id);
+        } else {
+            $data = explode('%', $_COOKIE['PRTViews']);
+            
+            if (!sizeof($data)) $data = array();
+            foreach($data as $key => $value) {
+                if (!(int) $value) unset($data[$key]);
+            }
+            
+            if (in_array($this->id, $data)) return;
+            
+            if (sizeof($data) >= 20) {
+                array_shift($data);                
+            }
+            
+            array_push($data, $this->id);
+        }   
+            
+        getDB()->ask("UPDATE `{$this->db}` SET `hits` = LAST_INSERT_ID( `hits` + 1 ) WHERE `id`='" . $this->id . "'");
+        setcookie("PRTViews", "", time() - 3600);
+        setcookie("PRTViews", implode('%', $data), strtotime( '+30 days' ), '/');
+        
+    }
+    
     public function Show($full_text = false)
     {
         global $config, $user, $bd_names;
@@ -344,7 +371,7 @@ class News_Item extends Item
 
         if ($full_text) {
 
-            getDB()->ask("UPDATE `{$this->db}` SET `hits` = LAST_INSERT_ID( `hits` + 1 ) WHERE `id`='" . $this->id . "'");
+            $this->countView();
             $sql_hits = " LAST_INSERT_ID() AS hits,";
         }
 
