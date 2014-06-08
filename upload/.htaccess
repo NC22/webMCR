@@ -5,6 +5,10 @@ Options -Indexes
 
 php_flag register_globals off
 
+<Files log.txt>
+Deny from all 
+</Files>
+
 <IfModule mod_rewrite.c>
 SetEnv HTTP_MOD_REWRITE On
 
