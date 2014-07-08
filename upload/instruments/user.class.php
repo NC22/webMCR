@@ -1031,7 +1031,7 @@ class Group extends TextBase
         if ((int)$line[0])
             return false;
 
-        $sqlNames = '`name`,';
+        $sqlNames = '`name`';
         $sqlVars = '?';
         $sqlData = array($name);
         
