@@ -276,7 +276,24 @@ function ConfigPostStr($postKey){
 }
 
 function ConfigPostInt($postKey){
- return (isset( $_POST[$postKey]))? (int)$_POST[$postKey] : 0;
+    return (isset( $_POST[$postKey]))? (int)$_POST[$postKey] : false;
+}
+
+function GetRealIp(){
+
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) 
+    
+    $ip = $_SERVER['HTTP_CLIENT_IP']; 
+     
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) 
+    
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+     
+    else 
+     
+    $ip = $_SERVER['REMOTE_ADDR'];
+ 
+return substr($ip, 0, 16);
 }
 
 function CreateAdmin($site_user)
@@ -285,6 +302,8 @@ function CreateAdmin($site_user)
 
     $site_password = ConfigPostStr('site_password');
     $site_repassword = ConfigPostStr('site_repassword');
+    $site_email = ConfigPostStr('site_email');
+    $site_gender = ConfigPostStr('site_gender');
     $result = false;
 
     if (!TextBase::StringLen($site_password))
@@ -293,6 +312,10 @@ function CreateAdmin($site_user)
         $info = 'Введите повтор пароля.';
     elseif (strcmp($site_password, $site_repassword))
         $info = 'Пароли не совпадают.';
+    elseif ( !TextBase::StringLen($site_email))
+        $info = 'Введите е-мейл.';
+    elseif ( !TextBase::StringLen($site_gender))
+        $info = 'Подмена значения пола.';
     else {
         require_once(MCR_ROOT . 'instruments/auth/' . $config['p_logic'] . '.php');
 
@@ -302,10 +325,13 @@ function CreateAdmin($site_user)
                 . "`{$bd_users['login']}`,"
                 . "`{$bd_users['password']}`,"
                 . "`{$bd_users['ip']}`,"
-                . "`{$bd_users['group']}`) "
-                . "VALUES('$site_user','$pass','127.0.0.1',3) "
-                . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass'");
-        
+                . "`{$bd_users['group']}`,"
+                . "`{$bd_users['ctime']}`,"
+                . "`{$bd_users['email']}`"
+                . ",`{$bd_users['female']}`) "
+                . "VALUES('$site_user','$pass','".TextBase::SQLSafe(GetRealIp())."',3,NOW(),'$site_email',$site_gender)"
+                . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass',`{$bd_users['email']}`='$site_email'");
+
         require MCR_ROOT.'instruments/user.class.php';
         define('MCRAFT', MCR_ROOT . $site_ways['mcraft']);
         $user = new User($site_user, $bd_users['login']);
