@@ -38,7 +38,7 @@ class MCRAuth
             $user = new User($_SESSION['user_name'], $bd_users['login']);
 
         if (isset($_COOKIE['PRTCookie1']) and empty($user)) {
-
+            if($_COOKIE['PRTCookie1']=="0") exit('fuck the hack');
             $user = new User($_COOKIE['PRTCookie1'], $bd_users['tmp']);
             if ($user->id()) {
 
