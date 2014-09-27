@@ -329,7 +329,7 @@ function CreateAdmin($site_user)
                 . "`{$bd_users['ctime']}`,"
                 . "`{$bd_users['email']}`"
                 . ",`{$bd_users['female']}`) "
-                . "VALUES('$site_user','$pass','".TextBase::SQLSafe(GetRealIp())."',3,NOW(),'$site_email',$site_gender)"
+                . "VALUES('$site_user','$pass','"GetRealIp()."',3,NOW(),'$site_email',$site_gender)"
                 . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass',`{$bd_users['email']}`='$site_email'");
 
         require MCR_ROOT.'instruments/user.class.php';
