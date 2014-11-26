@@ -174,8 +174,11 @@ function POSTSafeMove($post_name, $tmp_dir = false)
     if (!$tmp_dir)
         $tmp_dir = MCRAFT . 'tmp/';
 
-    if (!is_dir($tmp_dir))
-        mkdir($tmp_dir, 0777);
+    if (!is_dir($tmp_dir)) {
+        $back = umask(0);
+        mkdir($tmp_dir, 0775, true);
+        umask($back);
+    }
 
     $tmp_file = tmp_name($tmp_dir);
     if (!move_uploaded_file($_FILES[$post_name]['tmp_name'], $tmp_dir . $tmp_file)) {

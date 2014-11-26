@@ -161,8 +161,11 @@ function createWays()
     global $site_ways, $create_ways;
 
     foreach ($site_ways as $key => $value)
-        if ($value and in_array($key, $create_ways) and !is_dir(MCR_ROOT . $site_ways['mcraft'] . $value))
-            mkdir(MCR_ROOT . $site_ways['mcraft'] . $value, 0777, true);
+        if ($value and in_array($key, $create_ways) and !is_dir(MCR_ROOT . $site_ways['mcraft'] . $value)) {
+            $back = umask(0);
+            mkdir(MCR_ROOT . $site_ways['mcraft'] . $value, 0775, true);
+            umask($back);
+        }
 }
 
 function findCMS($way)
@@ -329,7 +332,7 @@ function CreateAdmin($site_user)
                 . "`{$bd_users['ctime']}`,"
                 . "`{$bd_users['email']}`"
                 . ",`{$bd_users['female']}`) "
-                . "VALUES('$site_user','$pass','"GetRealIp()."',3,NOW(),'$site_email',$site_gender)"
+                . "VALUES('$site_user','$pass','".GetRealIp()."',3,NOW(),'$site_email',$site_gender)"
                 . "ON DUPLICATE KEY UPDATE `{$bd_users['group']}`='3',`{$bd_users['password']}`='$pass',`{$bd_users['email']}`='$site_email'");
 
         require MCR_ROOT.'instruments/user.class.php';
