@@ -244,7 +244,7 @@ switch ($method)
         $delete_skin = Filter::input('new_delete_skin', 'post', 'bool');
         $delete_cloak = Filter::input('new_delete_cloak', 'post', 'bool');
         
-        if ($newlogin)
+        if ($newlogin and ($user->lvl() >= 15 or $user->getPermission('change_login')))
             $rcodes[] = $mod_user->changeName($newlogin);
         
         if ($newpass) {
@@ -272,10 +272,10 @@ switch ($method)
             $rcodes[] = 1;
         }
         
-        if (!empty($_FILES['new_skin']['tmp_name']))
+        if (!empty($_FILES['new_skin']['tmp_name']) and ($user->lvl() >= 15 or $user->getPermission('change_skin')))
             $rcodes[] = (int) $mod_user->changeVisual('new_skin', 'skin');
 
-        if (!empty($_FILES['new_cloak']['tmp_name']))
+        if (!empty($_FILES['new_cloak']['tmp_name']) and ($user->lvl() >= 15 or $user->getPermission('change_cloak')))
             $rcodes[] = (int) $mod_user->changeVisual('new_cloak', 'cloak') . '1';
 
         $message = ''; 
