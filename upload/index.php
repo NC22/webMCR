@@ -3,6 +3,7 @@
 /* WEB-APP : WebMCR (С) 2013-2014 NC22 | License : GPLv3 */
 
 header('Content-Type: text/html; charset=UTF-8');
+if (!empty($_POST)) header("X-XSS-Protection: 0");
 
 require_once('./system.php');
 DBinit('index');
