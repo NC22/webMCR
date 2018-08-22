@@ -2,7 +2,6 @@
 
  - **Author** : NC22
  - **Version** : 2.4
- - **Website** : [webMCR.com](http://webmcr.com)
  - **Wiki** : [github.com/NC22/webMCR/wiki](https://github.com/NC22/webMCR/wiki)
 
 ## License 
