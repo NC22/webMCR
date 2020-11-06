@@ -12,7 +12,7 @@ class Item extends View {
 
     public function __construct($id, $type, $db, $style_sd = false)
     {
-        parent::View($style_sd);
+        parent::__construct($style_sd);
 
         $this->id = (int) $id;
         $this->db = $db;
@@ -99,7 +99,7 @@ class View {
 
     protected $st_subdir;
 
-    public function View($style_subdir = '')
+    public function __construct($style_subdir = '')
     {
         if (!$style_subdir)
             $style_subdir = false;
@@ -460,7 +460,7 @@ class ItemLike
     private $bd_content;
     private $db;
 
-    public function ItemLike($item_type, $item_id, $user_id)
+    public function __construct($item_type, $item_id, $user_id)
     {
         global $bd_names;
 
@@ -531,11 +531,11 @@ class Menu extends View
     private $menu_items;
     private $menu_fname;
 
-    public function Menu($style_sd = false, $auto_load = true, $mfile = 'instruments/menu_items.php')
+    public function __construct($style_sd = false, $auto_load = true, $mfile = 'instruments/menu_items.php')
     {
         global $config;
 
-        parent::View($style_sd);
+        parent::__construct($style_sd);
 
         $this->menu_fname = $mfile;
 

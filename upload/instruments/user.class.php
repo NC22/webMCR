@@ -964,7 +964,7 @@ class Group extends TextBase
     private $db;
     private $id;
 
-    public function Group($id = false)
+    public function __construct($id = false)
     {
         global $bd_names;
 
