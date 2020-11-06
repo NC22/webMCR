@@ -17,7 +17,7 @@ class Server extends Item
     private $rcon;
     private $s_user;
 
-    public function Server($id = false, $style_sd = false)
+    public function __construct($id = false, $style_sd = false)
     {
         global $bd_names;
 
@@ -550,7 +550,7 @@ Class ServerManager extends View
     {
         global $site_ways;
 
-        parent::View($style_sd);
+        parent::__construct($style_sd);
     }
 
     public function Show($type = 'side', $update = false)

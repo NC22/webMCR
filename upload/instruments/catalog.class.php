@@ -8,7 +8,7 @@ class Category
     private $name;
     private $priority;
 
-    public function Category($id = false)
+    public function __construct($id = false)
     {
         global $bd_names;
 
@@ -534,9 +534,9 @@ class NewsManager extends View
     private $work_link;
     private $category_id;
 
-    public function NewsManager($category = 1, $style_sd = false, $work_link = 'index.php?')
+    public function __construct($category = 1, $style_sd = false, $work_link = 'index.php?')
     { // category = -1 -- all last news
-        parent::View($style_sd);
+        parent::__construct($style_sd);
 
         if ((int) $category <= 0)
             $category = 0;

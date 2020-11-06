@@ -34,11 +34,11 @@ Class File extends View
     private $hash;
     private $downloads;
 
-    public function File($id = false, $style_sd = false)
+    public function __construct($id = false, $style_sd = false)
     {
         global $bd_names;
 
-        parent::View($style_sd);
+        parent::__construct($style_sd);
 
         $this->base_dir = MCRAFT . 'userdata/';
         $this->db = $bd_names['files'];
@@ -310,7 +310,7 @@ Class FileManager extends View
     private $work_skript;
     private $db;
 
-    public function FileManager($style_sd = false, $work_skript = 'index.php?mode=control&do=filelist&')
+    public function __construct($style_sd = false, $work_skript = 'index.php?mode=control&do=filelist&')
     {
         global $bd_names;
 
